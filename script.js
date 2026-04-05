@@ -166,6 +166,31 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   window.addEventListener('resize', fitCanvas);
   fitCanvas();
 
+  // ── Vinheta e cursor ──
+  const vignette = document.getElementById('curtain-vignette');
+  const curtainCursor = document.getElementById('curtain-cursor');
+  const sobreEl = document.getElementById('sobre');
+  const sobreWrap = sobreEl.querySelector('.section-wrap');
+
+  // Cursor: segue o mouse
+  document.addEventListener('mousemove', e => {
+    curtainCursor.style.left = e.clientX + 'px';
+    curtainCursor.style.top  = e.clientY + 'px';
+  }, { passive: true });
+
+  // Cursor: aparece ao entrar em #sobre quando a cortina estiver ativa
+  let curtainPhaseActive = false;
+  sobreEl.addEventListener('mouseenter', () => {
+    if (curtainPhaseActive) {
+      document.body.classList.add('curtain-cursor-active');
+      curtainCursor.style.opacity = '1';
+    }
+  });
+  sobreEl.addEventListener('mouseleave', () => {
+    document.body.classList.remove('curtain-cursor-active');
+    curtainCursor.style.opacity = '0';
+  });
+
   // ── Reveal do conteúdo (dispara após cortina abrir) ──
   let contentRevealed = false;
 
@@ -259,8 +284,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       currentFrame = frameProgress * (FRAME_COUNT - 1);
       drawFrame(currentFrame);
 
-      // Visibility + opacity do canvas
-      // Importante: sempre restaura visibility antes de mexer na opacity
+      // ── Canvas: visibility + opacity ──
       if (p <= 0.60) {
         canvas.style.visibility = 'visible';
         canvas.style.opacity    = '1';
@@ -273,11 +297,41 @@ document.querySelectorAll('.reveal-right').forEach(el => {
         canvas.style.visibility = 'hidden';
       }
 
-      // Reveal / hide do conteúdo vinculado ao progresso do scrub
+      // ── Vinheta: cresce até 40%, estável, depois some com canvas ──
+      let vigOpacity = 0;
+      if (p > 0 && p <= 0.40) {
+        vigOpacity = (p / 0.40) * 0.72;
+      } else if (p <= 0.60) {
+        vigOpacity = 0.72;
+      } else if (p <= 0.82) {
+        vigOpacity = 0.72 * (1 - (p - 0.60) / 0.22);
+      }
+      if (vigOpacity > 0) {
+        vignette.style.visibility = 'visible';
+        vignette.style.opacity    = vigOpacity.toFixed(3);
+      } else {
+        vignette.style.opacity    = '0';
+        vignette.style.visibility = 'hidden';
+      }
+
+      // ── Parallax: conteúdo aparece com zoom-out (scale 1.05 → 1) ──
+      if (sobreWrap) {
+        const sc = 1.05 - Math.min(p, 1) * 0.05;
+        gsap.set(sobreWrap, { scale: sc, transformOrigin: '50% 48%' });
+      }
+
+      // ── Cursor: ativo enquanto canvas estiver visível ──
+      curtainPhaseActive = (p > 0 && p < 0.85);
+      if (!curtainPhaseActive) {
+        document.body.classList.remove('curtain-cursor-active');
+        curtainCursor.style.opacity = '0';
+      }
+
+      // ── Reveal / hide do conteúdo ──
       if (p >= 0.58) {
         revealContent();
       } else {
-        hideContent();   // só executa de verdade quando contentRevealed=true
+        hideContent();
       }
     }
   });
@@ -285,8 +339,21 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 })();
 
 // ══════════════════════════════════
-// ÁREAS — fade slide da seção + cards
+// BRANDS — "puxar a cortina": some ao aproximar do #sobre
 // ══════════════════════════════════
+gsap.to('.brands-strip', {
+  opacity: 0,
+  scale: 0.96,
+  y: -24,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#sobre',
+    start: 'top 90%',
+    end: 'top top',
+    scrub: true,
+  }
+});
+
 // ══════════════════════════════════
 // ÁREAS — fade slide da seção + cards
 // ══════════════════════════════════
