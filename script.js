@@ -242,11 +242,11 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     document.querySelectorAll('[data-target]').forEach(el => { el.textContent = '0+'; });
   }
 
-  // Mostra o canvas com frame 0 assim que #sobre começa a entrar na tela,
-  // evitando o espaço branco antes da cortina aparecer.
+  // Mostra o canvas com frame 0 quando #sobre está próximo do topo,
+  // evitando espaço branco sem sobrepor o hero.
   ScrollTrigger.create({
     trigger: '#sobre',
-    start: 'top bottom',   // quando o topo de #sobre cruza a base da viewport
+    start: 'top 25%',   // só aparece quando #sobre já está 25% do topo
     onEnter() {
       canvas.style.visibility = 'visible';
       canvas.style.opacity    = '1';
