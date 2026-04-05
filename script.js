@@ -98,7 +98,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 });
 
 // ══════════════════════════════════════════════════
-// CORTINA + SOBRE — timeline unificada com pin
+// CORTINA + SOBRE — scrub por scroll + pin
 // ══════════════════════════════════════════════════
 (function () {
   const FRAME_COUNT = 91;
@@ -107,6 +107,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   const ctx = canvas.getContext('2d');
 
   let DPR = window.devicePixelRatio || 1;
+  let currentFrame = 0;
 
   function fitCanvas() {
     DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -117,7 +118,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
-    drawFrame(proxy.frame);
+    drawFrame(currentFrame);
   }
 
   const imgs = [];
@@ -131,12 +132,18 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     const idx = Math.min(Math.max(Math.round(rawIdx), 0), FRAME_COUNT - 1);
     let img = imgs[idx];
     if (!img || !img.complete) {
+      // tenta frame anterior carregado
       for (let j = idx - 1; j >= 0; j--) {
         if (imgs[j] && imgs[j].complete) { img = imgs[j]; break; }
       }
+      // tenta próximo frame carregado
+      if (!img || !img.complete) {
+        for (let j = idx + 1; j < FRAME_COUNT; j++) {
+          if (imgs[j] && imgs[j].complete) { img = imgs[j]; break; }
+        }
+      }
     }
     if (!img || !img.complete) return;
-    // Coordenadas em CSS pixels (setTransform cuida do DPR)
     const cw = window.innerWidth, ch = window.innerHeight;
     const iw = img.naturalWidth,   ih = img.naturalHeight;
     const scale = Math.max(cw / iw, ch / ih);
@@ -145,63 +152,103 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     ctx.drawImage(img, (cw - sw) / 2, (ch - sh) / 2, sw, sh);
   }
 
-  const proxy = { frame: 0 };
   if (imgs[0].complete) { fitCanvas(); }
   else { imgs[0].addEventListener('load', fitCanvas); }
   window.addEventListener('resize', fitCanvas);
   fitCanvas();
 
-  // Auto-play ao entrar na viewport — sem pin, sem scrub
+  // ── Reveal do conteúdo (dispara após cortina abrir) ──
+  let contentRevealed = false;
+
+  function revealContent() {
+    if (contentRevealed) return;
+    contentRevealed = true;
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.to('.label-line',    { scaleX: 1, duration: 0.5 }, 0);
+    tl.to('.label-text',    { opacity: 1, duration: 0.5 }, 0.15);
+    tl.to('#sobre-title',   { opacity: 1, y: 0, duration: 0.6 }, 0.25);
+    tl.to('.sobre-para',    { opacity: 1, y: 0, duration: 0.55, stagger: 0.12 }, 0.4);
+    tl.to('.sobre-img',     { clipPath: 'inset(0 0% 0 0%)', duration: 0.8, ease: 'power3.inOut' }, 0.35);
+    tl.to('#sobre-divider', { scaleX: 1, duration: 0.6, ease: 'power3.inOut' }, 0.8);
+    tl.to('.sobre-stats',   { opacity: 1, y: 0, duration: 0.5 }, 0.95);
+
+    tl.call(() => {
+      const hw = document.getElementById('sobre-hw');
+      if (!hw) return;
+      gsap.to(hw, { color: '#26A5FF', duration: 0.3, yoyo: true, repeat: 1, ease: 'none' });
+      setTimeout(() => hw.classList.add('hw-active'), 300);
+    }, [], 0.85);
+
+    tl.call(() => {
+      document.querySelectorAll('[data-target]').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target, duration: 1.8, ease: 'elastic.out(1, 0.5)',
+          onUpdate() { el.textContent = Math.ceil(obj.val) + '+'; }
+        });
+      });
+    }, [], 1.0);
+  }
+
+  function hideContent() {
+    contentRevealed = false;
+    gsap.set('.label-line',    { scaleX: 0 });
+    gsap.set('.label-text',    { opacity: 0 });
+    gsap.set('#sobre-title',   { opacity: 0, y: 18 });
+    gsap.set('.sobre-para',    { opacity: 0, y: 22 });
+    gsap.set('.sobre-img',     { clipPath: 'inset(0 50% 0 50%)' });
+    gsap.set('#sobre-divider', { scaleX: 0 });
+    gsap.set('.sobre-stats',   { opacity: 0, y: 20 });
+    const hw = document.getElementById('sobre-hw');
+    if (hw) { hw.classList.remove('hw-active'); gsap.set(hw, { color: '' }); }
+    document.querySelectorAll('[data-target]').forEach(el => { el.textContent = '0+'; });
+  }
+
+  // ── ScrollTrigger com pin + scrub ──
+  // O pin dura apenas 80vh de scroll extra; ao terminar o conteúdo do
+  // #sobre já está visível e o usuário continua rolando normalmente.
   ScrollTrigger.create({
     trigger: '#sobre',
-    start: 'top 60%',
-    once: true,
+    start: 'top top',
+    end: '+=80%',         // 80vh de scroll para abrir a cortina
+    pin: true,
+    anticipatePin: 1,
+    scrub: 0.8,           // lag suave
     onEnter() {
-      // Mostra o canvas só agora que chegou no Sobre
       canvas.style.visibility = 'visible';
-      canvas.style.opacity = '1';
+      canvas.style.opacity    = '1';
+    },
+    onLeaveBack() {
+      canvas.style.visibility = 'visible';
+      canvas.style.opacity    = '1';
+      currentFrame = 0;
+      drawFrame(0);
+      hideContent();
+    },
+    onUpdate(self) {
+      const p = self.progress;
 
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      // Frames: abre ao longo de todo o scroll
+      const frameProgress = Math.min(p / 0.85, 1);
+      currentFrame = frameProgress * (FRAME_COUNT - 1);
+      drawFrame(currentFrame);
 
-      // Cortina abre automaticamente em 2s (como vídeo)
-      tl.to(proxy, {
-        frame: FRAME_COUNT - 1,
-        duration: 2,
-        ease: 'none',
-        onUpdate() { drawFrame(proxy.frame); }
-      }, 0);
+      // Fade-out do canvas entre 60% e 80% do scroll
+      if (p <= 0.60) {
+        canvas.style.opacity = '1';
+      } else if (p <= 0.80) {
+        const t = (p - 0.60) / 0.20;
+        canvas.style.opacity = (1 - t).toFixed(3);
+      } else {
+        canvas.style.opacity = '0';
+        canvas.style.visibility = 'hidden';
+      }
 
-      // Canvas some
-      tl.to(canvas, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, 1.4);
-
-      // Conteúdo emerge
-      tl.to('.label-line',  { scaleX: 1, duration: 0.4 }, 1.3);
-      tl.to('.label-text',  { opacity: 1, duration: 0.4 }, 1.5);
-      tl.to('#sobre-title', { opacity: 1, y: 0, duration: 0.5 }, 1.6);
-      tl.to('.sobre-para',  { opacity: 1, y: 0, duration: 0.5, stagger: 0.15 }, 1.8);
-      tl.to('.sobre-img',   { clipPath: 'inset(0 0% 0 0%)', duration: 0.7, ease: 'power3.inOut' }, 1.7);
-      tl.to('#sobre-divider', { scaleX: 1, duration: 0.5, ease: 'power3.inOut' }, 2.1);
-      tl.to('.sobre-stats', { opacity: 1, y: 0, duration: 0.5 }, 2.2);
-
-      // Highlight CONEXTE
-      tl.call(() => {
-        const hw = document.getElementById('sobre-hw');
-        if (!hw) return;
-        gsap.to(hw, { color: '#26A5FF', duration: 0.3, yoyo: true, repeat: 1, ease: 'none' });
-        setTimeout(() => hw.classList.add('hw-active'), 300);
-      }, [], 2.1);
-
-      // Counters
-      tl.call(() => {
-        document.querySelectorAll('[data-target]').forEach(el => {
-          const target = parseInt(el.dataset.target);
-          const obj = { val: 0 };
-          gsap.to(obj, {
-            val: target, duration: 1.8, ease: 'elastic.out(1, 0.5)',
-            onUpdate() { el.textContent = Math.ceil(obj.val) + '+'; }
-          });
-        });
-      }, [], 2.3);
+      // Dispara reveal do conteúdo cedo o suficiente para estar
+      // pronto antes do pin liberar
+      if (p >= 0.58) revealContent();
     }
   });
 
