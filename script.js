@@ -83,17 +83,17 @@ window.addEventListener('load', () => {
 // ══════════════════════════════════
 document.querySelectorAll('.reveal').forEach(el => {
   gsap.to(el, { opacity:1, y:0, duration:0.75, ease:'power3.out',
-    scrollTrigger:{ trigger:el, start:'top 88%', toggleActions:'play none none none' }
+    scrollTrigger:{ trigger:el, start:'top 88%', toggleActions:'play none none reverse' }
   });
 });
 document.querySelectorAll('.reveal-left').forEach(el => {
   gsap.to(el, { opacity:1, x:0, duration:0.8, ease:'power3.out',
-    scrollTrigger:{ trigger:el, start:'top 85%' }
+    scrollTrigger:{ trigger:el, start:'top 85%', toggleActions:'play none none reverse' }
   });
 });
 document.querySelectorAll('.reveal-right').forEach(el => {
   gsap.to(el, { opacity:1, x:0, duration:0.8, ease:'power3.out',
-    scrollTrigger:{ trigger:el, start:'top 85%' }
+    scrollTrigger:{ trigger:el, start:'top 85%', toggleActions:'play none none reverse' }
   });
 });
 
@@ -257,60 +257,60 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 // ══════════════════════════════════
 // ÁREAS — fade slide da seção + cards
 // ══════════════════════════════════
+const areasTL = gsap.timeline({ paused: true })
+  .fromTo('#areas',
+    { opacity: 0, y: 64 },
+    { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' }
+  )
+  .fromTo('#areas .label-tag',
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
+    '-=0.5'
+  )
+  .fromTo('#areas .section-h2',
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
+    '-=0.4'
+  )
+  .fromTo('.area-card',
+    { opacity: 0, y: 32 },
+    { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: { amount: 0.45 } },
+    '-=0.25'
+  )
+  .fromTo('#areas .cta-center',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+    '-=0.2'
+  );
+
 ScrollTrigger.create({
   trigger: '#areas',
   start: 'top 80%',
-  once: true,
   invalidateOnRefresh: true,
-  onEnter() {
-    const tl = gsap.timeline();
-
-    tl.fromTo('#areas',
-      { opacity: 0, y: 64 },
-      { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', clearProps: 'transform' }
-    );
-    tl.fromTo('#areas .label-tag',
-      { opacity: 0, y: 24 },
-      { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
-      '-=0.5'
-    );
-    tl.fromTo('#areas .section-h2',
-      { opacity: 0, y: 24 },
-      { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
-      '-=0.4'
-    );
-    tl.to('.area-card',
-      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: { amount: 0.45 } },
-      '-=0.25'
-    );
-    tl.fromTo('#areas .cta-center',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-      '-=0.2'
-    );
-  }
+  onEnter:     () => areasTL.play(),
+  onLeaveBack: () => areasTL.reverse(),
 });
 
 // ══════════════════════════════════
 // CONTATO: fade-slide ao entrar
 // ══════════════════════════════════
+const contatoTL = gsap.timeline({ paused: true })
+  .fromTo('#contato .contato-info',
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+  )
+  .fromTo('#contato .contato-form-box',
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+    '-=0.55'
+  );
+
 ScrollTrigger.create({
   trigger: '#contato',
   start: 'top 75%',
-  once: true,
   invalidateOnRefresh: true,
-  onEnter() {
-    const tl = gsap.timeline();
-    tl.fromTo('#contato .contato-info',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', clearProps: 'transform' }
-    );
-    tl.fromTo('#contato .contato-form-box',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', clearProps: 'transform' },
-      '-=0.55'
-    );
-  }
+  onEnter:     () => contatoTL.play(),
+  onLeaveBack: () => contatoTL.reverse(),
 });
 
 // ══════════════════════════════════
