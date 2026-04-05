@@ -202,7 +202,9 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   }
 
   function hideContent() {
+    if (!contentRevealed) return;   // evita chamar desnecessariamente a cada frame
     contentRevealed = false;
+    gsap.killTweensOf(['.label-line','.label-text','#sobre-title','.sobre-para','.sobre-img','#sobre-divider','.sobre-stats']);
     gsap.set('.label-line',    { scaleX: 0 });
     gsap.set('.label-text',    { opacity: 0 });
     gsap.set('#sobre-title',   { opacity: 0, y: 18 });
@@ -242,6 +244,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     anticipatePin: 1,
     scrub: 2,             // lag de 2s — animação mais fluida e menos mecânica
     onLeaveBack() {
+      // Usuário voltou ao topo: reseta tudo
       canvas.style.visibility = 'visible';
       canvas.style.opacity    = '1';
       currentFrame = 0;
@@ -256,20 +259,26 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       currentFrame = frameProgress * (FRAME_COUNT - 1);
       drawFrame(currentFrame);
 
-      // Fade-out do canvas entre 60% e 80% do scroll
+      // Visibility + opacity do canvas
+      // Importante: sempre restaura visibility antes de mexer na opacity
       if (p <= 0.60) {
-        canvas.style.opacity = '1';
-      } else if (p <= 0.80) {
-        const t = (p - 0.60) / 0.20;
+        canvas.style.visibility = 'visible';
+        canvas.style.opacity    = '1';
+      } else if (p <= 0.82) {
+        canvas.style.visibility = 'visible';
+        const t = (p - 0.60) / 0.22;
         canvas.style.opacity = (1 - t).toFixed(3);
       } else {
-        canvas.style.opacity = '0';
+        canvas.style.opacity    = '0';
         canvas.style.visibility = 'hidden';
       }
 
-      // Dispara reveal do conteúdo cedo o suficiente para estar
-      // pronto antes do pin liberar
-      if (p >= 0.58) revealContent();
+      // Reveal / hide do conteúdo vinculado ao progresso do scrub
+      if (p >= 0.58) {
+        revealContent();
+      } else {
+        hideContent();   // só executa de verdade quando contentRevealed=true
+      }
     }
   });
 
