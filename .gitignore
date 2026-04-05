@@ -1,6 +1,3 @@
-# frames grandes (regenerar localmente)
-frames/
-
 # arquivos do sistema
 .DS_Store
 Thumbs.db
