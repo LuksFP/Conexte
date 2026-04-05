@@ -206,6 +206,22 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     document.querySelectorAll('[data-target]').forEach(el => { el.textContent = '0+'; });
   }
 
+  // Mostra o canvas com frame 0 assim que #sobre começa a entrar na tela,
+  // evitando o espaço branco antes da cortina aparecer.
+  ScrollTrigger.create({
+    trigger: '#sobre',
+    start: 'top bottom',   // quando o topo de #sobre cruza a base da viewport
+    onEnter() {
+      canvas.style.visibility = 'visible';
+      canvas.style.opacity    = '1';
+      drawFrame(0);
+    },
+    onLeaveBack() {
+      canvas.style.visibility = 'hidden';
+      canvas.style.opacity    = '0';
+    }
+  });
+
   // ── ScrollTrigger com pin + scrub ──
   // O pin dura apenas 80vh de scroll extra; ao terminar o conteúdo do
   // #sobre já está visível e o usuário continua rolando normalmente.
@@ -216,10 +232,6 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     pin: true,
     anticipatePin: 1,
     scrub: 0.8,           // lag suave
-    onEnter() {
-      canvas.style.visibility = 'visible';
-      canvas.style.opacity    = '1';
-    },
     onLeaveBack() {
       canvas.style.visibility = 'visible';
       canvas.style.opacity    = '1';
