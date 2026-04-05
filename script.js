@@ -106,236 +106,88 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   );
 });
 
-// ══════════════════════════════════════════════════
-// CORTINA + SOBRE — scrub por scroll + pin
-// ══════════════════════════════════════════════════
+// ══════════════════════════════════
+// SOBRE — staggered reveal (estilo Framer Motion)
+// ══════════════════════════════════
 (function () {
-  const FRAME_COUNT = 91;
-  const canvas = document.getElementById('curtain-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  let DPR = window.devicePixelRatio || 1;
-  let currentFrame = 0;
-
-  function fitCanvas() {
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    canvas.width  = w * DPR;
-    canvas.height = h * DPR;
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    drawFrame(currentFrame);
-  }
-
-  const imgs = [];
-  for (let i = 0; i < FRAME_COUNT; i++) {
-    const img = new Image();
-    img.src = `curtain/ezgif-frame-${String(i + 1).padStart(3, '0')}.jpg`;
-    imgs.push(img);
-  }
-
-  function drawFrame(rawIdx) {
-    const idx = Math.min(Math.max(Math.round(rawIdx), 0), FRAME_COUNT - 1);
-    let img = imgs[idx];
-    if (!img || !img.complete) {
-      // tenta frame anterior carregado
-      for (let j = idx - 1; j >= 0; j--) {
-        if (imgs[j] && imgs[j].complete) { img = imgs[j]; break; }
-      }
-      // tenta próximo frame carregado
-      if (!img || !img.complete) {
-        for (let j = idx + 1; j < FRAME_COUNT; j++) {
-          if (imgs[j] && imgs[j].complete) { img = imgs[j]; break; }
-        }
-      }
-    }
-    if (!img || !img.complete) return;
-    const cw = window.innerWidth, ch = window.innerHeight;
-    const iw = img.naturalWidth,   ih = img.naturalHeight;
-    const scale = Math.max(cw / iw, ch / ih);
-    const sw = iw * scale, sh = ih * scale;
-    ctx.clearRect(0, 0, cw, ch);
-    ctx.drawImage(img, (cw - sw) / 2, (ch - sh) / 2, sw, sh);
-  }
-
-  if (imgs[0].complete) { fitCanvas(); }
-  else { imgs[0].addEventListener('load', fitCanvas); }
-  window.addEventListener('resize', fitCanvas);
-  fitCanvas();
-
-  // ── Vinheta e cursor ──
-  const vignette = document.getElementById('curtain-vignette');
-  const curtainCursor = document.getElementById('curtain-cursor');
   const sobreEl = document.getElementById('sobre');
-  const sobreWrap = sobreEl.querySelector('.section-wrap');
+  if (!sobreEl) return;
 
-  // Cursor: segue o mouse
-  document.addEventListener('mousemove', e => {
-    curtainCursor.style.left = e.clientX + 'px';
-    curtainCursor.style.top  = e.clientY + 'px';
-  }, { passive: true });
+  // label tag
+  const labelLine = sobreEl.querySelector('.label-line');
+  const labelText = sobreEl.querySelector('.label-text');
+  if (labelLine) { gsap.set(labelLine, { scaleX: 0 }); }
+  if (labelText) { gsap.set(labelText, { opacity: 0 }); }
 
-  // Cursor: aparece ao entrar em #sobre quando a cortina estiver ativa
-  let curtainPhaseActive = false;
-  sobreEl.addEventListener('mouseenter', () => {
-    if (curtainPhaseActive) {
-      document.body.classList.add('curtain-cursor-active');
-      curtainCursor.style.opacity = '1';
+  // title
+  const title = sobreEl.querySelector('#sobre-title');
+  if (title) { gsap.set(title, { opacity: 0, y: 30, clipPath: 'inset(0 0 100% 0)' }); }
+
+  // paras
+  const paras = sobreEl.querySelectorAll('.sobre-para');
+  paras.forEach(p => gsap.set(p, { opacity: 0, y: 24 }));
+
+  // image
+  const img = sobreEl.querySelector('.sobre-img');
+  if (img) { gsap.set(img, { clipPath: 'inset(0 0 100% 0)', borderRadius: '8px' }); }
+
+  // divider
+  const divider = sobreEl.querySelector('#sobre-divider');
+  if (divider) { gsap.set(divider, { scaleX: 0 }); }
+
+  // stats
+  const stats = sobreEl.querySelector('.sobre-stats');
+  if (stats) { gsap.set(stats, { opacity: 0, y: 20 }); }
+
+  let revealed = false;
+  let statAnimated = false;
+
+  const sobreTimeline = gsap.timeline({ paused: true });
+  sobreTimeline
+    .to(labelLine, { scaleX: 1, duration: 0.5, ease: 'power3.out' }, 0)
+    .to(labelText, { opacity: 1, duration: 0.5 }, 0.1)
+    .to(title, { opacity: 1, clipPath: 'inset(0 0 0% 0)', y: 0, duration: 0.7, ease: 'power3.out' }, 0.15)
+    .to(paras, { opacity: 1, y: 0, stagger: 0.1, duration: 0.6 }, 0.4)
+    .to(img, { clipPath: 'inset(0 0% 0% 0)', duration: 0.8, ease: 'power3.inOut' }, 0.3)
+    .to(divider, { scaleX: 1, duration: 0.6, ease: 'power3.inOut' }, 0.7)
+    .to(stats, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 0.85);
+
+  ScrollTrigger.create({
+    trigger: '#sobre',
+    start: 'top 70%',
+    onEnter() {
+      if (!revealed) {
+        revealed = true;
+        sobreTimeline.play();
+        // counter animation nos stats
+        setTimeout(() => {
+          document.querySelectorAll('[data-target]').forEach(el => {
+            const target = parseInt(el.dataset.target);
+            const obj = { val: 0 };
+            gsap.to(obj, {
+              val: target, duration: 1.8, ease: 'elastic.out(1, 0.5)',
+              onUpdate() { el.textContent = Math.ceil(obj.val) + '+'; }
+            });
+          });
+        }, 600);
+      }
+    },
+    onLeaveBack() {
+      if (revealed) {
+        sobreTimeline.reverse(0.3);
+        revealed = false;
+      }
     }
   });
-  sobreEl.addEventListener('mouseleave', () => {
-    document.body.classList.remove('curtain-cursor-active');
-    curtainCursor.style.opacity = '0';
-  });
 
-  // ── Reveal do conteúdo (dispara após cortina abrir) ──
-  let contentRevealed = false;
-
-  function revealContent() {
-    if (contentRevealed) return;
-    contentRevealed = true;
-
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    tl.to('.label-line',    { scaleX: 1, duration: 0.5 }, 0);
-    tl.to('.label-text',    { opacity: 1, duration: 0.5 }, 0.15);
-    tl.to('#sobre-title',   { opacity: 1, y: 0, duration: 0.6 }, 0.25);
-    tl.to('.sobre-para',    { opacity: 1, y: 0, duration: 0.55, stagger: 0.12 }, 0.4);
-    tl.to('.sobre-img',     { clipPath: 'inset(0 0% 0 0%)', duration: 0.8, ease: 'power3.inOut' }, 0.35);
-    tl.to('#sobre-divider', { scaleX: 1, duration: 0.6, ease: 'power3.inOut' }, 0.8);
-    tl.to('.sobre-stats',   { opacity: 1, y: 0, duration: 0.5 }, 0.95);
-
-    tl.call(() => {
-      const hw = document.getElementById('sobre-hw');
-      if (!hw) return;
+  // highlight word
+  const hw = document.getElementById('sobre-hw');
+  if (hw) {
+    setTimeout(() => {
       gsap.to(hw, { color: '#26A5FF', duration: 0.3, yoyo: true, repeat: 1, ease: 'none' });
       setTimeout(() => hw.classList.add('hw-active'), 300);
-    }, [], 0.85);
-
-    tl.call(() => {
-      document.querySelectorAll('[data-target]').forEach(el => {
-        const target = parseInt(el.dataset.target);
-        const obj = { val: 0 };
-        gsap.to(obj, {
-          val: target, duration: 1.8, ease: 'elastic.out(1, 0.5)',
-          onUpdate() { el.textContent = Math.ceil(obj.val) + '+'; }
-        });
-      });
-    }, [], 1.0);
+    }, 1200);
   }
-
-  function hideContent() {
-    if (!contentRevealed) return;   // evita chamar desnecessariamente a cada frame
-    contentRevealed = false;
-    gsap.killTweensOf(['.label-line','.label-text','#sobre-title','.sobre-para','.sobre-img','#sobre-divider','.sobre-stats']);
-    gsap.set('.label-line',    { scaleX: 0 });
-    gsap.set('.label-text',    { opacity: 0 });
-    gsap.set('#sobre-title',   { opacity: 0, y: 18 });
-    gsap.set('.sobre-para',    { opacity: 0, y: 22 });
-    gsap.set('.sobre-img',     { clipPath: 'inset(0 50% 0 50%)' });
-    gsap.set('#sobre-divider', { scaleX: 0 });
-    gsap.set('.sobre-stats',   { opacity: 0, y: 20 });
-    const hw = document.getElementById('sobre-hw');
-    if (hw) { hw.classList.remove('hw-active'); gsap.set(hw, { color: '' }); }
-    document.querySelectorAll('[data-target]').forEach(el => { el.textContent = '0+'; });
-  }
-
-  // Mostra o canvas com frame 0 quando #sobre está próximo do topo,
-  // evitando espaço branco sem sobrepor o hero.
-  ScrollTrigger.create({
-    trigger: '#sobre',
-    start: 'top 25%',   // só aparece quando #sobre já está 25% do topo
-    onEnter() {
-      canvas.style.visibility = 'visible';
-      canvas.style.opacity    = '1';
-      drawFrame(0);
-    },
-    onLeaveBack() {
-      canvas.style.visibility = 'hidden';
-      canvas.style.opacity    = '0';
-    }
-  });
-
-  // ── ScrollTrigger com pin + scrub ──
-  // O pin dura apenas 80vh de scroll extra; ao terminar o conteúdo do
-  // #sobre já está visível e o usuário continua rolando normalmente.
-  ScrollTrigger.create({
-    trigger: '#sobre',
-    start: 'top top',
-    end: '+=220%',        // 220vh de scroll — abertura mais lenta e cinematográfica
-    pin: true,
-    anticipatePin: 1,
-    scrub: 2.5,           // lag suave
-    onLeaveBack() {
-      // Usuário voltou ao topo: reseta tudo
-      canvas.style.visibility = 'visible';
-      canvas.style.opacity    = '1';
-      currentFrame = 0;
-      drawFrame(0);
-      hideContent();
-    },
-    onUpdate(self) {
-      const p = self.progress;
-
-      // Frames: abre ao longo de todo o scroll
-      const frameProgress = Math.min(p / 0.85, 1);
-      currentFrame = frameProgress * (FRAME_COUNT - 1);
-      drawFrame(currentFrame);
-
-      // ── Canvas: visibility + opacity ──
-      if (p <= 0.60) {
-        canvas.style.visibility = 'visible';
-        canvas.style.opacity    = '1';
-      } else if (p <= 0.82) {
-        canvas.style.visibility = 'visible';
-        const t = (p - 0.60) / 0.22;
-        canvas.style.opacity = (1 - t).toFixed(3);
-      } else {
-        canvas.style.opacity    = '0';
-        canvas.style.visibility = 'hidden';
-      }
-
-      // ── Vinheta: cresce até 40%, estável, depois some com canvas ──
-      let vigOpacity = 0;
-      if (p > 0 && p <= 0.40) {
-        vigOpacity = (p / 0.40) * 0.72;
-      } else if (p <= 0.60) {
-        vigOpacity = 0.72;
-      } else if (p <= 0.82) {
-        vigOpacity = 0.72 * (1 - (p - 0.60) / 0.22);
-      }
-      if (vigOpacity > 0) {
-        vignette.style.visibility = 'visible';
-        vignette.style.opacity    = vigOpacity.toFixed(3);
-      } else {
-        vignette.style.opacity    = '0';
-        vignette.style.visibility = 'hidden';
-      }
-
-      // ── Parallax: conteúdo aparece com zoom-out (scale 1.05 → 1) ──
-      if (sobreWrap) {
-        const sc = 1.05 - Math.min(p, 1) * 0.05;
-        gsap.set(sobreWrap, { scale: sc, transformOrigin: '50% 48%' });
-      }
-
-      // ── Cursor: ativo enquanto canvas estiver visível ──
-      curtainPhaseActive = (p > 0 && p < 0.85);
-      if (!curtainPhaseActive) {
-        document.body.classList.remove('curtain-cursor-active');
-        curtainCursor.style.opacity = '0';
-      }
-
-      // ── Reveal / hide do conteúdo ──
-      if (p >= 0.58) {
-        revealContent();
-      } else {
-        hideContent();
-      }
-    }
-  });
-
 })();
 
 // ══════════════════════════════════
