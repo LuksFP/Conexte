@@ -1,0 +1,10 @@
+# frames grandes (regenerar localmente)
+frames/
+
+# arquivos do sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# node (se usar futuramente)
+node_modules/
