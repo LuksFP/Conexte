@@ -339,22 +339,6 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 })();
 
 // ══════════════════════════════════
-// BRANDS — "puxar a cortina": some ao aproximar do #sobre
-// ══════════════════════════════════
-gsap.to('.brands-strip', {
-  opacity: 0,
-  scale: 0.96,
-  y: -24,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#sobre',
-    start: 'top 90%',
-    end: 'top top',
-    scrub: true,
-  }
-});
-
-// ══════════════════════════════════
 // ÁREAS — fade slide da seção + cards
 // ══════════════════════════════════
 gsap.timeline({
