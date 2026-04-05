@@ -6,13 +6,14 @@
   --green:#C8D400;
   --blue:#26A5FF;
   --white:#FFFFFF;
-  --off:#F4F6FA;
+  --off:#EDF3FB;
   --light-gray:#EAECF0;
   --text:#1A1A2E;
   --text-muted:#5A6278;
   --border:#E2E6EF;
   --serif:'Syne',sans-serif;
   --body:'Inter',system-ui,sans-serif;
+  --bg-light: linear-gradient(160deg, #EBF3FB 0%, #F5F9FF 45%, #EAF2FB 100%);
 }
 html{scroll-behavior:smooth;overflow-x:hidden}
 body{background:var(--white);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden}
@@ -278,7 +279,7 @@ nav.scrolled .hamburger span{background:var(--text)}
 
 /* ── SECTIONS ── */
 section{position:relative;z-index:1}
-.section-white{background:var(--white)}
+.section-white{background:var(--bg-light)}
 
 /* símbolo watermark no sobre */
 #sobre-symbol{
@@ -347,7 +348,7 @@ section{position:relative;z-index:1}
   background:var(--border);border-radius:8px;overflow:hidden;
 }
 .stat-box{
-  background:var(--white);padding:24px 20px;
+  background:var(--bg-light);padding:24px 20px;
 }
 .stat-num{
   font-family:var(--serif);font-size:40px;font-weight:800;
@@ -580,7 +581,7 @@ body.curtain-cursor-active #sobre{cursor:none}
 
 /* ── CONTATO ── */
 #contato{
-  background:var(--off);
+  background:var(--bg-light);
 }
 #contato .section-h2{color:var(--navy)}
 #contato .label-tag{color:var(--navy);border-color:rgba(0,8,90,0.18);background:rgba(0,8,90,0.06)}
