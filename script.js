@@ -82,19 +82,28 @@ window.addEventListener('load', () => {
 // SCROLL REVEALS (outras seções)
 // ══════════════════════════════════
 document.querySelectorAll('.reveal').forEach(el => {
-  gsap.to(el, { opacity:1, y:0, duration:0.75, ease:'power3.out',
-    scrollTrigger:{ trigger:el, start:'top 88%', toggleActions:'play none none reverse' }
-  });
+  gsap.fromTo(el,
+    { opacity: 0, y: 32 },
+    { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' }
+    }
+  );
 });
 document.querySelectorAll('.reveal-left').forEach(el => {
-  gsap.to(el, { opacity:1, x:0, duration:0.8, ease:'power3.out',
-    scrollTrigger:{ trigger:el, start:'top 85%', toggleActions:'play none none reverse' }
-  });
+  gsap.fromTo(el,
+    { opacity: 0, x: -36 },
+    { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' }
+    }
+  );
 });
 document.querySelectorAll('.reveal-right').forEach(el => {
-  gsap.to(el, { opacity:1, x:0, duration:0.8, ease:'power3.out',
-    scrollTrigger:{ trigger:el, start:'top 85%', toggleActions:'play none none reverse' }
-  });
+  gsap.fromTo(el,
+    { opacity: 0, x: 36 },
+    { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' }
+    }
+  );
 });
 
 // ══════════════════════════════════════════════════
@@ -228,10 +237,10 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   ScrollTrigger.create({
     trigger: '#sobre',
     start: 'top top',
-    end: '+=80%',         // 80vh de scroll para abrir a cortina
+    end: '+=120%',        // 120vh de scroll — mais espaço = movimento mais suave
     pin: true,
     anticipatePin: 1,
-    scrub: 0.8,           // lag suave
+    scrub: 2,             // lag de 2s — animação mais fluida e menos mecânica
     onLeaveBack() {
       canvas.style.visibility = 'visible';
       canvas.style.opacity    = '1';
@@ -269,61 +278,36 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 // ══════════════════════════════════
 // ÁREAS — fade slide da seção + cards
 // ══════════════════════════════════
-const areasTL = gsap.timeline({ paused: true })
-  .fromTo('#areas',
-    { opacity: 0, y: 64 },
-    { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' }
-  )
-  .fromTo('#areas .label-tag',
-    { opacity: 0, y: 24 },
-    { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
-    '-=0.5'
-  )
-  .fromTo('#areas .section-h2',
-    { opacity: 0, y: 24 },
-    { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
-    '-=0.4'
-  )
-  .fromTo('.area-card',
-    { opacity: 0, y: 32 },
-    { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: { amount: 0.45 } },
-    '-=0.25'
-  )
-  .fromTo('#areas .cta-center',
-    { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-    '-=0.2'
-  );
-
-ScrollTrigger.create({
-  trigger: '#areas',
-  start: 'top 80%',
-  invalidateOnRefresh: true,
-  onEnter:     () => areasTL.play(),
-  onLeaveBack: () => areasTL.reverse(),
-});
+// ══════════════════════════════════
+// ÁREAS — fade slide da seção + cards
+// ══════════════════════════════════
+gsap.timeline({
+  scrollTrigger: {
+    trigger: '#areas',
+    start: 'top 80%',
+    toggleActions: 'play none none reverse',
+    invalidateOnRefresh: true,
+  }
+})
+  .fromTo('#areas',           { opacity: 0, y: 64 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' })
+  .fromTo('#areas .label-tag',{ opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.5')
+  .fromTo('#areas .section-h2',{ opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
+  .fromTo('.area-card',       { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.6,  ease: 'power3.out', stagger: { amount: 0.45 } }, '-=0.25')
+  .fromTo('#areas .cta-center',{ opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.2');
 
 // ══════════════════════════════════
 // CONTATO: fade-slide ao entrar
 // ══════════════════════════════════
-const contatoTL = gsap.timeline({ paused: true })
-  .fromTo('#contato .contato-info',
-    { opacity: 0, y: 40 },
-    { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }
-  )
-  .fromTo('#contato .contato-form-box',
-    { opacity: 0, y: 40 },
-    { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
-    '-=0.55'
-  );
-
-ScrollTrigger.create({
-  trigger: '#contato',
-  start: 'top 75%',
-  invalidateOnRefresh: true,
-  onEnter:     () => contatoTL.play(),
-  onLeaveBack: () => contatoTL.reverse(),
-});
+gsap.timeline({
+  scrollTrigger: {
+    trigger: '#contato',
+    start: 'top 75%',
+    toggleActions: 'play none none reverse',
+    invalidateOnRefresh: true,
+  }
+})
+  .fromTo('#contato .contato-info',    { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+  .fromTo('#contato .contato-form-box',{ opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.55');
 
 // ══════════════════════════════════
 // NAV: transparente sobre hero, sólida no resto
