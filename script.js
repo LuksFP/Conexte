@@ -264,10 +264,10 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   ScrollTrigger.create({
     trigger: '#sobre',
     start: 'top top',
-    end: '+=120%',        // 120vh de scroll — mais espaço = movimento mais suave
+    end: '+=220%',        // 220vh de scroll — abertura mais lenta e cinematográfica
     pin: true,
     anticipatePin: 1,
-    scrub: 2,             // lag de 2s — animação mais fluida e menos mecânica
+    scrub: 2.5,           // lag suave
     onLeaveBack() {
       // Usuário voltou ao topo: reseta tudo
       canvas.style.visibility = 'visible';
