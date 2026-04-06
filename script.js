@@ -151,8 +151,10 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 // CORTINA + SOBRE — scrub por scroll + pin
 // ══════════════════════════════════════════════════
 (function () {
-  const sobreEl = document.getElementById('sobre');
-  if (!sobreEl) return;
+  const FRAME_COUNT = 91;
+  const canvas = document.getElementById('curtain-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
 
   let DPR = window.devicePixelRatio || 1;
   let currentFrame = 0;
@@ -169,19 +171,20 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     drawFrame(currentFrame);
   }
 
-  // paras
-  const paras = sobreEl.querySelectorAll('.sobre-para');
-  paras.forEach(p => gsap.set(p, { opacity: 0, y: 24 }));
+  const imgs = [];
+  for (let i = 0; i < FRAME_COUNT; i++) {
+    const img = new Image();
+    img.src = `curtain/ezgif-frame-${String(i + 1).padStart(3, '0')}.jpg`;
+    imgs.push(img);
+  }
 
   function drawFrame(rawIdx) {
     const idx = Math.min(Math.max(Math.round(rawIdx), 0), FRAME_COUNT - 1);
     let img = imgs[idx];
     if (!img || !img.complete) {
-      // tenta frame anterior carregado
       for (let j = idx - 1; j >= 0; j--) {
         if (imgs[j] && imgs[j].complete) { img = imgs[j]; break; }
       }
-      // tenta próximo frame carregado
       if (!img || !img.complete) {
         for (let j = idx + 1; j < FRAME_COUNT; j++) {
           if (imgs[j] && imgs[j].complete) { img = imgs[j]; break; }
@@ -309,14 +312,6 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     }
   });
 
-  // highlight word
-  const hw = document.getElementById('sobre-hw');
-  if (hw) {
-    setTimeout(() => {
-      gsap.to(hw, { color: '#26A5FF', duration: 0.3, yoyo: true, repeat: 1, ease: 'none' });
-      setTimeout(() => hw.classList.add('hw-active'), 300);
-    }, 1200);
-  }
 })();
 
 // ══════════════════════════════════

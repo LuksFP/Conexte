@@ -142,9 +142,6 @@ nav.scrolled .hamburger span{background:var(--text)}
   overflow:hidden;
   background:var(--navy);
   z-index:1;
-  /* corte diagonal na base: transição suave para o sobre */
-  clip-path:polygon(0 0,100% 0,100% 92%,0 100%);
-  margin-bottom:-60px;
 }
 
 
