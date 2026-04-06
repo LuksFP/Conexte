@@ -155,6 +155,53 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 });
 
 // ══════════════════════════════════
+// AREAS — card spotlight interaction
+// ══════════════════════════════════
+(function () {
+  const grid = document.querySelector('.areas-grid');
+  if (!grid) return;
+
+  const cards = Array.from(grid.querySelectorAll('.area-card'));
+  const hoverCapable = window.matchMedia('(hover:hover) and (pointer:fine)');
+
+  function setActive(card) {
+    cards.forEach((item) => item.classList.toggle('is-active', item === card));
+    grid.classList.add('has-active-card');
+  }
+
+  function clearActive() {
+    cards.forEach((item) => item.classList.remove('is-active'));
+    grid.classList.remove('has-active-card');
+  }
+
+  cards.forEach((card) => {
+    const title = card.querySelector('.area-title');
+    if (title) card.setAttribute('aria-label', title.textContent.trim());
+    card.tabIndex = 0;
+
+    card.addEventListener('pointerenter', () => {
+      if (hoverCapable.matches) setActive(card);
+    });
+    card.addEventListener('pointerleave', () => {
+      if (hoverCapable.matches && !grid.contains(document.activeElement)) clearActive();
+    });
+    card.addEventListener('focusin', () => setActive(card));
+    card.addEventListener('focusout', (event) => {
+      if (!grid.contains(event.relatedTarget)) clearActive();
+    });
+    card.addEventListener('click', () => {
+      setActive(card);
+    });
+  });
+
+  grid.addEventListener('mouseleave', () => {
+    if (hoverCapable.matches && !grid.contains(document.activeElement)) clearActive();
+  });
+
+  window.addEventListener('blur', clearActive);
+})();
+
+// ══════════════════════════════════
 // SOBRE — staggered reveal (estilo Framer Motion)
 // ══════════════════════════════════
 (function () {
@@ -366,12 +413,25 @@ gsap.timeline({
   const ctx = canvas.getContext('2d');
   let DPR = 1;
   let currentFrame = 0;
+  const FRAME_DIRS = ['rede', 'frames'];
+  let frameDir = FRAME_DIRS[0];
+
+  function frameSrc(dir, i) {
+    return `${dir}/ezgif-frame-${String(i).padStart(3, '0')}.jpg`;
+  }
 
   // pré-carrega todos os frames
   const imgs = [];
   for (let i = 1; i <= TOTAL; i++) {
     const img = new Image();
-    img.src = `rede/ezgif-frame-${String(i).padStart(3, '0')}.jpg`;
+    img.onerror = () => {
+      const fallback = FRAME_DIRS.find(dir => dir !== frameDir);
+      if (!fallback) return;
+      frameDir = fallback;
+      img.onerror = null;
+      img.src = frameSrc(fallback, i);
+    };
+    img.src = frameSrc(frameDir, i);
     imgs.push(img);
   }
 
@@ -418,28 +478,14 @@ gsap.timeline({
   else { imgs[0].addEventListener('load', init); }
   window.addEventListener('resize', () => { fitCanvas(); drawFrame(currentFrame); });
 
-  // Hack badge aparece com o reveal do sobre
-  const hack = document.querySelector('.hack-badge');
-
-  ScrollTrigger.create({
-    trigger: '#sobre',
-    start: 'top 60%',
-    onEnter() {
-      if (hack) gsap.to(hack, { opacity: 1, duration: 0.7, ease: 'power2.out', delay: 0.4 });
-    },
-    onLeaveBack() {
-      if (hack) gsap.set(hack, { opacity: 0 });
-    }
-  });
-
   // Scrub: cabo anima conforme rola pelo #sobre
   ScrollTrigger.create({
     trigger: '#sobre',
     start: 'top 50%',
     end:   'bottom top',
-    scrub: 1.5,
+    scrub: 0.35,
     onUpdate(self) {
-      currentFrame = Math.round(self.progress * (TOTAL - 1));
+      currentFrame = Math.round(Math.min(self.progress * 1.12, 1) * (TOTAL - 1));
       drawFrame(currentFrame);
     }
   });
