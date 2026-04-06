@@ -182,7 +182,17 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     card.addEventListener('pointerenter', () => {
       if (hoverCapable.matches) setActive(card);
     });
+    card.addEventListener('pointermove', (event) => {
+      if (!hoverCapable.matches) return;
+      const rect = card.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 100;
+      const y = ((event.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--spot-x', `${Math.max(0, Math.min(100, x)).toFixed(2)}%`);
+      card.style.setProperty('--spot-y', `${Math.max(0, Math.min(100, y)).toFixed(2)}%`);
+    });
     card.addEventListener('pointerleave', () => {
+      card.style.removeProperty('--spot-x');
+      card.style.removeProperty('--spot-y');
       if (hoverCapable.matches && !grid.contains(document.activeElement)) clearActive();
     });
     card.addEventListener('focusin', () => setActive(card));
