@@ -169,10 +169,10 @@ nav.scrolled .hamburger span{background:var(--text)}
 #hero-left{
   position:absolute;
   top:0;left:0;bottom:0;
-  width:58%;
+  width:65%;
   z-index:2;
   display:flex;align-items:center;
-  padding:72px 4vw 0 5vw;
+  padding:90px 4vw 60px 5vw;
 }
 
 /* text content */
@@ -192,13 +192,13 @@ nav.scrolled .hamburger span{background:var(--text)}
 
 .hero-title{
   font-family:var(--serif);
-  font-size:clamp(24px,3.4vw,54px);
-  font-weight:800;line-height:1.1;
+  font-size:clamp(22px,2.8vw,46px);
+  font-weight:800;line-height:1.12;
   letter-spacing:-0.02em;
   color:var(--white);
   margin-bottom:1rem;
 }
-.char{display:inline-block;opacity:0;transform:translateY(50px) rotate(4deg);will-change:transform,opacity}
+.char{display:inline-block;opacity:0;will-change:transform,opacity}
 .word{display:inline-block;overflow:visible;white-space:nowrap;margin-right:0.22em}
 .word:last-child{margin-right:0}
 .gap{display:none}
@@ -723,7 +723,7 @@ footer{
   .form-row{grid-template-columns:1fr}
   .footer-bottom{flex-direction:column;gap:14px;text-align:center}
   /* Hero mobile: text ocupa mais largura */
-  #hero-left{width:88%;padding:0 6vw 0 6vw}
+  #hero-left{width:92%;padding:80px 6vw 40px 6vw}
 }
 @media(max-width:560px){
   .areas-grid{grid-template-columns:1fr;gap:12px}

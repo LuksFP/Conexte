@@ -59,23 +59,73 @@ function splitChars(el) {
   });
 }
 
+// ══════════════════════════════════
+// EFEITO MATRIX — scramble sem layout shift
+// ══════════════════════════════════
+const MATRIX_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&?!<>';
+
+function scrambleChar(el, duration = 0.48, glowColor = 'rgba(38,165,255,0.95)') {
+  if (el._scrambling) return;
+  el._scrambling = true;
+  const original = el.textContent;
+  const w = el.getBoundingClientRect().width;
+  el.style.display   = 'inline-block';
+  el.style.minWidth  = w + 'px';
+  el.style.textAlign = 'center';
+  const ticks = Math.round(duration * 20);
+  let tick = 0;
+  const iv = setInterval(() => {
+    if (tick >= ticks) {
+      clearInterval(iv);
+      el.textContent    = original;
+      el.style.minWidth = '';
+      el._scrambling    = false;
+      gsap.fromTo(el,
+        { textShadow: `0 0 14px ${glowColor}, 0 0 3px #fff` },
+        { textShadow: '0 0 0px transparent', duration: 0.4, ease: 'power2.out' }
+      );
+      return;
+    }
+    el.textContent = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
+    tick++;
+  }, (duration * 1000) / ticks);
+}
+
+function matrixReveal(charEls, stagger = 0.038) {
+  charEls.forEach((el, i) => {
+    gsap.set(el, { opacity: 1 });
+    setTimeout(() => scrambleChar(el), i * stagger * 1000);
+  });
+}
+
+function bindCharHover() {
+  document.querySelectorAll('.hero-title .char').forEach(el => {
+    el.addEventListener('mouseenter', () => scrambleChar(el, 0.3));
+  });
+}
+
 window.addEventListener('load', () => {
   splitChars(document.getElementById('heroTitle'));
 
   gsap.to('#navbar', { y: 0, duration: 0.8, ease: 'power2.out', delay: 0.1 });
 
-  // Vídeo: zoom-out + fade-in na entrada
   gsap.fromTo('#hero-video',
     { scale: 1.08, opacity: 0 },
     { scale: 1,    opacity: 1, duration: 1.8, ease: 'power3.out', delay: 0 }
   );
 
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.25 });
-  tl.to('#eyebrow',            { opacity: 1, duration: 0.7 }, 0);
-  tl.to('.hero-title .char',   { opacity: 1, y: 0, rotate: 0, duration: 0.6, stagger: { each: 0.022, from: 'start' }, ease: 'back.out(1.5)' }, 0.2);
-  tl.to('#heroSub',            { opacity: 1, y: 0, duration: 0.6 }, 0.85);
-  tl.to('#heroActions',        { opacity: 1, y: 0, duration: 0.6 }, 1.05);
-  tl.to('#scroll-hint',        { opacity: 1, duration: 0.6 }, 1.4);
+  tl.to('#eyebrow',     { opacity: 1, duration: 0.7 }, 0);
+  tl.to('#heroSub',     { opacity: 1, y: 0, duration: 0.6 }, 1.1);
+  tl.to('#heroActions', { opacity: 1, y: 0, duration: 0.6 }, 1.3);
+  tl.to('#scroll-hint', { opacity: 1, duration: 0.6 }, 1.7);
+
+  // Efeito Matrix em todas as letras do título
+  setTimeout(() => {
+    const chars = Array.from(document.querySelectorAll('.hero-title .char'));
+    matrixReveal(chars);
+    bindCharHover();
+  }, 350);
 });
 
 // ══════════════════════════════════
