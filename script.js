@@ -92,12 +92,14 @@ function matrixReveal(charEls, { stagger = 0.032, duration = 0.5, glowColor } = 
   });
 }
 
-// Hover em qualquer .char da página (exceto enquanto anima)
-document.addEventListener('mouseover', e => {
-  const el = e.target.closest('.char');
-  if (!el) return;
-  scrambleChar(el, 0.35, 'rgba(38,165,255,0.8)');
-});
+// Hover em .char — aplica após o DOM estar pronto
+function bindCharHover() {
+  document.querySelectorAll('.char').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      scrambleChar(el, 0.32, 'rgba(38,165,255,0.8)');
+    });
+  });
+}
 
 window.addEventListener('load', () => {
   splitChars(document.getElementById('heroTitle'));
@@ -118,7 +120,8 @@ window.addEventListener('load', () => {
   // Efeito Matrix nas letras do título (começa a 0.35s)
   setTimeout(() => {
     const chars = Array.from(document.querySelectorAll('.hero-title .char'));
-    matrixReveal(chars, 0);
+    matrixReveal(chars);
+    bindCharHover(); // ativa hover após split
   }, 350);
 });
 

@@ -364,18 +364,21 @@ section{position:relative;z-index:1}
   position:relative;
   overflow:hidden;
   min-height:100vh;
-  margin-top:-180px;
-  padding-top:180px;
-  z-index:2;
-  background:linear-gradient(
-    180deg,
-    #00085A              0%,
-    rgba(0,8,90,0.72)    8%,
-    rgba(10,20,80,0.30)  18%,
-    #EBF3FB              32%,
-    #F5F9FF              60%,
-    #EAF2FB              100%
-  );
+  background:linear-gradient(180deg,#EBF3FB 0%,#F5F9FF 50%,#EAF2FB 100%);
+}
+
+/* Wave divider hero→sobre */
+.wave-divider{
+  position:absolute;
+  top:-2px;left:0;right:0;
+  line-height:0;
+  z-index:3;
+  pointer-events:none;
+}
+.wave-divider svg{
+  display:block;
+  width:100%;
+  height:80px;
 }
 /* cortina removida */
 .sobre-stats{
