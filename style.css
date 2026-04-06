@@ -144,20 +144,20 @@ nav.scrolled .hamburger span{background:var(--text)}
   z-index:1;
 }
 
-/* gradiente de fusão hero → sobre: funde o navy com o azul-gelo */
-#hero::after{
-  content:'';
+/* gradiente de fusão hero → sobre: aparece só ao rolar */
+#hero-fade{
   position:absolute;
   bottom:0;left:0;right:0;
-  height:35%;
+  height:42%;
   z-index:4;
   pointer-events:none;
+  opacity:0;
   background:linear-gradient(
     to bottom,
-    transparent        0%,
-    rgba(235,243,251,0.18) 40%,
-    rgba(235,243,251,0.72) 72%,
-    #EBF3FB            100%
+    transparent            0%,
+    rgba(235,243,251,0.30) 45%,
+    rgba(235,243,251,0.85) 75%,
+    #EBF3FB                100%
   );
 }
 

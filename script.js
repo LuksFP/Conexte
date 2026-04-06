@@ -299,6 +299,18 @@ gsap.timeline({
   }, [], 2.65);
 })();
 
+// gradiente hero→sobre: aparece só ao rolar para baixo
+gsap.to('#hero-fade', {
+  opacity: 1,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#hero',
+    start: 'center top',
+    end: 'bottom top',
+    scrub: true,
+  }
+});
+
 // parallax símbolo hero
 gsap.to('#hero-symbol', {
   yPercent: 60,
