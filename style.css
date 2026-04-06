@@ -470,8 +470,8 @@ section{position:relative;z-index:1}
     border-color .28s ease,
     box-shadow .32s cubic-bezier(.2,.85,.2,1),
     background .32s ease;
-  opacity:0;
-  transform:translateY(28px);
+  opacity:1;
+  transform:none;
   box-shadow:
     0 16px 40px rgba(0, 8, 90, 0.22),
     0 1px 0 rgba(255,255,255,0.04) inset;
