@@ -152,17 +152,18 @@ nav.scrolled .hamburger span{background:var(--text)}
   object-fit:cover;
   z-index:0;
   filter:contrast(1.08) saturate(1.12);
+  opacity:1;
 }
 
-/* overlay gradiente: navy no texto, transparente na direita */
+/* overlay gradiente: semi-navy no texto, transparente na direita */
 #hero-overlay{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(
     100deg,
-    rgba(0,8,90,1)    0%,
-    rgba(0,8,90,0.96) 26%,
-    rgba(0,8,90,0.55) 50%,
-    rgba(0,8,90,0.08) 72%,
+    rgba(0,8,90,0.82) 0%,
+    rgba(0,8,90,0.75) 22%,
+    rgba(0,8,90,0.42) 46%,
+    rgba(0,8,90,0.06) 68%,
     transparent       100%
   );
 }
@@ -379,64 +380,53 @@ section{position:relative;z-index:1}
   pointer-events:none;
 }
 
-/* ── Cabo de rede 3D na transição diagonal ── */
-#network-cable{
+/* ── CABLE CANVAS — 200 frames, scrub por scroll ── */
+#cable-canvas{
   position:absolute;
-  top:0;left:0;right:0;
-  height:120px;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  pointer-events:none;
+  /* some na esquerda (texto), visível na direita (rack) */
+  -webkit-mask-image:linear-gradient(to right,
+    transparent 0%,
+    rgba(0,0,0,0.05) 16%,
+    rgba(0,0,0,0.5) 36%,
+    black 54%,
+    black 100%);
+  mask-image:linear-gradient(to right,
+    transparent 0%,
+    rgba(0,0,0,0.05) 16%,
+    rgba(0,0,0,0.5) 36%,
+    black 54%,
+    black 100%);
+}
+
+/* ── HACK BADGE — estático, lado direito ── */
+.hack-badge{
+  position:absolute;
+  right:6.5%;
+  top:38%;
   z-index:4;
   pointer-events:none;
-  overflow:hidden;
+  transform:rotate(2.5deg);
+  opacity:0;
+  will-change:transform,opacity;
+  filter:drop-shadow(2px 3px 0 rgba(0,8,90,0.15));
 }
-.cable-tube{
-  position:absolute;
-  /* centra verticalmente na diagonal: metade da altura */
-  top:50px;
-  left:-60%;
-  width:220%;
-  height:14px;
-  /* ângulo da diagonal ~-4.8deg */
-  transform:rotate(-4.8deg);
-  transform-origin:center center;
-  border-radius:7px;
-  /* gradiente radial simula cilindro 3D */
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,0.55) 0%,
-      rgba(255,255,255,0.15) 18%,
-      #26A5FF 30%,
-      #0057B8 58%,
-      #003d80 80%,
-      rgba(0,0,0,0.3) 100%
-    );
-  box-shadow:
-    0 4px 14px rgba(0,0,0,0.55),
-    0 1px 3px rgba(0,0,0,0.4),
-    inset 0 2px 3px rgba(255,255,255,0.25);
-  will-change:transform;
+.hack-badge svg{
+  width:clamp(110px,12vw,180px);
+  height:auto;
+  display:block;
 }
-/* conector RJ45 na ponta esquerda do cabo */
-.cable-connector{
-  position:absolute;
-  top:44px;
-  left:-60%;
-  width:32px;
-  height:22px;
-  transform:rotate(-4.8deg);
-  transform-origin:center center;
-  border-radius:4px 3px 3px 4px;
-  background:linear-gradient(180deg,#e0e8f0 0%,#b0bcc8 45%,#8090a0 100%);
-  box-shadow:0 3px 10px rgba(0,0,0,0.55);
-  will-change:transform;
-  /* clip de travamento do conector */
-  &::after{
-    content:'';
-    position:absolute;
-    bottom:2px;left:6px;right:6px;
-    height:5px;
-    background:rgba(0,0,0,0.2);
-    border-radius:2px;
+
+@media(max-width:768px){
+  .hack-badge{ right:4%; top:auto; bottom:7%; transform:rotate(1.5deg); }
+  .hack-badge svg{ width:100px; }
+  #cable-canvas{
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.4) 45%,black 70%);
+    mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.4) 45%,black 70%);
   }
 }
 

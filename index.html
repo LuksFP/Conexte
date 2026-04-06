@@ -68,7 +68,7 @@
 
   <!-- vídeo de fundo -->
   <video id="hero-video" autoplay muted playsinline loop>
-    <source src="hero.mp4" type="video/mp4">
+    <source src="robo.mp4" type="video/mp4">
   </video>
 
   <!-- overlay gradiente -->
@@ -118,10 +118,23 @@
 
 <!-- ═══ SOBRE ═══ -->
 <section id="sobre" class="section-white">
-  <!-- cabo de rede deslizando na transição diagonal -->
-  <div id="network-cable" aria-hidden="true">
-    <div class="cable-connector"></div>
-    <div class="cable-tube"></div>
+  <!-- cabo de rede: canvas com 200 frames controlado por scroll -->
+  <canvas id="cable-canvas" aria-hidden="true"></canvas>
+
+  <!-- HACK badge — estático, aparece com o reveal do sobre -->
+  <div class="hack-badge" aria-hidden="true">
+    <svg viewBox="0 0 172 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 9 C52 5 118 7 158 10 C162 10 163 14 163 18 C164 46 162 68 160 82 C158 86 154 88 150 88 C112 90 52 90 18 87 C12 86 10 82 10 76 C8 50 9 26 14 9 Z" stroke="#00085A" stroke-width="3.2" fill="rgba(235,243,251,0.85)" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M22 16 C56 13 116 14 150 17 C153 40 152 62 150 78 C116 80 56 81 22 79 C20 60 20 36 22 16 Z" stroke="#00085A" stroke-width="0.8" fill="none" opacity="0.3" stroke-linecap="round"/>
+      <!-- H -->
+      <path d="M32 30 L32 66 M32 48 L58 48 M58 30 L58 66" stroke="#00085A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- A -->
+      <path d="M68 66 L80 30 L92 66 M72 54 L88 54" stroke="#00085A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- C -->
+      <path d="M138 36 C130 28 110 28 104 48 C98 68 110 74 122 70" stroke="#00085A" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <!-- K -->
+      <path d="M144 30 L144 66 M144 48 L162 30 M144 48 L162 66" stroke="#00085A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
   </div>
   <svg id="sobre-symbol" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <!-- hexágono externo -->

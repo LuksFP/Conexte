@@ -115,8 +115,8 @@ window.addEventListener('load', () => {
   gsap.to('#navbar', { y: 0, duration: 0.8, ease: 'power2.out', delay: 0.1 });
 
   gsap.fromTo('#hero-video',
-    { scale: 1.08, opacity: 0 },
-    { scale: 1,    opacity: 1, duration: 1.8, ease: 'power3.out', delay: 0 }
+    { scale: 1.08 },
+    { scale: 1, duration: 1.8, ease: 'power3.out', delay: 0 }
   );
 
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.25 });
@@ -356,25 +356,91 @@ gsap.timeline({
   }, [], 2.65);
 })();
 
-// ── Cabo de rede desliza na transição diagonal ──
-(function() {
-  const tube = document.querySelector('.cable-tube');
-  const conn = document.querySelector('.cable-connector');
-  if (!tube) return;
+// ══════════════════════════════════════════════════
+// CABO DE REDE — canvas com 200 frames, scrub GSAP
+// ══════════════════════════════════════════════════
+(function () {
+  const TOTAL = 200;
+  const canvas = document.getElementById('cable-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let DPR = 1;
+  let currentFrame = 0;
 
-  // estado inicial: fora da tela à esquerda
-  gsap.set([tube, conn], { x: '-100vw' });
+  // pré-carrega todos os frames
+  const imgs = [];
+  for (let i = 1; i <= TOTAL; i++) {
+    const img = new Image();
+    img.src = `rede/ezgif-frame-${String(i).padStart(3, '0')}.jpg`;
+    imgs.push(img);
+  }
+
+  function fitCanvas() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const section = document.getElementById('sobre');
+    const w = section.offsetWidth;
+    const h = section.offsetHeight;
+    canvas.width  = w * DPR;
+    canvas.height = h * DPR;
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+  }
+
+  function drawFrame(rawIdx) {
+    const idx = Math.min(Math.max(Math.round(rawIdx), 0), TOTAL - 1);
+    let img = imgs[idx];
+    if (!img || !img.complete) {
+      for (let j = idx - 1; j >= 0; j--) {
+        if (imgs[j] && imgs[j].complete) { img = imgs[j]; break; }
+      }
+    }
+    if (!img || !img.complete) return;
+    const cw = canvas.width / DPR;
+    const ch = canvas.height / DPR;
+    const iw = img.naturalWidth;
+    const ih = img.naturalHeight;
+    // cover ancorado à direita — rack sempre visível no lado direito
+    const scale = Math.max(cw / iw, ch / ih);
+    const sw = iw * scale, sh = ih * scale;
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(img, cw - sw, (ch - sh) / 2, sw, sh);
+  }
+
+  function init() {
+    fitCanvas();
+    drawFrame(0);
+  }
+
+  if (imgs[0].complete) { init(); }
+  else { imgs[0].addEventListener('load', init); }
+  window.addEventListener('resize', () => { fitCanvas(); drawFrame(currentFrame); });
+
+  // Hack badge aparece com o reveal do sobre
+  const hack = document.querySelector('.hack-badge');
 
   ScrollTrigger.create({
     trigger: '#sobre',
-    start: 'top 88%',
+    start: 'top 60%',
     onEnter() {
-      // cabo entra da esquerda e sai pela direita
-      gsap.to(conn, { x: '160vw', duration: 1.6, ease: 'power2.in', delay: 0 });
-      gsap.to(tube, { x: '130vw', duration: 1.9, ease: 'power2.inOut', delay: 0.08 });
+      if (hack) gsap.to(hack, { opacity: 1, duration: 0.7, ease: 'power2.out', delay: 0.4 });
     },
     onLeaveBack() {
-      gsap.set([tube, conn], { x: '-100vw' });
+      if (hack) gsap.set(hack, { opacity: 0 });
+    }
+  });
+
+  // Scrub: cabo anima conforme rola pelo #sobre
+  ScrollTrigger.create({
+    trigger: '#sobre',
+    start: 'top 50%',
+    end:   'bottom top',
+    scrub: 1.5,
+    onUpdate(self) {
+      currentFrame = Math.round(self.progress * (TOTAL - 1));
+      drawFrame(currentFrame);
     }
   });
 })();
