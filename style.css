@@ -359,6 +359,18 @@ section{position:relative;z-index:1}
   position:relative;
   overflow:hidden;
   min-height:100vh;
+  background:linear-gradient(180deg,#EBF3FB 0%,#F5F9FF 50%,#EAF2FB 100%);
+}
+/* triângulo diagonal navy que "nasce" do hero sem clipar o conteúdo */
+#sobre::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:120px;
+  background:var(--navy);
+  clip-path:polygon(0 0,100% 0,100% 0,0 100%);
+  z-index:0;
+  pointer-events:none;
 }
 #curtain-canvas{
   position:fixed;
