@@ -286,21 +286,67 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 })();
 
 // ══════════════════════════════════
-// ÁREAS — fade slide da seção + cards
+// ÁREAS — cards nascem no centro e se espalham para o grid
 // ══════════════════════════════════
-gsap.timeline({
-  scrollTrigger: {
-    trigger: '#areas',
-    start: 'top 80%',
-    toggleActions: 'play none none reverse',
-    invalidateOnRefresh: true,
-  }
-})
-  .fromTo('#areas',           { opacity: 0, y: 64 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' })
-  .fromTo('#areas .label-tag',{ opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.5')
-  .fromTo('#areas .section-h2',{ opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
-  .fromTo('.area-card',       { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.6,  ease: 'power3.out', stagger: { amount: 0.45 } }, '-=0.25')
-  .fromTo('#areas .cta-center',{ opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.2');
+const areasGrid = document.querySelector('.areas-grid');
+const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
+const stackOffsets = [
+  { x: -26, y: -14, r: -6, z: 16 },
+  { x: -14, y: -8, r: -4, z: 15 },
+  { x: -4, y: -2, r: -2, z: 14 },
+  { x: 6, y: 2, r: 2, z: 13 },
+  { x: 16, y: 8, r: 4, z: 12 },
+  { x: 28, y: 14, r: 6, z: 11 },
+];
+
+if (areasGrid && areaCardsForIntro.length) {
+  gsap.timeline({
+    scrollTrigger: {
+      trigger: '#areas',
+      start: 'top 82%',
+      toggleActions: 'play none none reverse',
+      invalidateOnRefresh: true,
+    }
+  })
+    .fromTo('#areas',            { opacity: 0, y: 64 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' })
+    .fromTo('#areas .label-tag', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.5')
+    .fromTo('#areas .section-h2',{ opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
+    .from(areaCardsForIntro, {
+      opacity: 0,
+      scale: 0.9,
+      filter: 'blur(4px)',
+      transformOrigin: '50% 50%',
+      zIndex(i) {
+        return stackOffsets[i % stackOffsets.length].z;
+      },
+      x(i, el) {
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const viewportCenterX = window.innerWidth / 2;
+        return (viewportCenterX - centerX) + stackOffsets[i % stackOffsets.length].x;
+      },
+      y(i, el) {
+        const rect = el.getBoundingClientRect();
+        const centerY = rect.top + rect.height / 2;
+        const viewportCenterY = window.innerHeight / 2;
+        return (viewportCenterY - centerY) + stackOffsets[i % stackOffsets.length].y;
+      },
+      rotation(i) {
+        return stackOffsets[i % stackOffsets.length].r;
+      },
+      duration: 1.05,
+      ease: 'power2.out',
+      stagger: { each: 0.06, from: 'center' }
+    }, '-=0.24')
+    .to(areaCardsForIntro, {
+      rotation: 0,
+      filter: 'blur(0px)',
+      duration: 0.38,
+      ease: 'power1.out',
+      stagger: { each: 0.018, from: 'center' }
+    }, '<0.42')
+    .fromTo('#areas .cta-center',{ opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.24');
+}
 
 // ══════════════════════════════════
 // CONTATO: fade-slide ao entrar
