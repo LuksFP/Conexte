@@ -235,8 +235,6 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   if (stats) { gsap.set(stats, { opacity: 0, y: 20 }); }
 
   let revealed = false;
-  let statAnimated = false;
-
   const sobreTimeline = gsap.timeline({ paused: true });
   sobreTimeline
     .to(labelLine, { scaleX: 1, duration: 0.5, ease: 'power3.out' }, 0)
@@ -288,18 +286,20 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 // ══════════════════════════════════
 // ÁREAS — cards nascem no centro e se espalham para o grid
 // ══════════════════════════════════
-const areasGrid = document.querySelector('.areas-grid');
-const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
-const stackOffsets = [
-  { x: -26, y: -14, r: -6, z: 16 },
-  { x: -14, y: -8, r: -4, z: 15 },
-  { x: -4, y: -2, r: -2, z: 14 },
-  { x: 6, y: 2, r: 2, z: 13 },
-  { x: 16, y: 8, r: 4, z: 12 },
-  { x: 28, y: 14, r: 6, z: 11 },
-];
+(function initAreasIntro() {
+  const areasGrid = document.querySelector('.areas-grid');
+  const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
+  if (!areasGrid || !areaCardsForIntro.length) return;
 
-if (areasGrid && areaCardsForIntro.length) {
+  const stackOffsets = [
+    { x: -26, y: -14, r: -6, z: 16 },
+    { x: -14, y: -8, r: -4, z: 15 },
+    { x: -4, y: -2, r: -2, z: 14 },
+    { x: 6, y: 2, r: 2, z: 13 },
+    { x: 16, y: 8, r: 4, z: 12 },
+    { x: 28, y: 14, r: 6, z: 11 },
+  ];
+
   gsap.timeline({
     scrollTrigger: {
       trigger: '#areas',
@@ -345,8 +345,8 @@ if (areasGrid && areaCardsForIntro.length) {
       ease: 'power1.out',
       stagger: { each: 0.018, from: 'center' }
     }, '<0.42')
-    .fromTo('#areas .cta-center',{ opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.24');
-}
+    .fromTo('#areas .cta-center',{ opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.24');
+})();
 
 // ══════════════════════════════════
 // CONTATO: fade-slide ao entrar
