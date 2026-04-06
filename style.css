@@ -144,22 +144,6 @@ nav.scrolled .hamburger span{background:var(--text)}
   z-index:1;
 }
 
-/* gradiente de fusão hero → sobre: aparece só ao rolar */
-#hero-fade{
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:42%;
-  z-index:4;
-  pointer-events:none;
-  opacity:0;
-  background:linear-gradient(
-    to bottom,
-    transparent            0%,
-    rgba(235,243,251,0.30) 45%,
-    rgba(235,243,251,0.85) 75%,
-    #EBF3FB                100%
-  );
-}
 
 /* vídeo full-bleed */
 #hero-video{
@@ -380,8 +364,18 @@ section{position:relative;z-index:1}
   position:relative;
   overflow:hidden;
   min-height:100vh;
-  margin-top:-2px; /* elimina qualquer gap residual */
-  background:linear-gradient(180deg, #EBF3FB 0%, #F5F9FF 45%, #EAF2FB 100%);
+  margin-top:-180px;
+  padding-top:180px;
+  z-index:2;
+  background:linear-gradient(
+    180deg,
+    #00085A              0%,
+    rgba(0,8,90,0.72)    8%,
+    rgba(10,20,80,0.30)  18%,
+    #EBF3FB              32%,
+    #F5F9FF              60%,
+    #EAF2FB              100%
+  );
 }
 /* cortina removida */
 .sobre-stats{

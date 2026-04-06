@@ -59,58 +59,45 @@ function splitChars(el) {
   });
 }
 
-// ── Efeito Matrix: embaralha caracteres antes de revelar a letra real ──
-const MATRIX_CHARS = 'ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ01アイウエオカキクケコサシスセソタチツテトナニヌネノ@#$%&?!';
+// ══════════════════════════════════
+// EFEITO MATRIX — scramble de letras
+// ══════════════════════════════════
+const MATRIX_CHARS = 'ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝアイウエオカキクケコ01@#$%&?!';
 
-function matrixReveal(charEls, startDelay = 0) {
+// Embaralha um único elemento e revela a letra original
+function scrambleChar(el, duration = 0.5, glowColor = 'rgba(38,165,255,0.9)') {
+  const original = el.textContent;
+  const ticks    = Math.round(duration * 22);
+  let   tick     = 0;
+  const iv = setInterval(() => {
+    if (tick >= ticks) {
+      clearInterval(iv);
+      el.textContent = original;
+      gsap.fromTo(el,
+        { textShadow: `0 0 16px ${glowColor}, 0 0 4px #fff` },
+        { textShadow: '0 0 0px rgba(0,0,0,0)', duration: 0.45, ease: 'power2.out' }
+      );
+      return;
+    }
+    el.textContent = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
+    tick++;
+  }, (duration * 1000) / ticks);
+}
+
+// Aplica em um array de elementos com stagger
+function matrixReveal(charEls, { stagger = 0.032, duration = 0.5, glowColor } = {}) {
   charEls.forEach((el, i) => {
-    const original = el.textContent;
-    const delay    = startDelay + i * 0.032; // stagger entre letras
-    const scrambleTime = 0.55;               // duração do embaralhamento
-    const fps  = 24;
-    const ticks = Math.round(scrambleTime * fps);
-
     gsap.set(el, { opacity: 1 });
-
-    // fase 1: embaralha
-    let tick = 0;
-    const interval = setInterval(() => {
-      if (tick >= ticks) {
-        clearInterval(interval);
-        el.textContent = original; // revela a letra real
-        // pulso de brilho ao fixar
-        gsap.fromTo(el,
-          { textShadow: '0 0 18px rgba(38,165,255,0.9), 0 0 4px #fff' },
-          { textShadow: '0 0 0px rgba(38,165,255,0)', duration: 0.5, ease: 'power2.out' }
-        );
-        return;
-      }
-      el.textContent = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
-      tick++;
-    }, (scrambleTime * 1000) / ticks);
-
-    // agenda início com delay
-    gsap.delayedCall(delay, () => { /* interval já rodando */ });
-    // aplica delay real pausando o interval antes
-    clearInterval(interval);
-    setTimeout(() => {
-      tick = 0;
-      const iv = setInterval(() => {
-        if (tick >= ticks) {
-          clearInterval(iv);
-          el.textContent = original;
-          gsap.fromTo(el,
-            { textShadow: '0 0 18px rgba(38,165,255,0.9), 0 0 4px #fff' },
-            { textShadow: '0 0 0px rgba(38,165,255,0)', duration: 0.5, ease: 'power2.out' }
-          );
-          return;
-        }
-        el.textContent = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
-        tick++;
-      }, (scrambleTime * 1000) / ticks);
-    }, delay * 1000);
+    setTimeout(() => scrambleChar(el, duration, glowColor), i * stagger * 1000);
   });
 }
+
+// Hover em qualquer .char da página (exceto enquanto anima)
+document.addEventListener('mouseover', e => {
+  const el = e.target.closest('.char');
+  if (!el) return;
+  scrambleChar(el, 0.35, 'rgba(38,165,255,0.8)');
+});
 
 window.addEventListener('load', () => {
   splitChars(document.getElementById('heroTitle'));
