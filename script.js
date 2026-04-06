@@ -124,13 +124,6 @@ window.addEventListener('load', () => {
   tl.to('#heroSub',   { opacity: 1, y: 0, duration: 0.6 }, 1.1);
   tl.to('#heroActions',{ opacity: 1, y: 0, duration: 0.6 }, 1.3);
   tl.to('#scroll-hint',{ opacity: 1, duration: 0.6 }, 1.7);
-
-  // Efeito Matrix nas letras do título (começa a 0.35s)
-  setTimeout(() => {
-    const chars = Array.from(document.querySelectorAll('.hero-title .char'));
-    matrixReveal(chars);
-    bindCharHover(); // ativa hover após split
-  }, 350);
 });
 
 // ══════════════════════════════════
@@ -351,6 +344,15 @@ gsap.timeline({
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 }
     );
+    // Matrix: dispara após preloader abrir — espera chars estarem prontos
+    (function waitForChars() {
+      const chars = Array.from(document.querySelectorAll('.hero-title .char'));
+      if (chars.length > 0) {
+        setTimeout(() => { matrixReveal(chars); bindCharHover(); }, 120);
+      } else {
+        setTimeout(waitForChars, 50);
+      }
+    })();
   }, [], 2.65);
 })();
 
