@@ -144,6 +144,23 @@ nav.scrolled .hamburger span{background:var(--text)}
   z-index:1;
 }
 
+/* gradiente de fusão hero → sobre: funde o navy com o azul-gelo */
+#hero::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:35%;
+  z-index:4;
+  pointer-events:none;
+  background:linear-gradient(
+    to bottom,
+    transparent        0%,
+    rgba(235,243,251,0.18) 40%,
+    rgba(235,243,251,0.72) 72%,
+    #EBF3FB            100%
+  );
+}
+
 /* vídeo full-bleed */
 #hero-video{
   position:absolute;inset:0;
@@ -360,6 +377,8 @@ section{position:relative;z-index:1}
   position:relative;
   overflow:hidden;
   min-height:100vh;
+  margin-top:-2px; /* elimina qualquer gap residual */
+  background:linear-gradient(180deg, #EBF3FB 0%, #F5F9FF 45%, #EAF2FB 100%);
 }
 /* cortina removida */
 .sobre-stats{
