@@ -308,9 +308,9 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       invalidateOnRefresh: true,
     }
   })
-    .fromTo('#areas',            { opacity: 0, y: 64 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' })
-    .fromTo('#areas .label-tag', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.5')
-    .fromTo('#areas .section-h2',{ opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
+    .from('#areas', { opacity: 0, y: 64, duration: 0.85, ease: 'power3.out', immediateRender: false })
+    .from('#areas .label-tag', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.5')
+    .from('#areas .section-h2', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.4')
     .from(areaCardsForIntro, {
       opacity: 0,
       scale: 0.9,
@@ -336,6 +336,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       },
       duration: 1.05,
       ease: 'power2.out',
+      immediateRender: false,
       stagger: { each: 0.06, from: 'center' }
     }, '-=0.24')
     .to(areaCardsForIntro, {
@@ -345,7 +346,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       ease: 'power1.out',
       stagger: { each: 0.018, from: 'center' }
     }, '<0.42')
-    .fromTo('#areas .cta-center',{ opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.24');
+    .from('#areas .cta-center', { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out', immediateRender: false }, '-=0.24');
 })();
 
 // ══════════════════════════════════
