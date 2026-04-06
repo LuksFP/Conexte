@@ -217,8 +217,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   // title
   const title = sobreEl.querySelector('#sobre-title');
   if (title) { gsap.set(title, { opacity: 0, y: 30, clipPath: 'inset(0 0 100% 0)' }); }
-
-  // paras
+    // paras
   const paras = sobreEl.querySelectorAll('.sobre-para');
   paras.forEach(p => gsap.set(p, { opacity: 0, y: 24 }));
 
@@ -411,7 +410,7 @@ gsap.timeline({
     1.5
   )
 
-  // Fase 5 — abertura: metades se afastam revelando o hero
+  // Fase 5  abertura: metades se afastam revelando o hero
   .to('.pre-half.top', {
     yPercent: -100, duration: 0.9, ease: 'expo.inOut'
   }, 2.0)
@@ -438,7 +437,7 @@ gsap.timeline({
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 }
     );
-    // Matrix: dispara após preloader abrir — espera chars estarem prontos
+        // Matrix: dispara após preloader abrir — espera chars estarem prontos
     (function waitForChars() {
       const chars = Array.from(document.querySelectorAll('.hero-title .char'));
       if (chars.length > 0) {
