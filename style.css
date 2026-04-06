@@ -212,11 +212,14 @@ nav.scrolled .hamburger span{background:var(--text)}
   font-family:var(--serif);
   font-size:clamp(24px,3.4vw,54px);
   font-weight:800;line-height:1.1;
+  text-shadow:
+    0 0 40px rgba(38,165,255,0.35),
+    0 2px 24px rgba(0,8,90,0.5);
   letter-spacing:-0.02em;
   color:var(--white);
   margin-bottom:1rem;
 }
-.char{display:inline-block;opacity:0;transform:translateY(50px) rotate(4deg);will-change:transform,opacity}
+.char{display:inline-block;opacity:0;will-change:transform,opacity}
 .word{display:inline-block;overflow:visible;white-space:nowrap;margin-right:0.22em}
 .word:last-child{margin-right:0}
 .gap{display:none}

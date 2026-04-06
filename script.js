@@ -59,23 +59,80 @@ function splitChars(el) {
   });
 }
 
+// ── Efeito Matrix: embaralha caracteres antes de revelar a letra real ──
+const MATRIX_CHARS = 'ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ01アイウエオカキクケコサシスセソタチツテトナニヌネノ@#$%&?!';
+
+function matrixReveal(charEls, startDelay = 0) {
+  charEls.forEach((el, i) => {
+    const original = el.textContent;
+    const delay    = startDelay + i * 0.032; // stagger entre letras
+    const scrambleTime = 0.55;               // duração do embaralhamento
+    const fps  = 24;
+    const ticks = Math.round(scrambleTime * fps);
+
+    gsap.set(el, { opacity: 1 });
+
+    // fase 1: embaralha
+    let tick = 0;
+    const interval = setInterval(() => {
+      if (tick >= ticks) {
+        clearInterval(interval);
+        el.textContent = original; // revela a letra real
+        // pulso de brilho ao fixar
+        gsap.fromTo(el,
+          { textShadow: '0 0 18px rgba(38,165,255,0.9), 0 0 4px #fff' },
+          { textShadow: '0 0 0px rgba(38,165,255,0)', duration: 0.5, ease: 'power2.out' }
+        );
+        return;
+      }
+      el.textContent = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
+      tick++;
+    }, (scrambleTime * 1000) / ticks);
+
+    // agenda início com delay
+    gsap.delayedCall(delay, () => { /* interval já rodando */ });
+    // aplica delay real pausando o interval antes
+    clearInterval(interval);
+    setTimeout(() => {
+      tick = 0;
+      const iv = setInterval(() => {
+        if (tick >= ticks) {
+          clearInterval(iv);
+          el.textContent = original;
+          gsap.fromTo(el,
+            { textShadow: '0 0 18px rgba(38,165,255,0.9), 0 0 4px #fff' },
+            { textShadow: '0 0 0px rgba(38,165,255,0)', duration: 0.5, ease: 'power2.out' }
+          );
+          return;
+        }
+        el.textContent = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
+        tick++;
+      }, (scrambleTime * 1000) / ticks);
+    }, delay * 1000);
+  });
+}
+
 window.addEventListener('load', () => {
   splitChars(document.getElementById('heroTitle'));
 
   gsap.to('#navbar', { y: 0, duration: 0.8, ease: 'power2.out', delay: 0.1 });
 
-  // Vídeo: zoom-out + fade-in na entrada
   gsap.fromTo('#hero-video',
     { scale: 1.08, opacity: 0 },
     { scale: 1,    opacity: 1, duration: 1.8, ease: 'power3.out', delay: 0 }
   );
 
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.25 });
-  tl.to('#eyebrow',            { opacity: 1, duration: 0.7 }, 0);
-  tl.to('.hero-title .char',   { opacity: 1, y: 0, rotate: 0, duration: 0.6, stagger: { each: 0.022, from: 'start' }, ease: 'back.out(1.5)' }, 0.2);
-  tl.to('#heroSub',            { opacity: 1, y: 0, duration: 0.6 }, 0.85);
-  tl.to('#heroActions',        { opacity: 1, y: 0, duration: 0.6 }, 1.05);
-  tl.to('#scroll-hint',        { opacity: 1, duration: 0.6 }, 1.4);
+  tl.to('#eyebrow',   { opacity: 1, duration: 0.7 }, 0);
+  tl.to('#heroSub',   { opacity: 1, y: 0, duration: 0.6 }, 1.1);
+  tl.to('#heroActions',{ opacity: 1, y: 0, duration: 0.6 }, 1.3);
+  tl.to('#scroll-hint',{ opacity: 1, duration: 0.6 }, 1.7);
+
+  // Efeito Matrix nas letras do título (começa a 0.35s)
+  setTimeout(() => {
+    const chars = Array.from(document.querySelectorAll('.hero-title .char'));
+    matrixReveal(chars, 0);
+  }, 350);
 });
 
 // ══════════════════════════════════
