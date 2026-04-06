@@ -291,20 +291,21 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 const areasGrid = document.querySelector('.areas-grid');
 const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
 const stackOffsets = [
-  { x: -84, y: -52, r: -5 },
-  { x: -44, y: -20, r: -2 },
-  { x: 0, y: 6, r: 0 },
-  { x: 48, y: 28, r: 2 },
-  { x: 86, y: 52, r: 5 },
-  { x: 18, y: -44, r: 3 },
+  { x: -26, y: -14, r: -6, z: 16 },
+  { x: -14, y: -8, r: -4, z: 15 },
+  { x: -4, y: -2, r: -2, z: 14 },
+  { x: 6, y: 2, r: 2, z: 13 },
+  { x: 16, y: 8, r: 4, z: 12 },
+  { x: 28, y: 14, r: 6, z: 11 },
 ];
 
 if (areasGrid && areaCardsForIntro.length) {
   gsap.timeline({
     scrollTrigger: {
       trigger: '#areas',
-      start: 'top 80%',
-      toggleActions: 'play none none reverse',
+      start: 'top 95%',
+      end: 'top 46%',
+      scrub: 1.05,
       invalidateOnRefresh: true,
     }
   })
@@ -313,7 +314,12 @@ if (areasGrid && areaCardsForIntro.length) {
     .fromTo('#areas .section-h2',{ opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
     .from(areaCardsForIntro, {
       opacity: 0,
-      scale: 0.92,
+      scale: 0.9,
+      filter: 'blur(4px)',
+      transformOrigin: '50% 50%',
+      zIndex(i) {
+        return stackOffsets[i % stackOffsets.length].z;
+      },
       x(i, el) {
         const rect = el.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
@@ -329,16 +335,17 @@ if (areasGrid && areaCardsForIntro.length) {
       rotation(i) {
         return stackOffsets[i % stackOffsets.length].r;
       },
-      duration: 0.95,
-      ease: 'power3.out',
-      stagger: { each: 0.07, from: 'center' }
-    }, '-=0.22')
+      duration: 1.05,
+      ease: 'power2.out',
+      stagger: { each: 0.06, from: 'center' }
+    }, '-=0.24')
     .to(areaCardsForIntro, {
       rotation: 0,
-      duration: 0.35,
+      filter: 'blur(0px)',
+      duration: 0.38,
       ease: 'power1.out',
-      stagger: { each: 0.02, from: 'center' }
-    }, '<0.4')
+      stagger: { each: 0.018, from: 'center' }
+    }, '<0.42')
     .fromTo('#areas .cta-center',{ opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.24');
 }
 
