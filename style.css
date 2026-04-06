@@ -379,6 +379,67 @@ section{position:relative;z-index:1}
   pointer-events:none;
 }
 
+/* ── Cabo de rede 3D na transição diagonal ── */
+#network-cable{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:120px;
+  z-index:4;
+  pointer-events:none;
+  overflow:hidden;
+}
+.cable-tube{
+  position:absolute;
+  /* centra verticalmente na diagonal: metade da altura */
+  top:50px;
+  left:-60%;
+  width:220%;
+  height:14px;
+  /* ângulo da diagonal ~-4.8deg */
+  transform:rotate(-4.8deg);
+  transform-origin:center center;
+  border-radius:7px;
+  /* gradiente radial simula cilindro 3D */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.55) 0%,
+      rgba(255,255,255,0.15) 18%,
+      #26A5FF 30%,
+      #0057B8 58%,
+      #003d80 80%,
+      rgba(0,0,0,0.3) 100%
+    );
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.55),
+    0 1px 3px rgba(0,0,0,0.4),
+    inset 0 2px 3px rgba(255,255,255,0.25);
+  will-change:transform;
+}
+/* conector RJ45 na ponta esquerda do cabo */
+.cable-connector{
+  position:absolute;
+  top:44px;
+  left:-60%;
+  width:32px;
+  height:22px;
+  transform:rotate(-4.8deg);
+  transform-origin:center center;
+  border-radius:4px 3px 3px 4px;
+  background:linear-gradient(180deg,#e0e8f0 0%,#b0bcc8 45%,#8090a0 100%);
+  box-shadow:0 3px 10px rgba(0,0,0,0.55);
+  will-change:transform;
+  /* clip de travamento do conector */
+  &::after{
+    content:'';
+    position:absolute;
+    bottom:2px;left:6px;right:6px;
+    height:5px;
+    background:rgba(0,0,0,0.2);
+    border-radius:2px;
+  }
+}
+
 /* cortina removida */
 .sobre-stats{
   opacity:0;

@@ -356,6 +356,29 @@ gsap.timeline({
   }, [], 2.65);
 })();
 
+// ── Cabo de rede desliza na transição diagonal ──
+(function() {
+  const tube = document.querySelector('.cable-tube');
+  const conn = document.querySelector('.cable-connector');
+  if (!tube) return;
+
+  // estado inicial: fora da tela à esquerda
+  gsap.set([tube, conn], { x: '-100vw' });
+
+  ScrollTrigger.create({
+    trigger: '#sobre',
+    start: 'top 88%',
+    onEnter() {
+      // cabo entra da esquerda e sai pela direita
+      gsap.to(conn, { x: '160vw', duration: 1.6, ease: 'power2.in', delay: 0 });
+      gsap.to(tube, { x: '130vw', duration: 1.9, ease: 'power2.inOut', delay: 0.08 });
+    },
+    onLeaveBack() {
+      gsap.set([tube, conn], { x: '-100vw' });
+    }
+  });
+})();
+
 // gradiente hero→sobre: aparece só ao rolar para baixo
 gsap.to('#hero-fade', {
   opacity: 1,
