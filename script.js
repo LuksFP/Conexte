@@ -217,8 +217,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   // title
   const title = sobreEl.querySelector('#sobre-title');
   if (title) { gsap.set(title, { opacity: 0, y: 30, clipPath: 'inset(0 0 100% 0)' }); }
-
-  // paras
+    // paras
   const paras = sobreEl.querySelectorAll('.sobre-para');
   paras.forEach(p => gsap.set(p, { opacity: 0, y: 24 }));
 
@@ -235,8 +234,6 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   if (stats) { gsap.set(stats, { opacity: 0, y: 20 }); }
 
   let revealed = false;
-  let statAnimated = false;
-
   const sobreTimeline = gsap.timeline({ paused: true });
   sobreTimeline
     .to(labelLine, { scaleX: 1, duration: 0.5, ease: 'power3.out' }, 0)
@@ -288,30 +285,31 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 // ══════════════════════════════════
 // ÁREAS — cards nascem no centro e se espalham para o grid
 // ══════════════════════════════════
-const areasGrid = document.querySelector('.areas-grid');
-const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
-const stackOffsets = [
-  { x: -26, y: -14, r: -6, z: 16 },
-  { x: -14, y: -8, r: -4, z: 15 },
-  { x: -4, y: -2, r: -2, z: 14 },
-  { x: 6, y: 2, r: 2, z: 13 },
-  { x: 16, y: 8, r: 4, z: 12 },
-  { x: 28, y: 14, r: 6, z: 11 },
-];
+(function initAreasIntro() {
+  const areasGrid = document.querySelector('.areas-grid');
+  const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
+  if (!areasGrid || !areaCardsForIntro.length) return;
 
-if (areasGrid && areaCardsForIntro.length) {
+  const stackOffsets = [
+    { x: -26, y: -14, r: -6, z: 16 },
+    { x: -14, y: -8, r: -4, z: 15 },
+    { x: -4, y: -2, r: -2, z: 14 },
+    { x: 6, y: 2, r: 2, z: 13 },
+    { x: 16, y: 8, r: 4, z: 12 },
+    { x: 28, y: 14, r: 6, z: 11 },
+  ];
+
   gsap.timeline({
     scrollTrigger: {
       trigger: '#areas',
-      start: 'top 95%',
-      end: 'top 46%',
-      scrub: 1.05,
+      start: 'top 82%',
+      toggleActions: 'play none none reverse',
       invalidateOnRefresh: true,
     }
   })
-    .fromTo('#areas',            { opacity: 0, y: 64 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' })
-    .fromTo('#areas .label-tag', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.5')
-    .fromTo('#areas .section-h2',{ opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
+    .from('#areas', { opacity: 0, y: 64, duration: 0.85, ease: 'power3.out', immediateRender: false })
+    .from('#areas .label-tag', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.5')
+    .from('#areas .section-h2', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.4')
     .from(areaCardsForIntro, {
       opacity: 0,
       scale: 0.9,
@@ -337,6 +335,7 @@ if (areasGrid && areaCardsForIntro.length) {
       },
       duration: 1.05,
       ease: 'power2.out',
+      immediateRender: false,
       stagger: { each: 0.06, from: 'center' }
     }, '-=0.24')
     .to(areaCardsForIntro, {
@@ -346,8 +345,8 @@ if (areasGrid && areaCardsForIntro.length) {
       ease: 'power1.out',
       stagger: { each: 0.018, from: 'center' }
     }, '<0.42')
-    .fromTo('#areas .cta-center',{ opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.24');
-}
+    .from('#areas .cta-center', { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out', immediateRender: false }, '-=0.24');
+})();
 
 // ══════════════════════════════════
 // CONTATO: fade-slide ao entrar
@@ -365,6 +364,7 @@ gsap.timeline({
 
 // ══════════════════════════════════
 // NAV: transparente sobre hero, sólida no resto
+// ══════════════════════════════════
 // ══════════════════════════════════
 // PRELOADER
 // ══════════════════════════════════
@@ -410,7 +410,7 @@ gsap.timeline({
     1.5
   )
 
-  // Fase 5 — abertura: metades se afastam revelando o hero
+  // Fase 5  abertura: metades se afastam revelando o hero
   .to('.pre-half.top', {
     yPercent: -100, duration: 0.9, ease: 'expo.inOut'
   }, 2.0)
@@ -437,7 +437,7 @@ gsap.timeline({
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 }
     );
-    // Matrix: dispara após preloader abrir — espera chars estarem prontos
+        // Matrix: dispara após preloader abrir — espera chars estarem prontos
     (function waitForChars() {
       const chars = Array.from(document.querySelectorAll('.hero-title .char'));
       if (chars.length > 0) {
@@ -562,33 +562,22 @@ gsap.to('#hero-symbol', {
 });
 
 const scrollC = document.getElementById('scroll-c');
-const nav = document.getElementById('navbar');
-let tickScheduled = false;
-
-function syncScrollState() {
-  const pastHero = window.scrollY > window.innerHeight * 0.85;
-  if (nav) nav.classList.toggle('scrolled', pastHero);
-  document.body.classList.toggle('scrolled-past-hero', pastHero);
-
-  // símbolo desce acompanhando o scroll
-  if (scrollC) {
-    const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
-    const pct = Math.min(window.scrollY / maxScroll, 1);
-    const maxY = window.innerHeight - 80;
-    scrollC.style.transform = `translateY(${pct * maxY}px)`;
-  }
-
-  tickScheduled = false;
-}
-
 window.addEventListener('scroll', () => {
-  if (!tickScheduled) {
-    tickScheduled = true;
-    requestAnimationFrame(syncScrollState);
+  const nav = document.getElementById('navbar');
+  const pastHero = window.scrollY > window.innerHeight * 0.85;
+  if (pastHero) {
+    nav.classList.add('scrolled');
+    document.body.classList.add('scrolled-past-hero');
+  } else {
+    nav.classList.remove('scrolled');
+    document.body.classList.remove('scrolled-past-hero');
   }
+  // símbolo desce acompanhando o scroll
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const pct = Math.min(window.scrollY / maxScroll, 1);
+  const maxY = window.innerHeight - 80;
+  scrollC.style.transform = `translateY(${pct * maxY}px)`;
 }, { passive: true });
-
-syncScrollState();
 
 // ══════════════════════════════════
 // MOBILE MENU
