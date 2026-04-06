@@ -60,22 +60,32 @@ function splitChars(el) {
 }
 
 // ══════════════════════════════════
-// EFEITO MATRIX — scramble de letras
+// EFEITO MATRIX — scramble sem layout shift
 // ══════════════════════════════════
-const MATRIX_CHARS = 'ﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝアイウエオカキクケコ01@#$%&?!';
+// Apenas chars de largura similar às latinas para evitar quebra de layout
+const MATRIX_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&?!<>';
 
-// Embaralha um único elemento e revela a letra original
-function scrambleChar(el, duration = 0.5, glowColor = 'rgba(38,165,255,0.9)') {
+function scrambleChar(el, duration = 0.48, glowColor = 'rgba(38,165,255,0.95)') {
+  if (el._scrambling) return;
+  el._scrambling = true;
   const original = el.textContent;
-  const ticks    = Math.round(duration * 22);
-  let   tick     = 0;
+  // Trava a largura antes de embaralhar para evitar layout shift
+  const w = el.getBoundingClientRect().width;
+  el.style.display    = 'inline-block';
+  el.style.minWidth   = w + 'px';
+  el.style.textAlign  = 'center';
+
+  const ticks = Math.round(duration * 20);
+  let tick = 0;
   const iv = setInterval(() => {
     if (tick >= ticks) {
       clearInterval(iv);
-      el.textContent = original;
+      el.textContent  = original;
+      el.style.minWidth = '';
+      el._scrambling  = false;
       gsap.fromTo(el,
-        { textShadow: `0 0 16px ${glowColor}, 0 0 4px #fff` },
-        { textShadow: '0 0 0px rgba(0,0,0,0)', duration: 0.45, ease: 'power2.out' }
+        { textShadow: `0 0 14px ${glowColor}, 0 0 3px #fff` },
+        { textShadow: '0 0 0px transparent', duration: 0.4, ease: 'power2.out' }
       );
       return;
     }
@@ -84,20 +94,18 @@ function scrambleChar(el, duration = 0.5, glowColor = 'rgba(38,165,255,0.9)') {
   }, (duration * 1000) / ticks);
 }
 
-// Aplica em um array de elementos com stagger
-function matrixReveal(charEls, { stagger = 0.032, duration = 0.5, glowColor } = {}) {
+// Aplica stagger em array de chars
+function matrixReveal(charEls, stagger = 0.038) {
   charEls.forEach((el, i) => {
     gsap.set(el, { opacity: 1 });
-    setTimeout(() => scrambleChar(el, duration, glowColor), i * stagger * 1000);
+    setTimeout(() => scrambleChar(el), i * stagger * 1000);
   });
 }
 
-// Hover em .char — aplica após o DOM estar pronto
+// Hover individual em cada .char
 function bindCharHover() {
-  document.querySelectorAll('.char').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      scrambleChar(el, 0.32, 'rgba(38,165,255,0.8)');
-    });
+  document.querySelectorAll('.hero-title .char').forEach(el => {
+    el.addEventListener('mouseenter', () => scrambleChar(el, 0.3));
   });
 }
 

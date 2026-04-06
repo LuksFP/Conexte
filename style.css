@@ -142,6 +142,9 @@ nav.scrolled .hamburger span{background:var(--text)}
   overflow:hidden;
   background:var(--navy);
   z-index:1;
+  /* corte diagonal na base: transição suave para o sobre */
+  clip-path:polygon(0 0,100% 0,100% 92%,0 100%);
+  margin-bottom:-60px;
 }
 
 
@@ -367,19 +370,6 @@ section{position:relative;z-index:1}
   background:linear-gradient(180deg,#EBF3FB 0%,#F5F9FF 50%,#EAF2FB 100%);
 }
 
-/* Wave divider hero→sobre */
-.wave-divider{
-  position:absolute;
-  top:-2px;left:0;right:0;
-  line-height:0;
-  z-index:3;
-  pointer-events:none;
-}
-.wave-divider svg{
-  display:block;
-  width:100%;
-  height:80px;
-}
 /* cortina removida */
 .sobre-stats{
   opacity:0;
