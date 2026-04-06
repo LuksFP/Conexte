@@ -509,6 +509,12 @@ section{position:relative;z-index:1}
   background:#0e1538;
   min-height:320px;
 }
+.area-card--public{--area-bg:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80')}
+.area-card--health{--area-bg:url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80')}
+.area-card--education{--area-bg:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=80')}
+.area-card--hospitality{--area-bg:url('https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1200&q=80')}
+.area-card--corporate{--area-bg:url('https://images.unsplash.com/photo-1556155092-490a1ba16284?auto=format&fit=crop&w=1200&q=80')}
+.area-card--retail{--area-bg:url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80')}
 .area-card--neo::before{
   content:'';
   position:absolute;
