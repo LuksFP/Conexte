@@ -5,3 +5,7 @@ desktop.ini
 
 # node (se usar futuramente)
 node_modules/
+
+# logs locais
+server.err.log
+server.out.log

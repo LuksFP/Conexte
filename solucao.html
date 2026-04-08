@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conexte | Soluções</title>
+  <style>
+    :root{
+      --navy:#00085A;
+      --navy-2:#0d1e6b;
+      --blue:#4d8fe8;
+      --blue-soft:#dce9ff;
+      --white:#fff;
+      --text:#182033;
+      --muted:#5f6b85;
+      --border:#d9e2f2;
+      --panel:#f6f9ff;
+      --green:#c8d400;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(77,143,232,.18), transparent 28%),
+        linear-gradient(180deg, #eef4ff 0%, #ffffff 100%);
+    }
+    a{color:inherit}
+    .hero{
+      min-height:48vh;
+      padding:32px 24px 56px;
+      color:var(--white);
+      background:
+        linear-gradient(180deg, rgba(0,8,90,.2), rgba(0,8,90,.82)),
+        var(--hero-bg, linear-gradient(135deg, #10256f, #091540));
+      background-size:cover;
+      background-position:center;
+    }
+    .shell{width:min(1160px, 100%);margin:0 auto}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:56px;
+    }
+    .brand{
+      display:inline-flex;
+      align-items:center;
+      gap:14px;
+      text-decoration:none;
+      color:var(--white);
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .brand img{height:42px;width:auto;display:block}
+    .back-link,.cta-link{
+      text-decoration:none;
+      border-radius:999px;
+      padding:12px 18px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(255,255,255,.1);
+      backdrop-filter:blur(10px);
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:28px;
+      align-items:end;
+    }
+    .eyebrow{
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.74);
+      margin:0 0 14px;
+    }
+    h1{
+      margin:0 0 16px;
+      font-size:clamp(34px, 4.5vw, 62px);
+      line-height:1.02;
+    }
+    .hero-copy{
+      max-width:720px;
+      font-size:18px;
+      line-height:1.7;
+      color:rgba(255,255,255,.86);
+    }
+    .hero-panel{
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:24px;
+      background:rgba(255,255,255,.08);
+      backdrop-filter:blur(12px);
+      padding:22px;
+      box-shadow:0 22px 56px rgba(0,0,0,.18);
+    }
+    .hero-panel h2{
+      margin:0 0 10px;
+      font-size:18px;
+    }
+    .hero-panel ul{
+      margin:0;
+      padding-left:18px;
+      line-height:1.8;
+      color:rgba(255,255,255,.84);
+    }
+    main{padding:36px 24px 64px}
+    .content{
+      width:min(1160px, 100%);
+      margin:0 auto;
+      display:grid;
+      gap:24px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:24px;
+    }
+    .panel{
+      background:rgba(255,255,255,.88);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:26px;
+      box-shadow:0 18px 44px rgba(16,37,111,.08);
+    }
+    .panel h3{
+      margin:0 0 14px;
+      font-size:20px;
+      color:var(--navy);
+    }
+    .panel p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+    }
+    .panel ul{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.9;
+    }
+    .modules-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:18px;
+    }
+    .module-card{
+      padding:22px;
+      border-radius:20px;
+      background:var(--panel);
+      border:1px solid var(--border);
+    }
+    .module-card h4{
+      margin:0 0 10px;
+      color:var(--navy);
+      font-size:18px;
+    }
+    .module-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+    }
+    .service-page{
+      display:grid;
+      gap:0;
+      border-radius:32px;
+      overflow:hidden;
+      background:#f8fbff;
+      box-shadow:0 24px 64px rgba(16,37,111,.12);
+      border:1px solid rgba(77,143,232,.12);
+    }
+    .service-showcase{
+      padding:34px 34px 28px;
+      background:
+        radial-gradient(circle at 92% 18%, rgba(77,143,232,.14), transparent 18%),
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(245,249,255,.98));
+    }
+    .service-showcase-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:34px;
+      align-items:center;
+    }
+    .service-visual{
+      position:relative;
+      min-height:320px;
+      border-radius:30px;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(0,8,90,.12), rgba(0,8,90,.38)),
+        var(--managed-hero-image, linear-gradient(135deg, #c7ddff, #f4f8ff));
+      background-size:cover;
+      background-position:center;
+      box-shadow:0 20px 48px rgba(0,8,90,.16);
+    }
+    .service-visual::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg, rgba(255,255,255,.14), transparent 58%);
+      pointer-events:none;
+    }
+    .service-copy{
+      display:grid;
+      gap:16px;
+    }
+    .service-kicker{
+      margin:0;
+      color:rgba(26,37,68,.54);
+      font-size:13px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    .service-copy h2{
+      margin:0;
+      font-size:clamp(34px,4vw,58px);
+      line-height:1;
+      color:var(--navy);
+      font-weight:500;
+    }
+    .service-copy p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:16px;
+      max-width:640px;
+    }
+    .service-stepbar{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:0;
+      background:linear-gradient(90deg, #0b2f74 0%, #14479d 100%);
+      border-top:1px solid rgba(255,255,255,.08);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .service-step{
+      appearance:none;
+      border:none;
+      background:transparent;
+      color:rgba(255,255,255,.72);
+      padding:18px 16px;
+      font:inherit;
+      cursor:pointer;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      transition:background .24s ease,color .24s ease;
+    }
+    .service-step strong{
+      font-size:15px;
+      color:inherit;
+    }
+    .service-step span{
+      font-size:14px;
+      color:inherit;
+    }
+    .service-step.is-active{
+      background:linear-gradient(90deg, rgba(77,143,232,.4), rgba(38,165,255,.22));
+      color:#fff;
+    }
+    .service-map-block{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      min-height:520px;
+      background:
+        radial-gradient(circle at 28% 30%, rgba(77,143,232,.16), transparent 26%),
+        linear-gradient(135deg, #00085a 0%, #0b2f74 48%, #103b87 100%);
+      color:#fff;
+    }
+    .service-map-visual{
+      position:relative;
+      overflow:hidden;
+      padding:38px 34px 34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .service-map-visual::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size:110px 110px;
+      pointer-events:none;
+    }
+    .service-map-shell{
+      position:relative;
+      width:min(560px, 100%);
+      aspect-ratio:1.05;
+    }
+    .service-map-badge{
+      position:absolute;
+      left:2%;
+      top:56%;
+      z-index:3;
+      padding:18px 22px;
+      border-radius:24px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(16px);
+      max-width:240px;
+      box-shadow:0 16px 42px rgba(0,0,0,.16);
+    }
+    .service-map-badge span{
+      display:block;
+      font-size:15px;
+      color:rgba(255,255,255,.74);
+      margin-bottom:6px;
+    }
+    .service-map-badge strong{
+      display:block;
+      font-size:24px;
+      line-height:1.12;
+      color:#fff;
+      font-weight:500;
+    }
+    .service-map-svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      filter:drop-shadow(0 28px 42px rgba(0,0,0,.22));
+    }
+    .service-map-shape{
+      fill:rgba(77,143,232,.22);
+      stroke:rgba(255,255,255,.26);
+      stroke-width:2;
+    }
+    .service-map-network{
+      fill:none;
+      stroke:rgba(77,143,232,.22);
+      stroke-width:2;
+    }
+    .service-map-dot{
+      fill:#d9ebff;
+      opacity:.36;
+      transition:opacity .24s ease, r .24s ease, fill .24s ease;
+    }
+    .service-map-dot.is-active{
+      fill:#ffffff;
+      opacity:1;
+    }
+    .service-map-pulse{
+      fill:none;
+      stroke:rgba(255,255,255,.46);
+      stroke-width:2;
+      opacity:.62;
+      transform-origin:center;
+      animation:servicePulse 2.8s ease-out infinite;
+    }
+    @keyframes servicePulse{
+      0%{transform:scale(.72);opacity:.72}
+      70%{transform:scale(1.26);opacity:0}
+      100%{transform:scale(1.26);opacity:0}
+    }
+    .service-map-side{
+      display:grid;
+      align-content:center;
+      gap:22px;
+      padding:40px 38px 40px 22px;
+      border-left:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    .service-active-label{
+      margin:0;
+      font-size:14px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(214,228,255,.72);
+      font-weight:700;
+    }
+    .service-active-title{
+      margin:0;
+      font-size:clamp(30px,3vw,42px);
+      line-height:1.04;
+      font-weight:500;
+    }
+    .service-active-copy{
+      margin:0;
+      color:rgba(234,241,255,.84);
+      line-height:1.82;
+      font-size:15px;
+    }
+    .service-active-metrics{
+      display:grid;
+      gap:16px;
+      margin-top:6px;
+    }
+    .service-metric{
+      padding:16px 18px;
+      border-radius:20px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.1);
+    }
+    .service-metric small{
+      display:block;
+      margin-bottom:8px;
+      color:rgba(214,228,255,.72);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .service-metric strong{
+      display:block;
+      font-size:18px;
+      color:#fff;
+      font-weight:600;
+      line-height:1.45;
+    }
+    .service-detail-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:18px;
+      padding:32px 34px 34px;
+      background:linear-gradient(180deg, #f7faff 0%, #eef4ff 100%);
+    }
+    .service-detail-card{
+      padding:22px;
+      border-radius:22px;
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(77,143,232,.14);
+      box-shadow:0 14px 34px rgba(16,37,111,.08);
+    }
+    .service-detail-card h4{
+      margin:0 0 10px;
+      color:var(--navy);
+      font-size:16px;
+    }
+    .service-detail-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+      font-size:14px;
+    }
+    .list-plain{
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+    .list-plain li{
+      padding:12px 0;
+      border-bottom:1px solid var(--border);
+    }
+    .list-plain li:last-child{border-bottom:none}
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:18px;
+    }
+    .kpi{
+      padding:18px;
+      border-radius:20px;
+      background:var(--panel);
+      border:1px solid var(--border);
+    }
+    .kpi strong{
+      display:block;
+      margin-bottom:6px;
+      color:var(--navy);
+      font-size:28px;
+    }
+    .kpi span{color:var(--muted);line-height:1.5}
+    .cta-box{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      flex-wrap:wrap;
+      background:linear-gradient(135deg, var(--navy), var(--navy-2));
+      color:var(--white);
+    }
+    .cta-box p{color:rgba(255,255,255,.84)}
+    .cta-primary{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      background:linear-gradient(135deg, #53a8ff 0%, #2f7ff1 100%);
+      color:var(--white);
+      padding:14px 22px;
+      border-radius:999px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    @media (max-width: 960px){
+      .hero-grid,.grid,.kpis,.modules-grid,.service-showcase-grid,.service-map-block,.service-detail-grid{grid-template-columns:1fr}
+      .service-stepbar{grid-template-columns:1fr 1fr}
+      .service-map-side{padding:28px 24px}
+      .service-showcase{padding:24px 22px}
+      .service-detail-grid{padding:24px 22px 26px}
+      .service-map-visual{padding:24px 18px 28px}
+      .service-map-badge{position:relative;left:auto;top:auto;margin-top:12px;max-width:none}
+      .topbar{margin-bottom:34px}
+    }
+  </style>
+</head>
+<body>
+  <header class="hero" id="hero">
+    <div class="shell">
+      <div class="topbar">
+        <a class="brand" href="index.html">
+          <img src="https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO.png" alt="Conexte">
+        </a>
+        <a class="back-link" href="index.html#solucoes">Voltar para soluções</a>
+      </div>
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow" id="solutionCategory">Solução Conexte</p>
+          <h1 id="solutionTitle">Solução</h1>
+          <p class="hero-copy" id="solutionIntro"></p>
+        </div>
+        <aside class="hero-panel">
+          <h2>Entregáveis</h2>
+          <ul id="solutionHighlights"></ul>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="content">
+      <section class="panel">
+        <h3>Visão Geral</h3>
+        <p id="solutionOverview"></p>
+      </section>
+
+      <section class="grid">
+        <article class="panel">
+          <h3>O que entregamos</h3>
+          <ul id="solutionDeliverables"></ul>
+        </article>
+        <article class="panel">
+          <h3>Casos de uso</h3>
+          <ul id="solutionUseCases"></ul>
+        </article>
+        <article class="panel">
+          <h3>Diferenciais</h3>
+          <ul id="solutionDifferentials"></ul>
+        </article>
+      </section>
+
+      <section class="panel">
+        <h3>Indicadores de projeto</h3>
+        <div class="kpis" id="solutionKpis"></div>
+      </section>
+
+      <section class="panel" id="solutionModulesSection" style="display:none">
+        <h3>Estrutura do Serviço</h3>
+        <div class="modules-grid" id="solutionModules"></div>
+      </section>
+
+      <section class="panel">
+        <h3>Etapas recomendadas</h3>
+        <ul class="list-plain" id="solutionSteps"></ul>
+      </section>
+
+      <section class="panel cta-box">
+        <div>
+          <h3 id="solutionCtaTitle">Quero falar com a Conexte</h3>
+          <p id="solutionCtaCopy"></p>
+        </div>
+        <a class="cta-primary" id="solutionCtaLink" href="https://api.whatsapp.com/send/?phone=5513996847503" target="_blank" rel="noopener">Solicitar atendimento</a>
+      </section>
+
+      <section id="managedServicesPage" class="service-page" style="display:none">
+        <div class="service-showcase">
+          <div class="service-showcase-grid">
+            <div class="service-visual" id="managedHeroVisual"></div>
+            <div class="service-copy">
+              <p class="service-kicker" id="managedKicker">Grupo de soluções</p>
+              <h2 id="managedHeroTitle">Serviços Gerenciados</h2>
+              <p id="managedHeroCopy"></p>
+            </div>
+          </div>
+        </div>
+        <div class="service-stepbar" id="managedStepbar"></div>
+        <div class="service-map-block">
+          <div class="service-map-visual">
+            <div class="service-map-shell">
+              <div class="service-map-badge">
+                <span>Atuação Conexte</span>
+                <strong id="managedBadgeText">Cobertura nacional orientada por operação</strong>
+              </div>
+              <svg class="service-map-svg" viewBox="0 0 540 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path class="service-map-network" d="M146 121C180 95 235 77 291 72C353 66 404 82 434 118M160 186C215 159 278 149 347 153C397 156 432 170 459 194M170 266C218 251 273 246 331 252C389 258 428 280 457 311M209 344C248 334 289 335 332 344C380 354 412 375 432 403" />
+                <path class="service-map-shape" d="M262 58L308 74L338 66L372 83L401 116L428 117L455 155L441 182L456 206L444 230L459 260L448 292L432 314L424 344L404 357L397 390L364 401L346 430L316 451L295 440L275 451L248 442L229 423L196 415L173 390L166 362L142 345L133 321L102 295L97 262L114 234L109 204L121 181L118 146L132 121L156 110L182 87L214 87L236 70Z" />
+                <g id="managedMapDots"></g>
+              </svg>
+            </div>
+          </div>
+          <div class="service-map-side">
+            <p class="service-active-label" id="managedActiveCode">1.1.1</p>
+            <h3 class="service-active-title" id="managedActiveTitle">Service Desk</h3>
+            <p class="service-active-copy" id="managedActiveCopy"></p>
+            <div class="service-active-metrics" id="managedMetrics"></div>
+          </div>
+        </div>
+        <div class="service-detail-grid" id="managedDetailGrid"></div>
+        <section class="panel cta-box">
+          <div>
+            <h3 id="managedCtaTitle">Quero falar com a Conexte</h3>
+            <p id="managedCtaCopy"></p>
+          </div>
+          <a class="cta-primary" id="managedCtaLink" href="https://api.whatsapp.com/send/?phone=5513996847503" target="_blank" rel="noopener">Solicitar atendimento</a>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const solutions = {
+      'inovacao-solucoes-inteligentes': {
+        category: 'Transformação digital',
+        title: 'Inovação e Soluções Inteligentes',
+        intro: 'Projetos orientados a eficiência operacional, automação e tomada de decisão com apoio de dados, integração e desenho técnico consistente.',
+        overview: 'Essa frente organiza diagnóstico, arquitetura, integração e implantação de soluções para modernizar processos internos, reduzir tarefas repetitivas e dar mais previsibilidade às operações. O foco é conectar tecnologia ao objetivo do negócio e não apenas instalar ferramentas isoladas.',
+        highlights: ['Mapeamento de processos e gargalos', 'Automação de fluxos críticos', 'Integração entre sistemas e equipes', 'Roadmap técnico com prioridades claras'],
+        deliverables: ['Levantamento do cenário atual', 'Plano de modernização por etapas', 'Integração de sistemas e APIs', 'Painéis operacionais e indicadores'],
+        useCases: ['Automação de atendimento interno', 'Fluxos de aprovação e chamados', 'Integração entre ERP, CRM e operação', 'Projetos de inovação para órgãos públicos e empresas'],
+        differentials: ['Abordagem consultiva e executiva', 'Priorização por impacto real', 'Documentação para continuidade do projeto', 'Acompanhamento de adoção e evolução'],
+        kpis: [{value:'30%', label:'redução potencial de retrabalho'}, {value:'12 sem', label:'janela média de implantação modular'}, {value:'24/7', label:'visibilidade operacional'}],
+        steps: ['Diagnóstico técnico e operacional do ambiente.', 'Definição do escopo prioritário e metas de negócio.', 'Implementação das integrações, automações e painéis.', 'Acompanhamento assistido com ajustes e evolução contínua.'],
+        ctaTitle: 'Estruturar um plano de inovação',
+        ctaCopy: 'Abrimos o projeto pelo cenário atual da operação e montamos uma proposta de evolução por etapas.'
+      },
+      'cloud-computing': {
+        category: 'Infraestrutura em nuvem',
+        title: 'Cloud Computing',
+        intro: 'Ambientes em nuvem desenhados para disponibilidade, segurança, escalabilidade e controle de custos, com arquitetura aderente à operação da empresa.',
+        overview: 'A solução de cloud da Conexte cobre planejamento, migração, sustentação e otimização de workloads em nuvem. O objetivo é entregar uma base confiável para aplicações, dados, backups, conectividade e crescimento sem improviso de infraestrutura.',
+        highlights: ['Arquitetura cloud sob medida', 'Migração controlada de serviços', 'Políticas de backup e recuperação', 'Governança de custo e performance'],
+        deliverables: ['Assessment do ambiente atual', 'Desenho de arquitetura cloud', 'Plano de migração e rollback', 'Monitoramento e rotina de otimização'],
+        useCases: ['Hospedagem de sistemas corporativos', 'Backup e disaster recovery', 'Escala rápida de aplicações', 'Ambientes híbridos entre matriz, filiais e nuvem'],
+        differentials: ['Implantação com baixo impacto operacional', 'Segurança incorporada na arquitetura', 'Visão de custo desde o início', 'Documentação de ambiente e acesso'],
+        kpis: [{value:'99,9%', label:'meta de disponibilidade para ambientes críticos'}, {value:'40%', label:'ganho potencial de elasticidade operacional'}, {value:'1 projeto', label:'migração guiada ponta a ponta'}],
+        steps: ['Avaliação de cargas, dependências e riscos.', 'Definição da arquitetura de destino.', 'Migração assistida com validação por etapas.', 'Operação monitorada e otimização contínua.'],
+        ctaTitle: 'Planejar uma migração para nuvem',
+        ctaCopy: 'Montamos o desenho técnico, a estratégia de migração e o plano de sustentação do novo ambiente.'
+      },
+      'servicos-gerenciados': {
+        category: 'Operação assistida',
+        title: 'Serviços Gerenciados',
+        intro: 'Gestão contínua do ambiente de TI com monitoramento, suporte, padronização operacional e resposta mais previsível a incidentes.',
+        overview: 'Os serviços gerenciados centralizam rotinas críticas de infraestrutura, suporte e acompanhamento de ambiente para reduzir indisponibilidade, acelerar resposta e manter padrão técnico. A entrega pode ser parcial ou completa, conforme o nível de maturidade da operação.',
+        highlights: ['Monitoramento e acompanhamento proativo', 'Suporte técnico com processos definidos', 'Rotinas preventivas e corretivas', 'Relatórios operacionais e indicadores'],
+        deliverables: ['Catálogo de serviços e SLAs', 'Plano de atendimento e escalonamento', 'Gestão de incidentes e mudanças', 'Relatórios periódicos de performance'],
+        useCases: ['Operação de TI terceirizada', 'Reforço ao time interno', 'Monitoramento de ambientes críticos', 'Suporte contínuo a filiais e unidades remotas'],
+        differentials: ['Atendimento com rotina formalizada', 'Padronização técnica do ambiente', 'Acompanhamento recorrente de indicadores', 'Menor dependência de ações reativas'],
+        kpis: [{value:'24/7', label:'monitoramento para ativos críticos'}, {value:'SLA', label:'acordos de atendimento definidos'}, {value:'1 time', label:'operação centralizada e auditável'}],
+        steps: ['Mapeamento dos ativos e prioridades de suporte.', 'Definição de escopo, níveis de atendimento e comunicação.', 'Entrada assistida em operação.', 'Acompanhamento recorrente com melhoria contínua.'],
+        ctaTitle: 'Estruturar serviços gerenciados',
+        ctaCopy: 'A Conexte pode assumir a operação total ou complementar a equipe interna com escopo definido.'
+      },
+      'servicos-gerenciados': {
+        category: 'Operação assistida',
+        title: 'Serviços Gerenciados',
+        intro: 'Gestão contínua da operação de TI com serviços estruturados para atendimento, campo, monitoramento e controle de ativos.',
+        overview: 'A frente de Serviços Gerenciados da Conexte foi organizada em quatro seções principais: Service Desk, Field Service, Network Operations Center e Inventário e Gestão de Ativos. Essa composição permite atender o usuário final, sustentar o ambiente, responder demandas presenciais e manter governança sobre os ativos de TI.',
+        highlights: ['Atendimento estruturado ao usuário', 'Suporte presencial quando necessário', 'Monitoramento contínuo da operação', 'Controle e governança dos ativos'],
+        deliverables: ['Central de atendimento para registro, triagem e resolução de chamados', 'Atendimento em campo para instalações, correções e suporte presencial', 'Monitoramento NOC para eventos, disponibilidade e acompanhamento de rede', 'Inventário atualizado com rastreabilidade e gestão do ciclo de vida dos ativos'],
+        useCases: ['Empresas que precisam de Service Desk com fluxo formal de chamados', 'Operações com unidades remotas que exigem Field Service', 'Ambientes que demandam monitoramento contínuo via NOC', 'Organizações que precisam organizar parque tecnológico e inventário'],
+        differentials: ['Cobertura operacional em camadas, do usuário ao ativo', 'Integração entre atendimento, monitoramento e campo', 'Padronização de processos e visibilidade operacional', 'Base mais confiável para auditoria, expansão e controle'],
+        kpis: [{value:'4 frentes', label:'estrutura principal de serviços gerenciados'}, {value:'24/7', label:'monitoramento aplicável ao NOC'}, {value:'1 operação', label:'visão integrada de chamados, campo e ativos'}],
+        managedPage: {
+          kicker: 'Grupo de soluções',
+          heroCopy: 'Dentro de nossos Serviços Gerenciados, estruturamos uma operação contínua que une atendimento, atuação em campo, monitoramento e governança de ativos. A página foi reorganizada em um formato editorial, com navegação por frentes e um mapa interativo para destacar a cobertura e a dinâmica operacional da Conexte.',
+          badge: 'Cobertura nacional com operação integrada',
+          heroImage: "url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1400&q=80')",
+          dots: [
+            {x:255,y:112},{x:286,y:103},{x:315,y:112},{x:340,y:129},{x:369,y:149},
+            {x:393,y:173},{x:407,y:198},{x:385,y:214},{x:363,y:192},{x:333,y:175},
+            {x:305,y:159},{x:274,y:149},{x:248,y:161},{x:225,y:188},{x:233,y:218},
+            {x:265,y:236},{x:298,y:247},{x:334,y:253},{x:367,y:266},{x:394,y:288},
+            {x:378,y:316},{x:349,y:327},{x:319,y:336},{x:287,y:346},{x:259,y:367},
+            {x:235,y:388},{x:267,y:404},{x:303,y:411},{x:334,y:398},{x:361,y:382},
+            {x:212,y:328},{x:186,y:301},{x:168,y:270},{x:167,y:233},{x:181,y:205}
+          ],
+          sections: [
+            {
+              code: '1.1.1',
+              title: 'Service Desk',
+              intro: 'Camada central de relacionamento com o usuário para registro, triagem, categorização, priorização e tratamento de chamados técnicos.',
+              metrics: [
+                {label:'Atuação', value:'Entrada, triagem e gestão de chamados'},
+                {label:'Foco', value:'Previsibilidade, SLA e experiência do usuário'},
+                {label:'Cobertura', value:'Suporte estruturado para operação contínua'}
+              ],
+              details: [
+                {title:'Objetivo', copy:'Organizar o fluxo de atendimento e criar um ponto único de entrada para demandas, incidentes e requisições do usuário.'},
+                {title:'Atuação', copy:'Abertura, acompanhamento, escalonamento, comunicação e encerramento controlado dos chamados conforme prioridade.'},
+                {title:'Resultado', copy:'Melhor experiência do usuário, maior rastreabilidade da demanda e leitura clara de filas, gargalos e SLAs.'}
+              ],
+              activeDots:[0,1,5,8,10,14,17,22,25,31]
+            },
+            {
+              code: '1.1.2',
+              title: 'Field Service',
+              intro: 'Frente de atendimento presencial para cenários que exigem ação local, instalação, substituição de equipamento, correção física ou suporte técnico in loco.',
+              metrics: [
+                {label:'Atuação', value:'Visitas técnicas, instalação e manutenção'},
+                {label:'Foco', value:'Execução presencial com padrão operacional'},
+                {label:'Cobertura', value:'Apoio local conforme criticidade do ambiente'}
+              ],
+              details: [
+                {title:'Objetivo', copy:'Resolver demandas que não se encerram remotamente e garantir execução local com alinhamento técnico.'},
+                {title:'Atuação', copy:'Instalações, substituições, correções físicas, validações em campo e suporte presencial em ambientes distribuídos.'},
+                {title:'Resultado', copy:'Menor indisponibilidade, mais agilidade na resposta e padronização da entrega em unidades remotas.'}
+              ],
+              activeDots:[2,4,6,9,12,16,19,24,27,34]
+            },
+            {
+              code: '1.1.3',
+              title: 'Network Operations Center',
+              intro: 'Camada de monitoramento e acompanhamento contínuo do ambiente para leitura de eventos, disponibilidade, desempenho e atuação coordenada diante de incidentes.',
+              metrics: [
+                {label:'Atuação', value:'Monitoramento, alarmes e leitura operacional'},
+                {label:'Foco', value:'Disponibilidade, desempenho e resposta rápida'},
+                {label:'Cobertura', value:'Visibilidade contínua sobre o ambiente'}
+              ],
+              details: [
+                {title:'Objetivo', copy:'Detectar desvios operacionais antes que se convertam em indisponibilidade crítica para o cliente.'},
+                {title:'Atuação', copy:'Monitoramento de rede, ativos, eventos, alarmes, performance e status de componentes essenciais da operação.'},
+                {title:'Resultado', copy:'Mais visibilidade, resposta mais rápida e sustentação contínua do ambiente com leitura preventiva.'}
+              ],
+              activeDots:[3,7,11,13,15,18,20,23,28,30,33]
+            },
+            {
+              code: '1.1.4',
+              title: 'Inventário e Gestão de Ativos',
+              intro: 'Disciplina voltada ao controle do parque tecnológico, rastreabilidade, organização do ciclo de vida e apoio à governança dos ativos de TI.',
+              metrics: [
+                {label:'Atuação', value:'Cadastro, rastreabilidade e histórico de ativos'},
+                {label:'Foco', value:'Governança e leitura do parque tecnológico'},
+                {label:'Cobertura', value:'Base confiável para suporte e auditoria'}
+              ],
+              details: [
+                {title:'Objetivo', copy:'Ter domínio sobre o que existe, onde está, em que condição está e como cada ativo participa da operação.'},
+                {title:'Atuação', copy:'Cadastro, padronização, atualização, histórico e gestão do ciclo de vida dos ativos tecnológicos.'},
+                {title:'Resultado', copy:'Base confiável para suporte, auditoria, planejamento de expansão, renovação e governança.'}
+              ],
+              activeDots:[21,26,29,32,34,24,18,9,5,1]
+            }
+          ]
+        },
+        modules: [
+          {title:'1.1.1. Service Desk', copy:'Central de atendimento para registro, triagem, tratamento e acompanhamento de chamados, com fluxo organizado para dar previsibilidade ao suporte ao usuário.'},
+          {title:'1.1.2. Field Service', copy:'Atendimento em campo para demandas presenciais, instalações, substituições, correções físicas e suporte técnico local quando a operação exige ação in loco.'},
+          {title:'1.1.3. Network Operations Center', copy:'Camada de monitoramento e acompanhamento contínuo da operação para visibilidade de eventos, disponibilidade, desempenho e resposta coordenada a incidentes.'},
+          {title:'1.1.4. Inventário e Gestão de Ativos', copy:'Controle estruturado do parque tecnológico com rastreabilidade, organização do ciclo de vida dos ativos e apoio à governança operacional.'}
+        ],
+        steps: ['Definição do escopo entre Service Desk, Field Service, NOC e inventário.', 'Mapeamento de fluxos, SLAs, ativos e prioridades da operação.', 'Implantação assistida com processos, atendimento e monitoramento.', 'Acompanhamento recorrente com indicadores e evolução do serviço.'],
+        ctaTitle: 'Estruturar serviços gerenciados',
+        ctaCopy: 'A Conexte pode assumir a operação total ou complementar a equipe interna com escopo definido.'
+      },
+      'cybersecurity': {
+        category: 'Segurança da informação',
+        title: 'Cybersecurity',
+        intro: 'Camadas de proteção, visibilidade e resposta para reduzir exposição a riscos, fortalecer controles e aumentar a resiliência do ambiente.',
+        overview: 'A frente de cybersecurity atua na prevenção, endurecimento, monitoramento e resposta a eventos de segurança. O desenho parte dos ativos críticos da organização para priorizar proteção perimetral, acessos, usuários, dados e continuidade operacional.',
+        highlights: ['Mapeamento de riscos e ativos críticos', 'Proteção de perímetro e identidade', 'Monitoramento de eventos e postura', 'Planos de resposta e contingência'],
+        deliverables: ['Assessment de segurança', 'Reforço de políticas de acesso', 'Camadas de defesa e segmentação', 'Plano de resposta a incidentes'],
+        useCases: ['Proteção contra ransomware', 'Segmentação de rede e controle de acesso', 'Segurança para trabalho híbrido', 'Adequação de postura para auditorias e compliance'],
+        differentials: ['Segurança aplicada à realidade operacional', 'Prioridade por risco e impacto', 'Combinação de tecnologia, processo e governança', 'Documentação de medidas e recomendações'],
+        kpis: [{value:'360°', label:'visibilidade sobre superfície crítica'}, {value:'2x', label:'ganho esperado em capacidade de resposta'}, {value:'0 improviso', label:'processo definido para incidentes'}],
+        steps: ['Levantamento de exposição e riscos prioritários.', 'Definição das camadas de proteção.', 'Implantação com validação de acesso e tráfego.', 'Monitoramento e revisão recorrente do nível de proteção.'],
+        ctaTitle: 'Reforçar a segurança do ambiente',
+        ctaCopy: 'Começamos por uma leitura objetiva do risco atual e desenhamos a proteção por prioridade.'
+      },
+      'infraestrutura': {
+        category: 'Base operacional',
+        title: 'Infraestrutura',
+        intro: 'Projetos de infraestrutura física e lógica para sustentar conectividade, desempenho, expansão e estabilidade do ambiente corporativo.',
+        overview: 'A solução de infraestrutura cobre rede, conectividade, servidores, organização física e desenho técnico do ambiente. A proposta é criar uma base robusta para suportar aplicações, usuários, comunicação entre unidades e crescimento com menos vulnerabilidade operacional.',
+        highlights: ['Projeto de rede e conectividade', 'Estruturação de servidores e ativos', 'Padronização e organização do ambiente', 'Documentação técnica para sustentação'],
+        deliverables: ['Desenho de topologia', 'Implantação e organização de ativos', 'Padronização de rede e acesso', 'Inventário e documentação operacional'],
+        useCases: ['Expansão de unidades e escritórios', 'Reestruturação de TI legada', 'Ambientes com falhas recorrentes', 'Preparação para novas aplicações e serviços'],
+        differentials: ['Visão integrada entre físico e lógico', 'Projeto preparado para crescimento', 'Organização com foco em suporte futuro', 'Execução alinhada à operação da empresa'],
+        kpis: [{value:'100%', label:'ambiente documentado para sustentação'}, {value:'1 base', label:'infraestrutura preparada para evolução'}, {value:'menor risco', label:'redução de falhas por improviso estrutural'}],
+        steps: ['Levantamento da topologia atual e necessidades futuras.', 'Desenho técnico da infraestrutura alvo.', 'Implantação e organização do ambiente.', 'Validação, documentação e transição operacional.'],
+        ctaTitle: 'Reestruturar a infraestrutura',
+        ctaCopy: 'Levantamos o cenário atual e desenhamos a base técnica necessária para estabilidade e crescimento.'
+      },
+      'data-center': {
+        category: 'Ambiente crítico',
+        title: 'Data Center',
+        intro: 'Estruturação de ambientes críticos com foco em disponibilidade, organização, energia, conectividade, monitoramento e continuidade.',
+        overview: 'A frente de data center atende demandas de organização, revisão e implantação de ambientes críticos para garantir estabilidade dos serviços e condições adequadas de operação. O trabalho considera racks, ativos, cabeamento, energia, redundância e monitoramento do ambiente.',
+        highlights: ['Organização física e lógica do ambiente', 'Planejamento de capacidade e redundância', 'Melhoria de disponibilidade e controle', 'Padronização para manutenção e expansão'],
+        deliverables: ['Projeto de layout e organização', 'Estruturação de racks e cabeamento', 'Revisão de energia e contingência', 'Documentação e governança operacional'],
+        useCases: ['Modernização de sala técnica', 'Expansão de capacidade', 'Correção de ambiente desorganizado', 'Preparação para serviços críticos e auditorias'],
+        differentials: ['Foco em continuidade operacional', 'Execução com visão de manutenção futura', 'Melhor aproveitamento físico do ambiente', 'Redução de risco em ativos críticos'],
+        kpis: [{value:'N+1', label:'referência para cenários com redundância'}, {value:'24/7', label:'monitoramento recomendado do ambiente'}, {value:'1 padrão', label:'organização técnica consistente'}],
+        steps: ['Avaliação do ambiente atual e criticidade dos ativos.', 'Desenho de layout, energia e conectividade.', 'Execução física e lógica da estrutura.', 'Entrega documentada com plano de manutenção e expansão.'],
+        ctaTitle: 'Modernizar o data center',
+        ctaCopy: 'Projetamos a evolução do ambiente crítico com foco em disponibilidade, organização e continuidade.'
+      }
+    };
+
+    const fallbackKey = 'cloud-computing';
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('item');
+    const data = solutions[key] || solutions[fallbackKey];
+
+    document.title = `Conexte | ${data.title}`;
+    document.getElementById('solutionCategory').textContent = data.category;
+    document.getElementById('solutionTitle').textContent = data.title;
+    document.getElementById('solutionIntro').textContent = data.intro;
+    document.getElementById('solutionOverview').textContent = data.overview;
+    document.getElementById('solutionCtaTitle').textContent = data.ctaTitle;
+    document.getElementById('solutionCtaCopy').textContent = data.ctaCopy;
+
+    const hero = document.getElementById('hero');
+    const imageMap = {
+      'inovacao-solucoes-inteligentes': "url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1600&q=80')",
+      'cloud-computing': "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80')",
+      'servicos-gerenciados': "url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1600&q=80')",
+      'cybersecurity': "url('https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1600&q=80')",
+      'infraestrutura': "url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80')",
+      'data-center': "url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80')"
+    };
+    hero.style.setProperty('--hero-bg', imageMap[key] || imageMap[fallbackKey]);
+
+    const listMap = [
+      ['solutionHighlights', data.highlights],
+      ['solutionDeliverables', data.deliverables],
+      ['solutionUseCases', data.useCases],
+      ['solutionDifferentials', data.differentials],
+      ['solutionSteps', data.steps]
+    ];
+
+    listMap.forEach(([id, items]) => {
+      const node = document.getElementById(id);
+      node.innerHTML = items.map((item) => `<li>${item}</li>`).join('');
+    });
+
+    document.getElementById('solutionKpis').innerHTML = data.kpis.map((item) => `
+      <div class="kpi">
+        <strong>${item.value}</strong>
+        <span>${item.label}</span>
+      </div>
+    `).join('');
+
+    const modulesSection = document.getElementById('solutionModulesSection');
+    const modulesNode = document.getElementById('solutionModules');
+    if (data.modules && data.modules.length) {
+      modulesSection.style.display = '';
+      modulesNode.innerHTML = data.modules.map((item) => `
+        <article class="module-card">
+          <h4>${item.title}</h4>
+          <p>${item.copy}</p>
+        </article>
+      `).join('');
+    }
+
+    if (key === 'servicos-gerenciados' && data.managedPage) {
+      document.querySelectorAll('.content > section:not(#managedServicesPage)').forEach((section) => {
+        section.style.display = 'none';
+      });
+
+      const managedPage = document.getElementById('managedServicesPage');
+      managedPage.style.display = '';
+      document.getElementById('managedKicker').textContent = data.managedPage.kicker;
+      document.getElementById('managedHeroTitle').textContent = data.title;
+      document.getElementById('managedHeroCopy').textContent = data.managedPage.heroCopy;
+      document.getElementById('managedBadgeText').textContent = data.managedPage.badge;
+      document.getElementById('managedHeroVisual').style.setProperty('--managed-hero-image', data.managedPage.heroImage);
+      document.getElementById('managedCtaTitle').textContent = data.ctaTitle;
+      document.getElementById('managedCtaCopy').textContent = data.ctaCopy;
+      document.getElementById('managedCtaLink').href = `https://api.whatsapp.com/send/?phone=5513996847503&text=${encodeURIComponent(`Olá, Conexte! Quero saber mais sobre ${data.title}.`)}`;
+
+      const dotsNode = document.getElementById('managedMapDots');
+      dotsNode.innerHTML = data.managedPage.dots.map((dot, index) => `
+        <g data-dot-index="${index}">
+          <circle class="service-map-dot" cx="${dot.x}" cy="${dot.y}" r="4.5"></circle>
+          <circle class="service-map-pulse" cx="${dot.x}" cy="${dot.y}" r="8"></circle>
+        </g>
+      `).join('');
+
+      const stepbar = document.getElementById('managedStepbar');
+      const detailGrid = document.getElementById('managedDetailGrid');
+      const activeCode = document.getElementById('managedActiveCode');
+      const activeTitle = document.getElementById('managedActiveTitle');
+      const activeCopy = document.getElementById('managedActiveCopy');
+      const metricsNode = document.getElementById('managedMetrics');
+
+      stepbar.innerHTML = data.managedPage.sections.map((section) => `
+        <button class="service-step" type="button" data-service-code="${section.code}">
+          <strong>${section.code}</strong>
+          <span>${section.title}</span>
+        </button>
+      `).join('');
+
+      const stepButtons = Array.from(stepbar.querySelectorAll('.service-step'));
+      const mapGroups = Array.from(dotsNode.querySelectorAll('g[data-dot-index]'));
+
+      function renderManagedSection(code) {
+        const current = data.managedPage.sections.find((section) => section.code === code) || data.managedPage.sections[0];
+        stepButtons.forEach((button) => {
+          button.classList.toggle('is-active', button.dataset.serviceCode === current.code);
+        });
+        mapGroups.forEach((group) => {
+          const isActive = current.activeDots.includes(Number(group.dataset.dotIndex));
+          group.querySelector('.service-map-dot').classList.toggle('is-active', isActive);
+          group.querySelector('.service-map-pulse').style.display = isActive ? '' : 'none';
+        });
+        activeCode.textContent = current.code;
+        activeTitle.textContent = current.title;
+        activeCopy.textContent = current.intro;
+        metricsNode.innerHTML = current.metrics.map((item) => `
+          <div class="service-metric">
+            <small>${item.label}</small>
+            <strong>${item.value}</strong>
+          </div>
+        `).join('');
+        detailGrid.innerHTML = current.details.map((item) => `
+          <article class="service-detail-card">
+            <h4>${item.title}</h4>
+            <p>${item.copy}</p>
+          </article>
+        `).join('');
+      }
+
+      stepButtons.forEach((button) => {
+        button.addEventListener('click', () => renderManagedSection(button.dataset.serviceCode));
+      });
+
+      renderManagedSection(data.managedPage.sections[0].code);
+    }
+
+    const ctaText = encodeURIComponent(`Olá, Conexte! Quero saber mais sobre ${data.title}.`);
+    document.getElementById('solutionCtaLink').href = `https://api.whatsapp.com/send/?phone=5513996847503&text=${ctaText}`;
+  </script>
+</body>
+</html>

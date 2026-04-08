@@ -29,6 +29,19 @@ function splitChars(el) {
   const parts = el.innerHTML.split('<br>');
   el.innerHTML = '';
   parts.forEach((part, pi) => {
+    if (part.includes('__HERO_GLYPH__')) {
+      const [beforeGlyph, afterGlyph] = part.split('__HERO_GLYPH__');
+      if (beforeGlyph.trim()) {
+        beforeGlyph.trim().split(/\s+/).forEach((w) => {
+          const wEl = document.createElement('span'); wEl.className = 'word';
+          w.split('').forEach(c => { const s = document.createElement('span'); s.className = 'char'; s.textContent = c; wEl.appendChild(s); });
+          el.appendChild(wEl);
+          const g = document.createElement('span'); g.className = 'gap'; el.appendChild(g);
+        });
+      }
+      el.appendChild(createHeroGlyph());
+      part = afterGlyph;
+    }
     const hasAccent = part.includes('class="accent"');
     if (hasAccent) {
       const [before, rest] = part.split('<span class="accent"');
@@ -42,7 +55,7 @@ function splitChars(el) {
         });
       }
       const acc = document.createElement('span');
-      acc.className = 'accent'; acc.style.color = 'var(--green)';
+      acc.className = 'accent'; acc.style.color = 'var(--blue)';
       const wEl = document.createElement('span'); wEl.className = 'word';
       inside.split('').forEach(c => { const s = document.createElement('span'); s.className = 'char'; s.textContent = c; wEl.appendChild(s); });
       acc.appendChild(wEl); el.appendChild(acc);
@@ -56,6 +69,170 @@ function splitChars(el) {
       });
     }
     if (pi < parts.length-1) el.appendChild(document.createElement('br'));
+  });
+}
+
+function createHeroGlyph() {
+  const wrap = document.createElement('span');
+  wrap.className = 'hero-glyph-slot';
+  wrap.setAttribute('aria-hidden', 'true');
+  return wrap;
+}
+
+function buildHeroGlyphSvg() {
+  return `
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" focusable="false">
+      <defs>
+        <linearGradient id="heroGlyphOuter" x1="22" y1="18" x2="96" y2="101" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#18568d"/>
+          <stop offset="1" stop-color="#103f6a"/>
+        </linearGradient>
+        <linearGradient id="heroGlyphInner" x1="35" y1="30" x2="83" y2="90" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#2aa3ff"/>
+          <stop offset="1" stop-color="#177fd7"/>
+        </linearGradient>
+      </defs>
+      <path class="hero-glyph-shell" d="M59 7L101 31L91 37L59 19L31 35V86L59 102L91 84L101 90L59 114L22 92V22Z" fill="url(#heroGlyphOuter)"/>
+      <path class="hero-glyph-shell" d="M59 7L109 35L99 41L59 18L26 37L22 31Z" fill="url(#heroGlyphOuter)"/>
+      <path class="hero-glyph-shell" d="M89 79L109 90L59 114L65 104Z" fill="url(#heroGlyphOuter)"/>
+      <path class="hero-glyph-core" d="M59 26L85 41L77 46L59 35L42 45V75L59 85L77 75L85 80L59 96L34 81V40Z" fill="url(#heroGlyphInner)"/>
+      <path class="hero-glyph-highlight" d="M59 11L96 32L90 35L59 17L31 33L27 31Z" fill="#ffffff" opacity=".14"/>
+      <path class="hero-glyph-highlight" d="M59 30L81 42L76 45L59 36L44 45L44 41Z" fill="#ffffff" opacity=".18"/>
+    </svg>`;
+}
+
+function initHeroGlyphMotion() {
+  const heroSlot = document.querySelector('.hero-glyph-slot:not(.hero-glyph-slot-about)');
+  const aboutSlot = document.querySelector('.hero-glyph-slot-about');
+  const hero = document.getElementById('hero');
+  const sobreTitle = document.getElementById('sobre-title');
+  if (!heroSlot || !aboutSlot || !hero || !sobreTitle) return;
+
+  let floating = document.getElementById('heroGlyphFloat');
+  if (!floating) {
+    floating = document.createElement('div');
+    floating.id = 'heroGlyphFloat';
+    floating.className = 'hero-glyph hero-glyph-float';
+    floating.setAttribute('aria-hidden', 'true');
+    floating.innerHTML = buildHeroGlyphSvg();
+    document.body.appendChild(floating);
+  }
+
+  const state = { progress: 0 };
+  let dockedInAbout = false;
+
+  function getRectCenter(rect, size) {
+    return {
+      x: rect.left + (rect.width - size) / 2,
+      y: rect.top + (rect.height - size) / 2,
+    };
+  }
+
+  function renderGlyph() {
+    if (dockedInAbout) return;
+    const heroRect = heroSlot.getBoundingClientRect();
+    const aboutRect = aboutSlot.getBoundingClientRect();
+    const size = Math.max(heroRect.height * 1.02, 44);
+    const start = getRectCenter(heroRect, size);
+    const end = getRectCenter(aboutRect, size);
+    const x = gsap.utils.interpolate(start.x, end.x, state.progress);
+    const y = gsap.utils.interpolate(start.y, end.y, state.progress);
+    const scale = gsap.utils.interpolate(1, 0.84, state.progress);
+    const rotate = gsap.utils.interpolate(0, -6, state.progress);
+
+    gsap.set(floating, {
+      x,
+      y,
+      width: size,
+      height: size,
+      scale,
+      rotate,
+      opacity: 1,
+    });
+  }
+
+  function undockGlyph() {
+    if (!dockedInAbout) return;
+    aboutSlot.innerHTML = '';
+    floating.innerHTML = buildHeroGlyphSvg();
+    gsap.set(floating, { opacity: 1 });
+    dockedInAbout = false;
+  }
+
+  function dockGlyphIntoAbout() {
+    if (dockedInAbout) return;
+    aboutSlot.innerHTML = buildHeroGlyphSvg();
+    gsap.set(floating, { opacity: 0 });
+    dockedInAbout = true;
+    const dockedSvg = aboutSlot.querySelector('svg');
+    if (dockedSvg) {
+      gsap.fromTo(dockedSvg,
+        { scale: 0.92, rotate: -4, transformOrigin: '50% 50%' },
+        { scale: 1, rotate: 0, duration: 0.6, ease: 'power2.out' }
+      );
+    }
+  }
+
+  gsap.to(state, {
+    progress: 1,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#hero',
+      start: 'top top',
+      endTrigger: '#sobre-title',
+      end: 'top 42%',
+      scrub: 1.2,
+      invalidateOnRefresh: true,
+      onUpdate: self => {
+        if (self.progress >= 0.999) {
+          dockGlyphIntoAbout();
+        } else {
+          undockGlyph();
+          renderGlyph();
+        }
+      },
+      onRefresh: self => {
+        if (self.progress >= 0.999) {
+          dockGlyphIntoAbout();
+        } else {
+          undockGlyph();
+          renderGlyph();
+        }
+      },
+      onLeave: () => {
+        state.progress = 1;
+        dockGlyphIntoAbout();
+      },
+      onEnterBack: () => {
+        undockGlyph();
+        renderGlyph();
+      },
+      onLeaveBack: () => {
+        state.progress = 0;
+        undockGlyph();
+        renderGlyph();
+      },
+    },
+  });
+
+  renderGlyph();
+
+  gsap.to(floating.querySelector('.hero-glyph-core'), {
+    scale: 1.035,
+    duration: 2.2,
+    repeat: -1,
+    yoyo: true,
+    ease: 'sine.inOut',
+    transformOrigin: '50% 50%',
+  });
+
+  gsap.to(floating.querySelectorAll('.hero-glyph-highlight'), {
+    opacity: 0.26,
+    duration: 1.8,
+    repeat: -1,
+    yoyo: true,
+    stagger: 0.16,
+    ease: 'sine.inOut',
   });
 }
 
@@ -111,6 +288,7 @@ function bindCharHover() {
 
 window.addEventListener('load', () => {
   splitChars(document.getElementById('heroTitle'));
+  initHeroGlyphMotion();
 
   gsap.to('#navbar', { y: 0, duration: 0.8, ease: 'power2.out', delay: 0.1 });
 
@@ -311,15 +489,15 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 
   gsap.timeline({
     scrollTrigger: {
-      trigger: '#areas',
+      trigger: '#solucoes',
       start: 'top 82%',
       toggleActions: 'play none none reverse',
       invalidateOnRefresh: true,
     }
   })
-    .from('#areas', { opacity: 0, y: 64, duration: 0.85, ease: 'power3.out', immediateRender: false })
-    .from('#areas .label-tag', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.5')
-    .from('#areas .section-h2', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.4')
+    .from('#solucoes', { opacity: 0, y: 64, duration: 0.85, ease: 'power3.out', immediateRender: false })
+    .from('#solucoes .label-tag', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.5')
+    .from('#solucoes .section-h2', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.4')
     .from(areaCardsForIntro, {
       opacity: 0,
       scale: 0.9,
@@ -355,7 +533,203 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       ease: 'power1.out',
       stagger: { each: 0.018, from: 'center' }
     }, '<0.42')
-    .from('#areas .cta-center', { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out', immediateRender: false }, '-=0.24');
+    .from('#solucoes .cta-center', { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out', immediateRender: false }, '-=0.24');
+})();
+
+(function initAreasOrbit() {
+  const orbit = document.getElementById('areasOrbit');
+  if (!orbit) return;
+
+  const nodes = Array.from(orbit.querySelectorAll('.areas-orbit-node'));
+  const subtitlesByTitle = {
+    'Órgãos Públicos': 'Modernização de processos, conformidade e eficiência para a gestão pública.',
+    'Hospitais e Clínicas': 'Operação segura, proteção de dados críticos e mais confiabilidade no atendimento.',
+    'Instituições de Ensino': 'Gestão digital, infraestrutura estável e melhor experiência para alunos e equipes.',
+    'Hotéis, Restaurantes e Centros Comerciais': 'Operações mais ágeis, conectividade contínua e experiência melhor para o cliente.',
+    'Empresas Comerciais e Corporativas': 'Produtividade, segurança e infraestrutura alinhada ao crescimento do negócio.',
+    'Supermercados e Atacarejos': 'Controle operacional, redução de perdas e mais performance no varejo.'
+  };
+  const iconsByTitle = {
+    'Órgãos Públicos': `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 4h12v15H6z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+        <path d="M9 7h2v2H9zm4 0h2v2h-2zM9 11h2v2H9zm4 0h2v2h-2zM9 15h2v2H9zm4 0h2v2h-2z" fill="currentColor"/>
+        <path d="M4 20h16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>`,
+    'Hospitais e Clínicas': `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 5h12v14H6z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+        <path d="M12 3v5M9.5 5.5h5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+        <path d="M9 10h2v2H9zm4 0h2v2h-2zM9 14h2v2H9zm4 0h2v2h-2z" fill="currentColor"/>
+        <path d="M4 20h16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>`,
+    'Instituições de Ensino': `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 9h18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+        <path d="M5 9 12 5l7 4" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+        <path d="M7 11v6M12 11v6M17 11v6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+        <path d="M4 19h16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>`,
+    'Hotéis, Restaurantes e Centros Comerciais': `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M7 4v16M6 4v7a2 2 0 0 1-2 2V4M8 4v7a2 2 0 0 0 2 2V4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 4c1.9 0 3 1.8 3 4.2 0 2-1 3.8-2.4 4.5V20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>`,
+    'Empresas Comerciais e Corporativas': `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 4h12v15H6z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+        <path d="M9 7h2v2H9zm4 0h2v2h-2zM9 11h2v2H9zm4 0h2v2h-2zM9 15h2v2H9zm4 0h2v2h-2z" fill="currentColor"/>
+        <path d="M4 20h16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>`,
+    'Supermercados e Atacarejos': `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 7h13l-1.5 7H8L6.5 9H4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13 5.5v4M11 7.5h4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+        <circle cx="10" cy="18.2" r="1.6" fill="currentColor"/>
+        <circle cx="16" cy="18.2" r="1.6" fill="currentColor"/>
+      </svg>`
+  };
+  const rings = Array.from(orbit.querySelectorAll('.areas-orbit-ring'));
+  const core = orbit.querySelector('.areas-orbit-center');
+  const nodesWrap = orbit.querySelector('.areas-orbit-nodes');
+  const mobileLayout = window.matchMedia('(max-width: 980px)');
+  let openNode = null;
+
+  nodes.forEach((node) => {
+    const title = node.querySelector('h3');
+    if (!title) return;
+
+    node.tabIndex = 0;
+    node.setAttribute('role', 'button');
+    node.setAttribute('aria-expanded', 'false');
+
+    if (!node.querySelector('.areas-orbit-node-card')) {
+      const card = document.createElement('div');
+      card.className = 'areas-orbit-node-card';
+      while (node.firstChild) card.appendChild(node.firstChild);
+
+      const subtitle = document.createElement('p');
+      subtitle.className = 'areas-orbit-subtitle';
+      subtitle.textContent = subtitlesByTitle[title.textContent.trim()] || '';
+      card.appendChild(subtitle);
+      node.appendChild(card);
+    }
+
+    const icon = node.querySelector('.areas-orbit-icon');
+    if (icon && iconsByTitle[title.textContent.trim()]) {
+      icon.innerHTML = iconsByTitle[title.textContent.trim()];
+    }
+  });
+
+  const nodeCards = nodes.map((node) => node.querySelector('.areas-orbit-node-card')).filter(Boolean);
+
+  function setOpenNode(target) {
+    openNode = target === openNode ? null : target;
+    nodes.forEach((node) => {
+      const isOpen = node === openNode;
+      node.classList.toggle('is-open', isOpen);
+      node.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+
+  function positionOrbitNodes() {
+    if (!nodesWrap || mobileLayout.matches) {
+      nodes.forEach((node) => {
+        node.style.left = '';
+        node.style.top = '';
+        node.style.transform = 'translateY(20px) scale(.96)';
+      });
+      return;
+    }
+
+    const orbitRect = orbit.getBoundingClientRect();
+    const radius = Math.min(orbitRect.width, orbitRect.height) * 0.39;
+
+    nodes.forEach((node) => {
+      const angleDeg = Number(node.dataset.angle || 0);
+      const angle = (angleDeg * Math.PI) / 180;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+      node.style.left = `calc(50% + ${x.toFixed(2)}px)`;
+      node.style.top = `calc(50% + ${y.toFixed(2)}px)`;
+      node.style.transform = 'translate(-50%,-50%) scale(.96)';
+    });
+  }
+
+  nodes.forEach((node) => {
+    node.addEventListener('click', () => setOpenNode(node));
+    node.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        setOpenNode(node);
+      }
+    });
+  });
+
+  gsap.timeline({
+    scrollTrigger: {
+      trigger: '#areas',
+      start: 'top 80%',
+      toggleActions: 'play none none reverse',
+      invalidateOnRefresh: true,
+    }
+  })
+    .from('#areas', { opacity: 0, y: 50, duration: 0.8, ease: 'power3.out', immediateRender: false })
+    .from('#areas .label-tag', { opacity: 0, y: 20, duration: 0.45, ease: 'power3.out', immediateRender: false }, '-=0.45')
+    .from('#areas .section-h2', { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out', immediateRender: false }, '-=0.3')
+    .from(rings, {
+      opacity: 0,
+      scale: 0.9,
+      duration: 0.85,
+      stagger: 0.08,
+      ease: 'power2.out',
+      immediateRender: false
+    }, '-=0.18')
+    .from(core, {
+      opacity: 0,
+      scale: 0.84,
+      duration: 0.7,
+      ease: 'power3.out',
+      immediateRender: false
+    }, '-=0.5')
+    .to(nodes, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.55,
+      stagger: { each: 0.08, from: 'center' },
+      ease: 'power3.out',
+      immediateRender: false
+    }, '-=0.3');
+
+  gsap.to('#areas .areas-orbit-ring--outer', {
+    rotate: 360,
+    duration: 28,
+    repeat: -1,
+    ease: 'none',
+    transformOrigin: '50% 50%'
+  });
+
+  if (nodesWrap && nodes.length) {
+    positionOrbitNodes();
+    window.addEventListener('resize', positionOrbitNodes);
+
+    gsap.to(nodesWrap, {
+      rotate: 360,
+      duration: 42,
+      repeat: -1,
+      ease: 'none',
+      transformOrigin: '50% 50%'
+    });
+
+    gsap.to(nodeCards, {
+      rotate: -360,
+      duration: 42,
+      repeat: -1,
+      ease: 'none',
+      transformOrigin: '50% 50%'
+    });
+  }
 })();
 
 // ══════════════════════════════════
