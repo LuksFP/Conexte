@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Conexte | Soluções</title>
   <style>
+    @font-face{
+      font-family:'Aptos Light';
+      src:url('https://framerusercontent.com/assets/UYb2RgnshbtNb82X0fzL6kNYpk.woff2') format('woff2');
+      font-display:swap;
+      font-style:normal;
+      font-weight:300;
+    }
+    @font-face{
+      font-family:'Aptos Display';
+      src:url('https://framerusercontent.com/assets/5JopmPNyPlcQMNdBbf5BWHXcFI0.woff2') format('woff2');
+      font-display:swap;
+      font-style:normal;
+      font-weight:400;
+    }
+    @font-face{
+      font-family:'Aptos Bold';
+      src:url('https://framerusercontent.com/assets/1q11U3y6NgV79ntuZJBtpWPdqM.woff2') format('woff2');
+      font-display:swap;
+      font-style:normal;
+      font-weight:700;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
     :root{
       --navy:#00085A;
       --navy-2:#0d1e6b;
@@ -489,6 +511,847 @@
       font-weight:700;
       white-space:nowrap;
     }
+    html{scroll-behavior:smooth}
+    body.managed-mode{
+      font-family:'Montserrat',sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(77,143,232,.18), transparent 32%),
+        linear-gradient(180deg, #eef4ff 0%, #ffffff 28%, #eef4ff 100%);
+    }
+    body.managed-mode .hero{
+      min-height:76vh;
+      padding:32px 24px 28px;
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(0,8,90,.20), rgba(0,8,90,.82)),
+        linear-gradient(135deg, rgba(0,8,90,.92), rgba(13,30,107,.72)),
+        var(--hero-bg, linear-gradient(135deg, #10256f, #091540));
+      background-size:cover;
+      background-position:center;
+    }
+    body.managed-mode .hero::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(77,143,232,.18), transparent 24%),
+        radial-gradient(circle at 84% 14%, rgba(200,212,0,.12), transparent 20%),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size:auto, auto, 120px 120px, 120px 120px;
+      pointer-events:none;
+    }
+    @keyframes managedHeroBackdropIn{
+      0%{
+        opacity:0;
+        transform:scale(1.08);
+      }
+      100%{
+        opacity:1;
+        transform:scale(1);
+      }
+    }
+    @keyframes managedIntroReveal{
+      0%{
+        opacity:0;
+        transform:translate3d(var(--intro-x, 0), var(--intro-y, 24px), 0) scale(var(--intro-scale, .985));
+        filter:blur(10px);
+      }
+      100%{
+        opacity:1;
+        transform:translate3d(0, 0, 0) scale(1);
+        filter:blur(0);
+      }
+    }
+    body.managed-mode .shell,
+    body.managed-mode .hero-grid,
+    body.managed-mode .topbar{
+      position:relative;
+      z-index:1;
+    }
+    body.managed-mode .topbar{
+      margin-bottom:72px;
+    }
+    body.managed-mode .hero::before,
+    body.managed-mode .brand,
+    body.managed-mode .back-link,
+    body.managed-mode .eyebrow,
+    body.managed-mode #solutionTitle,
+    body.managed-mode .hero-copy,
+    body.managed-mode .hero-panel,
+    body.managed-mode .hero-panel li,
+    body.managed-mode .managed-stepper,
+    body.managed-mode .managed-step-link{
+      will-change:transform, opacity, filter;
+      backface-visibility:hidden;
+    }
+    body.managed-mode .brand{--intro-y:-18px}
+    body.managed-mode .back-link{--intro-y:-16px}
+    body.managed-mode .eyebrow{--intro-y:22px}
+    body.managed-mode #solutionTitle{
+      --intro-y:34px;
+      --intro-scale:.97;
+    }
+    body.managed-mode .hero-copy{--intro-y:28px}
+    body.managed-mode .hero-panel{
+      --intro-x:38px;
+      --intro-scale:.98;
+    }
+    body.managed-mode .hero-panel li{--intro-y:18px}
+    body.managed-mode .managed-stepper{--intro-y:30px}
+    body.managed-mode .managed-step-link{--intro-y:18px}
+    body.managed-mode.managed-intro-pending .hero::before,
+    body.managed-mode.managed-intro-pending .brand,
+    body.managed-mode.managed-intro-pending .back-link,
+    body.managed-mode.managed-intro-pending .eyebrow,
+    body.managed-mode.managed-intro-pending #solutionTitle,
+    body.managed-mode.managed-intro-pending .hero-copy,
+    body.managed-mode.managed-intro-pending .hero-panel,
+    body.managed-mode.managed-intro-pending .hero-panel li,
+    body.managed-mode.managed-intro-pending .managed-stepper,
+    body.managed-mode.managed-intro-pending .managed-step-link{
+      opacity:0;
+      transform:translate3d(var(--intro-x, 0), var(--intro-y, 24px), 0) scale(var(--intro-scale, .985));
+      filter:blur(10px);
+    }
+    body.managed-mode.managed-intro-ready .hero::before{
+      animation:managedHeroBackdropIn 1.18s cubic-bezier(.16,1,.3,1) both;
+    }
+    body.managed-mode.managed-intro-ready .brand{
+      animation:managedIntroReveal .72s cubic-bezier(.16,1,.3,1) .06s both;
+    }
+    body.managed-mode.managed-intro-ready .back-link{
+      animation:managedIntroReveal .72s cubic-bezier(.16,1,.3,1) .14s both;
+    }
+    body.managed-mode.managed-intro-ready .eyebrow{
+      animation:managedIntroReveal .76s cubic-bezier(.16,1,.3,1) .2s both;
+    }
+    body.managed-mode.managed-intro-ready #solutionTitle{
+      animation:managedIntroReveal .86s cubic-bezier(.16,1,.3,1) .3s both;
+    }
+    body.managed-mode.managed-intro-ready .hero-copy{
+      animation:managedIntroReveal .82s cubic-bezier(.16,1,.3,1) .42s both;
+    }
+    body.managed-mode.managed-intro-ready .hero-panel{
+      animation:managedIntroReveal .86s cubic-bezier(.16,1,.3,1) .46s both;
+    }
+    body.managed-mode.managed-intro-ready .hero-panel li:nth-child(1){
+      animation:managedIntroReveal .64s cubic-bezier(.16,1,.3,1) .62s both;
+    }
+    body.managed-mode.managed-intro-ready .hero-panel li:nth-child(2){
+      animation:managedIntroReveal .64s cubic-bezier(.16,1,.3,1) .7s both;
+    }
+    body.managed-mode.managed-intro-ready .hero-panel li:nth-child(3){
+      animation:managedIntroReveal .64s cubic-bezier(.16,1,.3,1) .78s both;
+    }
+    body.managed-mode.managed-intro-ready .hero-panel li:nth-child(4){
+      animation:managedIntroReveal .64s cubic-bezier(.16,1,.3,1) .86s both;
+    }
+    body.managed-mode.managed-intro-ready .managed-stepper{
+      animation:managedIntroReveal .84s cubic-bezier(.16,1,.3,1) .56s both;
+    }
+    body.managed-mode.managed-intro-ready .managed-step-link:nth-child(1){
+      animation:managedIntroReveal .66s cubic-bezier(.16,1,.3,1) .7s both;
+    }
+    body.managed-mode.managed-intro-ready .managed-step-link:nth-child(2){
+      animation:managedIntroReveal .66s cubic-bezier(.16,1,.3,1) .78s both;
+    }
+    body.managed-mode.managed-intro-ready .managed-step-link:nth-child(3){
+      animation:managedIntroReveal .66s cubic-bezier(.16,1,.3,1) .86s both;
+    }
+    body.managed-mode.managed-intro-ready .managed-step-link:nth-child(4){
+      animation:managedIntroReveal .66s cubic-bezier(.16,1,.3,1) .94s both;
+    }
+    body.managed-mode .brand{
+      font-family:'Montserrat',sans-serif;
+      letter-spacing:.18em;
+    }
+    body.managed-mode .brand img{
+      filter:drop-shadow(0 10px 24px rgba(0,0,0,.28));
+    }
+    body.managed-mode .back-link,
+    body.managed-mode .cta-link{
+      border-color:rgba(255,255,255,.18);
+      background:rgba(255,255,255,.08);
+    }
+    body.managed-mode .hero-grid{
+      grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+      gap:34px;
+      align-items:end;
+    }
+    body.managed-mode .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      color:rgba(247,251,255,.84);
+      font-size:11px;
+      letter-spacing:.18em;
+      backdrop-filter:blur(14px);
+      margin-bottom:18px;
+    }
+    body.managed-mode h1{
+      margin:0 0 18px;
+      font-family:'Aptos Light',sans-serif;
+      font-weight:300;
+      font-size:clamp(50px, 7vw, 98px);
+      line-height:.94;
+      letter-spacing:-.045em;
+      color:#fff;
+    }
+    body.managed-mode #solutionTitle{
+      background:linear-gradient(90deg, #9ad8ff 0%, #ffffff 38%, #d9f764 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      text-shadow:none;
+    }
+    body.managed-mode .hero-copy{
+      max-width:760px;
+      font-size:18px;
+      line-height:1.8;
+      color:rgba(239,246,255,.88);
+    }
+    body.managed-mode .hero-panel{
+      padding:26px;
+      border-radius:28px;
+      background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:0 28px 64px rgba(0,0,0,.18);
+      backdrop-filter:blur(18px);
+    }
+    body.managed-mode .hero-panel h2{
+      margin:0 0 14px;
+      font-family:'Aptos Display',sans-serif;
+      font-size:28px;
+      color:#fff;
+      letter-spacing:-.03em;
+    }
+    body.managed-mode .hero-panel ul{
+      display:grid;
+      gap:12px;
+      padding-left:18px;
+      color:rgba(241,246,255,.82);
+      line-height:1.75;
+    }
+    body.managed-mode main{
+      padding:26px 24px 80px;
+    }
+    .managed-landing{
+      display:grid;
+      gap:28px;
+      width:min(1240px, 100%);
+      margin:0 auto;
+      position:relative;
+      z-index:2;
+    }
+    .managed-stepper{
+      position:sticky;
+      top:18px;
+      z-index:18;
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:12px;
+      padding:12px;
+      border-radius:24px;
+      background:rgba(0,8,90,.78);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 24px 58px rgba(0,8,90,.22);
+      backdrop-filter:blur(16px);
+    }
+    .managed-step-link{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:13px 14px;
+      border-radius:18px;
+      text-decoration:none;
+      color:rgba(230,238,255,.78);
+      transition:background .28s ease, color .28s ease, transform .28s ease;
+    }
+    .managed-step-link:hover,
+    .managed-step-link.is-active{
+      color:#fff;
+      background:linear-gradient(135deg, rgba(77,143,232,.34), rgba(200,212,0,.18));
+      transform:translateY(-2px);
+    }
+    .managed-step-number{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      font-weight:700;
+    }
+    .managed-step-label{
+      font-size:13px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .managed-section{
+      border-radius:34px;
+      border:1px solid rgba(77,143,232,.14);
+      background:rgba(255,255,255,.92);
+      box-shadow:0 26px 64px rgba(16,37,111,.10);
+      overflow:hidden;
+    }
+    .managed-section-inner{
+      padding:42px;
+    }
+    .managed-section-kicker{
+      margin:0 0 12px;
+      color:#4d8fe8;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .managed-section h2{
+      margin:0 0 14px;
+      font-family:'Aptos Light',sans-serif;
+      font-weight:300;
+      font-size:clamp(34px, 4vw, 56px);
+      line-height:.95;
+      letter-spacing:-.04em;
+      color:var(--navy);
+    }
+    .managed-section-copy{
+      margin:0;
+      max-width:720px;
+      color:var(--muted);
+      line-height:1.85;
+      font-size:16px;
+    }
+    .managed-solutions{
+      background:
+        radial-gradient(circle at 92% 0%, rgba(77,143,232,.12), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(244,248,255,.98));
+    }
+    .managed-solutions-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:20px;
+      margin-top:28px;
+    }
+    .managed-solution-card{
+      position:relative;
+      overflow:hidden;
+      border-radius:26px;
+      background:#eef4ff;
+      border:1px solid rgba(77,143,232,.16);
+      box-shadow:0 16px 34px rgba(16,37,111,.08);
+      transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+    }
+    .managed-solution-card:hover{
+      transform:translateY(-8px);
+      border-color:rgba(77,143,232,.28);
+      box-shadow:0 24px 42px rgba(16,37,111,.12);
+    }
+    .managed-solution-media{
+      aspect-ratio:1.12;
+      background:
+        linear-gradient(180deg, rgba(0,8,90,.06), rgba(0,8,90,.28)),
+        var(--managed-solution-image);
+      background-size:cover;
+      background-position:center;
+      border-bottom-left-radius:220px;
+      border-bottom-right-radius:170px;
+      border-top-right-radius:210px;
+      position:relative;
+      overflow:hidden;
+      margin:18px 18px 0;
+    }
+    .managed-solution-glow{
+      position:absolute;
+      left:-6%;
+      right:-6%;
+      bottom:12px;
+      height:36px;
+      background:radial-gradient(circle, rgba(200,212,0,.95) 0%, rgba(77,143,232,.82) 44%, transparent 76%);
+      opacity:.84;
+      filter:blur(14px);
+    }
+    .managed-solution-body{
+      padding:20px 20px 22px;
+      display:grid;
+      gap:12px;
+    }
+    .managed-solution-code{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:#4d8fe8;
+    }
+    .managed-solution-code::before{
+      content:'';
+      width:18px;
+      height:1px;
+      background:currentColor;
+    }
+    .managed-solution-card h3{
+      margin:0;
+      font-family:'Aptos Display',sans-serif;
+      font-size:24px;
+      line-height:1.04;
+      letter-spacing:-.03em;
+      color:var(--navy);
+    }
+    .managed-solution-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.72;
+    }
+    .managed-solution-tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .managed-solution-tags span{
+      display:inline-flex;
+      align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(77,143,232,.08);
+      border:1px solid rgba(77,143,232,.14);
+      color:var(--navy);
+      font-size:11px;
+      font-weight:600;
+      letter-spacing:.03em;
+    }
+    .managed-scenario{
+      position:relative;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 14% 16%, rgba(77,143,232,.18), transparent 20%),
+        linear-gradient(135deg, #00085a 0%, #0b2f74 46%, #13489c 100%);
+      color:#fff;
+    }
+    .managed-scenario-grid{
+      position:relative;
+      display:grid;
+      align-items:center;
+      grid-template-columns:minmax(360px, .86fr) minmax(500px, 1.14fr);
+      gap:clamp(24px, 4vw, 56px);
+      min-height:clamp(620px, 58vw, 760px);
+    }
+    .managed-scenario-grid::before{
+      content:'';
+      position:absolute;
+      top:46px;
+      bottom:46px;
+      left:calc(40.5% + 20px);
+      width:1px;
+      background:linear-gradient(180deg, transparent 0%, rgba(255,255,255,.12) 14%, rgba(255,255,255,.08) 48%, transparent 100%);
+      pointer-events:none;
+    }
+    .managed-scenario-copy{
+      position:relative;
+      z-index:1;
+      padding:58px 0 58px 44px;
+      display:grid;
+      align-content:center;
+      gap:18px;
+    }
+    .managed-scenario .managed-section-kicker{
+      color:rgba(217,247,100,.92);
+    }
+    .managed-scenario h2{
+      color:#fff;
+      max-width:11.2ch;
+      font-size:clamp(36px, 4.3vw, 62px);
+      line-height:.94;
+    }
+    .managed-scenario .managed-section-copy{
+      color:rgba(236,243,255,.84);
+      max-width:40ch;
+    }
+    .managed-scenario-stats{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+      margin-top:10px;
+      max-width:520px;
+    }
+    .managed-scenario-stat{
+      padding:16px 18px;
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(14px);
+      min-height:104px;
+      box-shadow:0 16px 30px rgba(0,0,0,.1);
+    }
+    .managed-scenario-stat:last-child{
+      grid-column:1 / -1;
+    }
+    .managed-scenario-stat strong{
+      display:block;
+      margin-bottom:6px;
+      font-family:'Aptos Display',sans-serif;
+      font-size:36px;
+      line-height:.95;
+      letter-spacing:-.03em;
+      color:#fff;
+    }
+    .managed-scenario-stat span{
+      color:rgba(236,243,255,.78);
+      font-size:14px;
+      line-height:1.6;
+    }
+    .managed-scenario-visual{
+      position:relative;
+      overflow:hidden;
+      padding:24px 48px 42px 0;
+      display:grid;
+      place-items:center stretch;
+    }
+    .managed-scenario-visual::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 54% 54%, rgba(114,210,255,.24) 0%, rgba(114,210,255,.08) 26%, transparent 58%),
+        radial-gradient(circle at 88% 14%, rgba(217,247,100,.10) 0%, transparent 18%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .managed-scenario-banner{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.06)),
+        var(--managed-banner-image);
+      background-size:cover;
+      background-position:center;
+      mix-blend-mode:screen;
+      opacity:.12;
+      pointer-events:none;
+    }
+    .managed-map-shell{
+      --map-tilt-x:0deg;
+      --map-tilt-y:0deg;
+      --map-glow-x:50%;
+      --map-glow-y:50%;
+      position:relative;
+      justify-self:end;
+      width:min(760px, calc(100% + 56px));
+      aspect-ratio:1.02;
+      z-index:1;
+      margin-right:-28px;
+      padding:18px;
+      border-radius:34px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 24% 16%, rgba(255,255,255,.14), transparent 20%),
+        linear-gradient(165deg, rgba(118,205,255,.12) 0%, rgba(255,255,255,.05) 32%, rgba(8,38,88,.04) 100%);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:
+        0 36px 72px rgba(0,0,0,.24),
+        0 0 0 1px rgba(77,143,232,.08),
+        0 0 68px rgba(95,192,255,.16);
+      backdrop-filter:blur(12px);
+      transform:perspective(1400px) rotateX(var(--map-tilt-x)) rotateY(var(--map-tilt-y)) translateY(0);
+      transition:transform .32s cubic-bezier(.16,1,.3,1), box-shadow .32s ease, border-color .32s ease;
+      will-change:transform;
+    }
+    .managed-map-shell:hover{
+      box-shadow:
+        0 44px 88px rgba(0,0,0,.26),
+        0 0 0 1px rgba(77,143,232,.12),
+        0 0 82px rgba(95,192,255,.22);
+    }
+    .managed-map-shell::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at var(--map-glow-x) var(--map-glow-y), rgba(255,255,255,.16), transparent 24%),
+        radial-gradient(circle at 50% 50%, rgba(115,210,255,.12), transparent 58%),
+        linear-gradient(180deg, rgba(255,255,255,.05), transparent 22%);
+      opacity:.48;
+      pointer-events:none;
+    }
+    .managed-map-shell::after{
+      content:'';
+      position:absolute;
+      inset:18px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        inset 0 0 34px rgba(83,186,255,.10);
+      pointer-events:none;
+      z-index:3;
+    }
+    .managed-map-stage,
+    .managed-map-fallback{
+      position:absolute;
+      inset:18px;
+      border-radius:24px;
+      overflow:hidden;
+    }
+    .managed-map-stage{
+      z-index:1;
+      opacity:0;
+      transition:opacity .45s ease;
+    }
+    .managed-map-stage canvas{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+    .managed-map-fallback{
+      z-index:2;
+      width:calc(100% - 36px);
+      height:calc(100% - 36px);
+      object-fit:cover;
+      box-shadow:0 24px 48px rgba(0,0,0,.24);
+      transform:scale(1.01);
+      transition:opacity .45s ease, transform .32s cubic-bezier(.16,1,.3,1), filter .32s ease;
+    }
+    .managed-map-shell.is-ready .managed-map-stage{opacity:1}
+    .managed-map-shell.is-ready .managed-map-fallback{
+      opacity:0;
+      transform:scale(1.04);
+    }
+    .managed-map-shell:not(.is-ready) .managed-map-fallback{
+      animation:managedMapFallbackDrift 7.2s ease-in-out infinite;
+    }
+    .managed-map-shell:hover .managed-map-fallback{
+      transform:scale(1.035);
+      filter:brightness(1.04) saturate(1.08);
+    }
+    .managed-map-chip{
+      position:absolute;
+      z-index:4;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(0,8,90,.54);
+      border:1px solid rgba(255,255,255,.12);
+      color:rgba(244,249,255,.92);
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      box-shadow:0 16px 30px rgba(0,0,0,.18);
+      backdrop-filter:blur(14px);
+    }
+    .managed-map-chip::before{
+      content:'';
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#d9f764;
+      box-shadow:0 0 16px rgba(217,247,100,.58);
+      animation:managedMapBeacon 2.8s ease-in-out infinite;
+    }
+    .managed-map-chip--north{
+      top:30px;
+      left:28px;
+    }
+    .managed-map-chip--south{
+      right:28px;
+      bottom:24px;
+    }
+    @keyframes managedMapBeacon{
+      0%,100%{opacity:.78;transform:scale(.92)}
+      50%{opacity:1;transform:scale(1.08)}
+    }
+    @keyframes managedMapFallbackDrift{
+      0%,100%{transform:scale(1.01) translate3d(0,0,0)}
+      50%{transform:scale(1.04) translate3d(0,-8px,0)}
+    }
+    .managed-benefits{
+      background:
+        radial-gradient(circle at 84% 12%, rgba(200,212,0,.12), transparent 24%),
+        linear-gradient(180deg, #ffffff 0%, #eff5ff 100%);
+    }
+    .managed-benefits-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:18px;
+      margin-top:26px;
+    }
+    .managed-benefit-card{
+      padding:24px;
+      border-radius:24px;
+      background:rgba(255,255,255,.9);
+      border:1px solid rgba(77,143,232,.14);
+      box-shadow:0 14px 32px rgba(16,37,111,.08);
+    }
+    .managed-benefit-index{
+      display:inline-flex;
+      margin-bottom:16px;
+      color:#4d8fe8;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .managed-benefit-card h3{
+      margin:0 0 10px;
+      font-family:'Aptos Light',sans-serif;
+      font-weight:300;
+      font-size:30px;
+      line-height:.98;
+      letter-spacing:-.035em;
+      color:var(--navy);
+    }
+    .managed-benefit-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.78;
+      font-size:15px;
+    }
+    .managed-contact{
+      background:
+        radial-gradient(circle at 12% 18%, rgba(77,143,232,.20), transparent 24%),
+        linear-gradient(135deg, #00085a 0%, #0d1e6b 44%, #103b87 100%);
+      color:#fff;
+    }
+    .managed-contact-grid{
+      display:grid;
+      grid-template-columns:minmax(0, 1.08fr) minmax(320px,.92fr);
+      gap:24px;
+      align-items:end;
+    }
+    .managed-contact .managed-section-kicker{
+      color:rgba(217,247,100,.92);
+    }
+    .managed-contact h2{
+      color:#fff;
+      max-width:620px;
+    }
+    .managed-contact .managed-section-copy{
+      color:rgba(237,245,255,.82);
+      max-width:640px;
+    }
+    .managed-contact-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:flex-start;
+    }
+    .managed-contact .cta-primary{
+      background:linear-gradient(135deg, #58b0ff 0%, #2b86ff 72%, #0f6fe2 100%);
+      box-shadow:0 18px 34px rgba(47,127,241,.26);
+    }
+    .managed-contact .cta-secondary{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px 22px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      text-decoration:none;
+      font-weight:600;
+    }
+    @media (max-width: 1100px){
+      body.managed-mode .hero-grid,
+      .managed-scenario-grid,
+      .managed-contact-grid{
+        grid-template-columns:1fr;
+      }
+      .managed-scenario-grid::before{
+        display:none;
+      }
+      .managed-scenario-copy{
+        padding:40px 38px 4px;
+      }
+      .managed-scenario h2{
+        max-width:12ch;
+      }
+      .managed-scenario-stats{
+        max-width:none;
+      }
+      .managed-scenario-visual{
+        padding:10px 30px 42px;
+        place-items:center;
+      }
+      .managed-map-shell{
+        width:min(760px, 100%);
+        margin-right:0;
+      }
+      .managed-solutions-grid{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 960px){
+      .managed-landing{
+        gap:22px;
+        margin:0 auto;
+      }
+      .managed-stepper{
+        grid-template-columns:1fr 1fr;
+      }
+      .managed-section-inner,
+      .managed-scenario-copy,
+      .managed-scenario-visual{
+        padding:28px 22px;
+      }
+      .managed-scenario-stats{
+        grid-template-columns:1fr;
+      }
+      .managed-scenario-stat:last-child{
+        grid-column:auto;
+      }
+      .managed-solutions-grid,
+      .managed-benefits-grid{
+        grid-template-columns:1fr;
+      }
+      .managed-map-shell{
+        padding:14px;
+        border-radius:26px;
+      }
+      .managed-map-shell::after{
+        inset:14px;
+        border-radius:18px;
+      }
+      .managed-map-stage,
+      .managed-map-fallback{
+        inset:14px;
+        border-radius:18px;
+      }
+      .managed-map-fallback{
+        width:calc(100% - 28px);
+        height:calc(100% - 28px);
+      }
+      .managed-map-chip{
+        padding:8px 11px;
+        font-size:9px;
+      }
+      .managed-map-chip--north{
+        top:18px;
+        left:18px;
+      }
+      .managed-map-chip--south{
+        right:18px;
+        bottom:18px;
+      }
+      .managed-contact-actions{
+        flex-direction:column;
+      }
+      .managed-contact .cta-primary,
+      .managed-contact .cta-secondary{
+        width:100%;
+      }
+    }
     @media (max-width: 960px){
       .hero-grid,.grid,.kpis,.modules-grid,.service-showcase-grid,.service-map-block,.service-detail-grid{grid-template-columns:1fr}
       .service-stepbar{grid-template-columns:1fr 1fr}
@@ -498,6 +1361,23 @@
       .service-map-visual{padding:24px 18px 28px}
       .service-map-badge{position:relative;left:auto;top:auto;margin-top:12px;max-width:none}
       .topbar{margin-bottom:34px}
+    }
+    @media (prefers-reduced-motion: reduce){
+      body.managed-mode .hero::before,
+      body.managed-mode .brand,
+      body.managed-mode .back-link,
+      body.managed-mode .eyebrow,
+      body.managed-mode #solutionTitle,
+      body.managed-mode .hero-copy,
+      body.managed-mode .hero-panel,
+      body.managed-mode .hero-panel li,
+      body.managed-mode .managed-stepper,
+      body.managed-mode .managed-step-link{
+        animation:none !important;
+        opacity:1 !important;
+        transform:none !important;
+        filter:none !important;
+      }
     }
   </style>
 </head>
@@ -569,52 +1449,86 @@
         <a class="cta-primary" id="solutionCtaLink" href="https://api.whatsapp.com/send/?phone=5513996847503" target="_blank" rel="noopener">Solicitar atendimento</a>
       </section>
 
-      <section id="managedServicesPage" class="service-page" style="display:none">
-        <div class="service-showcase">
-          <div class="service-showcase-grid">
-            <div class="service-visual" id="managedHeroVisual"></div>
-            <div class="service-copy">
-              <p class="service-kicker" id="managedKicker">Grupo de soluções</p>
-              <h2 id="managedHeroTitle">Serviços Gerenciados</h2>
-              <p id="managedHeroCopy"></p>
-            </div>
+      <section id="managedServicesPage" class="managed-landing" style="display:none">
+        <nav class="managed-stepper" aria-label="Navegação da página de serviços gerenciados">
+          <a class="managed-step-link is-active" href="#solucoes">
+            <span class="managed-step-number">1</span>
+            <span class="managed-step-label">Soluções</span>
+          </a>
+          <a class="managed-step-link" href="#cenario">
+            <span class="managed-step-number">2</span>
+            <span class="managed-step-label">Cenário</span>
+          </a>
+          <a class="managed-step-link" href="#beneficios">
+            <span class="managed-step-number">3</span>
+            <span class="managed-step-label">Benefícios</span>
+          </a>
+          <a class="managed-step-link" href="#faleconosco">
+            <span class="managed-step-number">4</span>
+            <span class="managed-step-label">Fale conosco</span>
+          </a>
+        </nav>
+
+        <section class="managed-section managed-solutions" id="solucoes">
+          <div class="managed-section-inner">
+            <p class="managed-section-kicker">Soluções do grupo</p>
+            <h2>As frentes que sustentam a operação.</h2>
+            <p class="managed-section-copy">A página foi reorganizada no formato da referência, mas aplicada à Conexte: quatro frentes principais, leitura clara do portfólio e linguagem visual mais corporativa para vender a estrutura de Serviços Gerenciados.</p>
+            <div class="managed-solutions-grid" id="managedSolutionsGrid"></div>
           </div>
-        </div>
-        <div class="service-stepbar" id="managedStepbar"></div>
-        <div class="service-map-block">
-          <div class="service-map-visual">
-            <div class="service-map-shell">
-              <div class="service-map-badge">
-                <span>Atuação Conexte</span>
-                <strong id="managedBadgeText">Cobertura nacional orientada por operação</strong>
+        </section>
+
+        <section class="managed-section managed-scenario" id="cenario">
+          <div class="managed-scenario-grid">
+            <div class="managed-scenario-copy">
+              <p class="managed-section-kicker" id="managedScenarioKicker">Cenário</p>
+              <h2 id="managedScenarioTitle">Cobertura nacional especializada</h2>
+              <p class="managed-section-copy" id="managedScenarioCopy"></p>
+              <div class="managed-scenario-stats" id="managedScenarioStats"></div>
+            </div>
+            <div class="managed-scenario-visual">
+              <div class="managed-scenario-banner" id="managedScenarioBanner"></div>
+              <div class="managed-map-shell" id="managedScenarioMapShell">
+                <div class="managed-map-stage" id="managedScenarioMapStage" aria-hidden="true"></div>
+                <img class="managed-map-fallback" src="brasil-network-map.jpeg" alt="Mapa do Brasil com conexões digitais entre regiões">
+                <div class="managed-map-chip managed-map-chip--north">Cobertura nacional</div>
+                <div class="managed-map-chip managed-map-chip--south">Operação integrada</div>
               </div>
-              <svg class="service-map-svg" viewBox="0 0 540 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path class="service-map-network" d="M146 121C180 95 235 77 291 72C353 66 404 82 434 118M160 186C215 159 278 149 347 153C397 156 432 170 459 194M170 266C218 251 273 246 331 252C389 258 428 280 457 311M209 344C248 334 289 335 332 344C380 354 412 375 432 403" />
-                <path class="service-map-shape" d="M262 58L308 74L338 66L372 83L401 116L428 117L455 155L441 182L456 206L444 230L459 260L448 292L432 314L424 344L404 357L397 390L364 401L346 430L316 451L295 440L275 451L248 442L229 423L196 415L173 390L166 362L142 345L133 321L102 295L97 262L114 234L109 204L121 181L118 146L132 121L156 110L182 87L214 87L236 70Z" />
-                <g id="managedMapDots"></g>
-              </svg>
             </div>
           </div>
-          <div class="service-map-side">
-            <p class="service-active-label" id="managedActiveCode">1.1.1</p>
-            <h3 class="service-active-title" id="managedActiveTitle">Service Desk</h3>
-            <p class="service-active-copy" id="managedActiveCopy"></p>
-            <div class="service-active-metrics" id="managedMetrics"></div>
+        </section>
+
+        <section class="managed-section managed-benefits" id="beneficios">
+          <div class="managed-section-inner">
+            <p class="managed-section-kicker">Benefícios</p>
+            <h2>Operação mais previsível, rápida e controlada.</h2>
+            <p class="managed-section-copy">A mesma lógica comercial da referência, mas com o discurso da Conexte: suporte mais consistente, menor improviso operacional e leitura real do ambiente para decisões melhores.</p>
+            <div class="managed-benefits-grid" id="managedBenefitsGrid"></div>
           </div>
-        </div>
-        <div class="service-detail-grid" id="managedDetailGrid"></div>
-        <section class="panel cta-box">
-          <div>
-            <h3 id="managedCtaTitle">Quero falar com a Conexte</h3>
-            <p id="managedCtaCopy"></p>
+        </section>
+
+        <section class="managed-section managed-contact" id="faleconosco">
+          <div class="managed-section-inner">
+            <div class="managed-contact-grid">
+              <div>
+                <p class="managed-section-kicker" id="managedContactKicker">Fale conosco</p>
+                <h2 id="managedContactTitle">Quero falar com a Conexte sobre Serviços Gerenciados.</h2>
+                <p class="managed-section-copy" id="managedContactCopy"></p>
+              </div>
+              <div class="managed-contact-actions">
+                <a class="cta-primary" id="managedContactPrimary" href="https://api.whatsapp.com/send/?phone=5513996847503" target="_blank" rel="noopener">Solicitar atendimento</a>
+                <a class="cta-secondary" id="managedContactSecondary" href="mailto:contato@conexte.com.br">Enviar e-mail</a>
+              </div>
+            </div>
           </div>
-          <a class="cta-primary" id="managedCtaLink" href="https://api.whatsapp.com/send/?phone=5513996847503" target="_blank" rel="noopener">Solicitar atendimento</a>
         </section>
       </section>
     </div>
   </main>
 
-  <script>
+  <script type="module">
+    import * as THREE from './node_modules/three/build/three.module.min.js';
+
     const solutions = {
       'inovacao-solucoes-inteligentes': {
         category: 'Transformação digital',
@@ -647,20 +1561,6 @@
       'servicos-gerenciados': {
         category: 'Operação assistida',
         title: 'Serviços Gerenciados',
-        intro: 'Gestão contínua do ambiente de TI com monitoramento, suporte, padronização operacional e resposta mais previsível a incidentes.',
-        overview: 'Os serviços gerenciados centralizam rotinas críticas de infraestrutura, suporte e acompanhamento de ambiente para reduzir indisponibilidade, acelerar resposta e manter padrão técnico. A entrega pode ser parcial ou completa, conforme o nível de maturidade da operação.',
-        highlights: ['Monitoramento e acompanhamento proativo', 'Suporte técnico com processos definidos', 'Rotinas preventivas e corretivas', 'Relatórios operacionais e indicadores'],
-        deliverables: ['Catálogo de serviços e SLAs', 'Plano de atendimento e escalonamento', 'Gestão de incidentes e mudanças', 'Relatórios periódicos de performance'],
-        useCases: ['Operação de TI terceirizada', 'Reforço ao time interno', 'Monitoramento de ambientes críticos', 'Suporte contínuo a filiais e unidades remotas'],
-        differentials: ['Atendimento com rotina formalizada', 'Padronização técnica do ambiente', 'Acompanhamento recorrente de indicadores', 'Menor dependência de ações reativas'],
-        kpis: [{value:'24/7', label:'monitoramento para ativos críticos'}, {value:'SLA', label:'acordos de atendimento definidos'}, {value:'1 time', label:'operação centralizada e auditável'}],
-        steps: ['Mapeamento dos ativos e prioridades de suporte.', 'Definição de escopo, níveis de atendimento e comunicação.', 'Entrada assistida em operação.', 'Acompanhamento recorrente com melhoria contínua.'],
-        ctaTitle: 'Estruturar serviços gerenciados',
-        ctaCopy: 'A Conexte pode assumir a operação total ou complementar a equipe interna com escopo definido.'
-      },
-      'servicos-gerenciados': {
-        category: 'Operação assistida',
-        title: 'Serviços Gerenciados',
         intro: 'Gestão contínua da operação de TI com serviços estruturados para atendimento, campo, monitoramento e controle de ativos.',
         overview: 'A frente de Serviços Gerenciados da Conexte foi organizada em quatro seções principais: Service Desk, Field Service, Network Operations Center e Inventário e Gestão de Ativos. Essa composição permite atender o usuário final, sustentar o ambiente, responder demandas presenciais e manter governança sobre os ativos de TI.',
         highlights: ['Atendimento estruturado ao usuário', 'Suporte presencial quando necessário', 'Monitoramento contínuo da operação', 'Controle e governança dos ativos'],
@@ -669,10 +1569,41 @@
         differentials: ['Cobertura operacional em camadas, do usuário ao ativo', 'Integração entre atendimento, monitoramento e campo', 'Padronização de processos e visibilidade operacional', 'Base mais confiável para auditoria, expansão e controle'],
         kpis: [{value:'4 frentes', label:'estrutura principal de serviços gerenciados'}, {value:'24/7', label:'monitoramento aplicável ao NOC'}, {value:'1 operação', label:'visão integrada de chamados, campo e ativos'}],
         managedPage: {
-          kicker: 'Grupo de soluções',
-          heroCopy: 'Dentro de nossos Serviços Gerenciados, estruturamos uma operação contínua que une atendimento, atuação em campo, monitoramento e governança de ativos. A página foi reorganizada em um formato editorial, com navegação por frentes e um mapa interativo para destacar a cobertura e a dinâmica operacional da Conexte.',
-          badge: 'Cobertura nacional com operação integrada',
-          heroImage: "url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1400&q=80')",
+          heroEyebrow: 'Grupo de soluções',
+          heroLead: 'Dentro de nossos Serviços Gerenciados, a Conexte estrutura atendimento, campo, monitoramento e governança de ativos em uma frente única de operação. A proposta é dar previsibilidade, padronização e suporte de alta disponibilidade para ambientes críticos.',
+          heroPanelTitle: 'Impacto na operação',
+          heroHighlights: [
+            'Service Desk com atendimento estruturado e leitura de fila, prioridade e SLA.',
+            'Field Service para demandas presenciais, instalações, correções físicas e suporte in loco.',
+            'NOC e gestão de ativos para ampliar visibilidade, controle e continuidade do ambiente.'
+          ],
+          heroImage: "url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1600&q=80')",
+          scenarioKicker: 'Cenário',
+          scenarioTitle: 'Cobertura operacional com leitura contínua do ambiente.',
+          scenarioCopy: 'A referência da Tecnocomp usa um banner amplo para vender capilaridade e presença. Aqui a mesma ideia foi reinterpretada para a Conexte: uma operação integrada, com monitoramento, atendimento, suporte presencial e controle do parque tecnológico em uma mesma leitura executiva.',
+          scenarioBannerImage: "url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1800&q=80')",
+          scenarioStats: [
+            {value:'4', label:'frentes centrais de serviços gerenciados em uma única operação'},
+            {value:'24/7', label:'monitoramento aplicável ao NOC e a ambientes críticos'},
+            {value:'1', label:'visão integrada de atendimento, campo, rede e ativos'}
+          ],
+          benefits: [
+            {
+              title: 'Atendimento rápido',
+              copy: 'Chamados entram por um fluxo claro, com triagem, priorização e encaminhamento mais previsíveis para o usuário e para a operação.'
+            },
+            {
+              title: 'Disponibilidade contínua',
+              copy: 'A combinação entre suporte, atuação em campo e leitura operacional reduz o tempo de resposta e sustenta ambientes que não podem parar.'
+            },
+            {
+              title: 'Gestão centralizada',
+              copy: 'Uma estrutura única reúne chamados, ativos, visitas técnicas e monitoramento para dar mais controle, rastreabilidade e governança.'
+            }
+          ],
+          contactKicker: 'Fale conosco',
+          contactTitle: 'Estruture Serviços Gerenciados com a Conexte.',
+          contactCopy: 'Se a operação precisa sair do modo reativo, a Conexte pode montar uma frente completa de atendimento, NOC, campo e gestão de ativos alinhada ao seu ambiente.',
           dots: [
             {x:255,y:112},{x:286,y:103},{x:315,y:112},{x:340,y:129},{x:369,y:149},
             {x:393,y:173},{x:407,y:198},{x:385,y:214},{x:363,y:192},{x:333,y:175},
@@ -687,6 +1618,7 @@
               code: '1.1.1',
               title: 'Service Desk',
               intro: 'Camada central de relacionamento com o usuário para registro, triagem, categorização, priorização e tratamento de chamados técnicos.',
+              image: "url('https://framerusercontent.com/images/TFeA1Fjeg2BO6XEvoIdKeJ7KI9E.png?width=848&height=471')",
               metrics: [
                 {label:'Atuação', value:'Entrada, triagem e gestão de chamados'},
                 {label:'Foco', value:'Previsibilidade, SLA e experiência do usuário'},
@@ -703,6 +1635,7 @@
               code: '1.1.2',
               title: 'Field Service',
               intro: 'Frente de atendimento presencial para cenários que exigem ação local, instalação, substituição de equipamento, correção física ou suporte técnico in loco.',
+              image: "url('https://framerusercontent.com/images/XYQYT1P7Im1fhatpgiPDrxPY3Ag.png?width=848&height=471')",
               metrics: [
                 {label:'Atuação', value:'Visitas técnicas, instalação e manutenção'},
                 {label:'Foco', value:'Execução presencial com padrão operacional'},
@@ -719,6 +1652,7 @@
               code: '1.1.3',
               title: 'Network Operations Center',
               intro: 'Camada de monitoramento e acompanhamento contínuo do ambiente para leitura de eventos, disponibilidade, desempenho e atuação coordenada diante de incidentes.',
+              image: "url('https://framerusercontent.com/images/nVmgcJbgt5z9wOJYgdsLovd7G8.png?width=848&height=471')",
               metrics: [
                 {label:'Atuação', value:'Monitoramento, alarmes e leitura operacional'},
                 {label:'Foco', value:'Disponibilidade, desempenho e resposta rápida'},
@@ -735,6 +1669,7 @@
               code: '1.1.4',
               title: 'Inventário e Gestão de Ativos',
               intro: 'Disciplina voltada ao controle do parque tecnológico, rastreabilidade, organização do ciclo de vida e apoio à governança dos ativos de TI.',
+              image: "url('https://framerusercontent.com/images/1f79jLcyd1enK0a4qq5ojpRX8.png?width=848&height=471')",
               metrics: [
                 {label:'Atuação', value:'Cadastro, rastreabilidade e histórico de ativos'},
                 {label:'Foco', value:'Governança e leitura do parque tecnológico'},
@@ -817,6 +1752,9 @@
     document.getElementById('solutionCtaCopy').textContent = data.ctaCopy;
 
     const hero = document.getElementById('hero');
+    const brandImage = document.querySelector('.brand img');
+    const defaultBrandLogo = 'https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO.png';
+    const managedBrandLogo = 'https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO-Branco.png';
     const imageMap = {
       'inovacao-solucoes-inteligentes': "url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1600&q=80')",
       'cloud-computing': "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80')",
@@ -826,6 +1764,7 @@
       'data-center': "url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80')"
     };
     hero.style.setProperty('--hero-bg', imageMap[key] || imageMap[fallbackKey]);
+    brandImage.src = defaultBrandLogo;
 
     const listMap = [
       ['solutionHighlights', data.highlights],
@@ -865,73 +1804,376 @@
       });
 
       const managedPage = document.getElementById('managedServicesPage');
+      document.body.classList.add('managed-mode');
       managedPage.style.display = '';
-      document.getElementById('managedKicker').textContent = data.managedPage.kicker;
-      document.getElementById('managedHeroTitle').textContent = data.title;
-      document.getElementById('managedHeroCopy').textContent = data.managedPage.heroCopy;
-      document.getElementById('managedBadgeText').textContent = data.managedPage.badge;
-      document.getElementById('managedHeroVisual').style.setProperty('--managed-hero-image', data.managedPage.heroImage);
-      document.getElementById('managedCtaTitle').textContent = data.ctaTitle;
-      document.getElementById('managedCtaCopy').textContent = data.ctaCopy;
-      document.getElementById('managedCtaLink').href = `https://api.whatsapp.com/send/?phone=5513996847503&text=${encodeURIComponent(`Olá, Conexte! Quero saber mais sobre ${data.title}.`)}`;
+      hero.style.setProperty('--hero-bg', data.managedPage.heroImage);
+      brandImage.src = managedBrandLogo;
+      document.getElementById('solutionCategory').textContent = data.managedPage.heroEyebrow;
+      document.getElementById('solutionTitle').textContent = data.title;
+      document.getElementById('solutionIntro').textContent = data.managedPage.heroLead;
+      document.querySelector('.hero-panel h2').textContent = data.managedPage.heroPanelTitle;
+      document.getElementById('solutionHighlights').innerHTML = data.managedPage.heroHighlights.map((item) => `<li>${item}</li>`).join('');
 
-      const dotsNode = document.getElementById('managedMapDots');
-      dotsNode.innerHTML = data.managedPage.dots.map((dot, index) => `
-        <g data-dot-index="${index}">
-          <circle class="service-map-dot" cx="${dot.x}" cy="${dot.y}" r="4.5"></circle>
-          <circle class="service-map-pulse" cx="${dot.x}" cy="${dot.y}" r="8"></circle>
-        </g>
+      document.getElementById('managedScenarioKicker').textContent = data.managedPage.scenarioKicker;
+      document.getElementById('managedScenarioTitle').textContent = data.managedPage.scenarioTitle;
+      document.getElementById('managedScenarioCopy').textContent = data.managedPage.scenarioCopy;
+      document.getElementById('managedScenarioBanner').style.setProperty('--managed-banner-image', data.managedPage.scenarioBannerImage);
+      document.getElementById('managedContactKicker').textContent = data.managedPage.contactKicker;
+      document.getElementById('managedContactTitle').textContent = data.managedPage.contactTitle;
+      document.getElementById('managedContactCopy').textContent = data.managedPage.contactCopy;
+      document.getElementById('managedContactPrimary').href = `https://api.whatsapp.com/send/?phone=5513996847503&text=${encodeURIComponent(`Olá, Conexte! Quero saber mais sobre ${data.title}.`)}`;
+
+      document.getElementById('managedScenarioStats').innerHTML = data.managedPage.scenarioStats.map((item) => `
+        <div class="managed-scenario-stat">
+          <strong>${item.value}</strong>
+          <span>${item.label}</span>
+        </div>
       `).join('');
 
-      const stepbar = document.getElementById('managedStepbar');
-      const detailGrid = document.getElementById('managedDetailGrid');
-      const activeCode = document.getElementById('managedActiveCode');
-      const activeTitle = document.getElementById('managedActiveTitle');
-      const activeCopy = document.getElementById('managedActiveCopy');
-      const metricsNode = document.getElementById('managedMetrics');
-
-      stepbar.innerHTML = data.managedPage.sections.map((section) => `
-        <button class="service-step" type="button" data-service-code="${section.code}">
-          <strong>${section.code}</strong>
-          <span>${section.title}</span>
-        </button>
-      `).join('');
-
-      const stepButtons = Array.from(stepbar.querySelectorAll('.service-step'));
-      const mapGroups = Array.from(dotsNode.querySelectorAll('g[data-dot-index]'));
-
-      function renderManagedSection(code) {
-        const current = data.managedPage.sections.find((section) => section.code === code) || data.managedPage.sections[0];
-        stepButtons.forEach((button) => {
-          button.classList.toggle('is-active', button.dataset.serviceCode === current.code);
-        });
-        mapGroups.forEach((group) => {
-          const isActive = current.activeDots.includes(Number(group.dataset.dotIndex));
-          group.querySelector('.service-map-dot').classList.toggle('is-active', isActive);
-          group.querySelector('.service-map-pulse').style.display = isActive ? '' : 'none';
-        });
-        activeCode.textContent = current.code;
-        activeTitle.textContent = current.title;
-        activeCopy.textContent = current.intro;
-        metricsNode.innerHTML = current.metrics.map((item) => `
-          <div class="service-metric">
-            <small>${item.label}</small>
-            <strong>${item.value}</strong>
+      document.getElementById('managedSolutionsGrid').innerHTML = data.managedPage.sections.map((section) => `
+        <article class="managed-solution-card">
+          <div class="managed-solution-media" style="--managed-solution-image:${section.image}">
+            <div class="managed-solution-glow"></div>
           </div>
-        `).join('');
-        detailGrid.innerHTML = current.details.map((item) => `
-          <article class="service-detail-card">
-            <h4>${item.title}</h4>
-            <p>${item.copy}</p>
-          </article>
-        `).join('');
-      }
+          <div class="managed-solution-body">
+            <span class="managed-solution-code">${section.code}</span>
+            <h3>${section.title}</h3>
+            <p>${section.intro}</p>
+            <div class="managed-solution-tags">
+              ${section.metrics.slice(0, 2).map((item) => `<span>${item.value}</span>`).join('')}
+            </div>
+          </div>
+        </article>
+      `).join('');
 
-      stepButtons.forEach((button) => {
-        button.addEventListener('click', () => renderManagedSection(button.dataset.serviceCode));
+      document.getElementById('managedBenefitsGrid').innerHTML = data.managedPage.benefits.map((item, index) => `
+        <article class="managed-benefit-card">
+          <span class="managed-benefit-index">0${index + 1}</span>
+          <h3>${item.title}</h3>
+          <p>${item.copy}</p>
+        </article>
+      `).join('');
+
+      const stepLinks = Array.from(managedPage.querySelectorAll('.managed-step-link'));
+      const observedSections = stepLinks
+        .map((link) => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+      const highlightStep = (id) => {
+        stepLinks.forEach((link) => {
+          link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
+        });
+      };
+
+      observedSections.forEach((section) => {
+        section.addEventListener('mouseenter', () => highlightStep(section.id));
       });
 
-      renderManagedSection(data.managedPage.sections[0].code);
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+          if (visible) highlightStep(visible.target.id);
+        }, {
+          threshold: [0.25, 0.5, 0.75],
+          rootMargin: '-20% 0px -30% 0px'
+        });
+        observedSections.forEach((section) => observer.observe(section));
+      }
+
+      queueManagedHeroIntro();
+      initManagedScenarioMap();
+      highlightStep('solucoes');
+    }
+
+    function queueManagedHeroIntro() {
+      const body = document.body;
+      if (!body.classList.contains('managed-mode')) return;
+
+      const reveal = () => {
+        body.classList.remove('managed-intro-pending');
+        body.classList.add('managed-intro-ready');
+      };
+
+      body.classList.remove('managed-intro-ready');
+      body.classList.add('managed-intro-pending');
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        reveal();
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(reveal);
+      });
+    }
+
+    let managedScenarioMapBooted = false;
+    function bindManagedScenarioShellMotion(stage, shell) {
+      if (!stage || !shell || shell.dataset.motionBound === 'true') return;
+      shell.dataset.motionBound = 'true';
+
+      const updateMotion = (event) => {
+        const rect = shell.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const px = (event.clientX - rect.left) / rect.width - 0.5;
+        const py = (event.clientY - rect.top) / rect.height - 0.5;
+        shell.style.setProperty('--map-tilt-x', `${(-py * 10).toFixed(2)}deg`);
+        shell.style.setProperty('--map-tilt-y', `${(px * 14).toFixed(2)}deg`);
+        shell.style.setProperty('--map-glow-x', `${((px + 0.5) * 100).toFixed(2)}%`);
+        shell.style.setProperty('--map-glow-y', `${((py + 0.5) * 100).toFixed(2)}%`);
+      };
+
+      const resetMotion = () => {
+        shell.style.setProperty('--map-tilt-x', '0deg');
+        shell.style.setProperty('--map-tilt-y', '0deg');
+        shell.style.setProperty('--map-glow-x', '50%');
+        shell.style.setProperty('--map-glow-y', '50%');
+      };
+
+      stage.addEventListener('pointermove', updateMotion, { passive: true });
+      stage.addEventListener('pointerleave', resetMotion);
+    }
+
+    function initManagedScenarioMap() {
+      const stage = document.getElementById('managedScenarioMapStage');
+      const shell = document.getElementById('managedScenarioMapShell');
+      if (!stage || !shell) return;
+
+      bindManagedScenarioShellMotion(stage, shell);
+
+      if (managedScenarioMapBooted) return;
+      if (typeof THREE === 'undefined' || !window.WebGLRenderingContext) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      managedScenarioMapBooted = true;
+
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance',
+      });
+      renderer.setClearColor(0x000000, 0);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.06;
+      stage.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+      camera.position.set(0, 0.04, 7.4);
+
+      const rig = new THREE.Group();
+      scene.add(rig);
+
+      scene.add(new THREE.AmbientLight(0xdcedff, 2.35));
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.55);
+      keyLight.position.set(3.2, 2.8, 5.4);
+      scene.add(keyLight);
+
+      const blueLight = new THREE.PointLight(0x44b4ff, 12, 24, 2);
+      blueLight.position.set(-3.1, 0.8, 4.8);
+      scene.add(blueLight);
+
+      const greenLight = new THREE.PointLight(0xd9f764, 5.8, 18, 2);
+      greenLight.position.set(3.4, -1.9, 3.4);
+      scene.add(greenLight);
+
+      const halo = new THREE.Mesh(
+        new THREE.PlaneGeometry(8.1, 5.2),
+        new THREE.MeshBasicMaterial({
+          color: 0x50c6ff,
+          transparent: true,
+          opacity: 0.12,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        })
+      );
+      halo.position.set(0, 0, -2.1);
+      rig.add(halo);
+
+      const rings = [
+        { outer: 3.14, inner: 3.11, opacity: 0.08, z: -1.75 },
+        { outer: 2.52, inner: 2.49, opacity: 0.06, z: -1.55 },
+      ].map((item) => {
+        const ring = new THREE.Mesh(
+          new THREE.RingGeometry(item.inner, item.outer, 96),
+          new THREE.MeshBasicMaterial({
+            color: 0xe8f8ff,
+            transparent: true,
+            opacity: item.opacity,
+            side: THREE.DoubleSide,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          })
+        );
+        ring.rotation.x = Math.PI / 2.36;
+        ring.position.z = item.z;
+        rig.add(ring);
+        return ring;
+      });
+
+      function createArc(points, color, opacity, radius) {
+        const curve = new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(point[0], point[1], point[2])));
+        return new THREE.Mesh(
+          new THREE.TubeGeometry(curve, 64, radius, 10, false),
+          new THREE.MeshBasicMaterial({
+            color,
+            transparent: true,
+            opacity,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          })
+        );
+      }
+
+      const arcs = [
+        createArc([[-2.55, 0.28, -0.12], [-1.2, 1.04, 0.84], [0.52, 0.88, 0.52], [2.02, 0.16, -0.06]], 0xf4fbff, 0.14, 0.011),
+        createArc([[-2.08, -0.86, -0.06], [-0.72, -0.18, 0.9], [0.68, 0.62, 0.64], [1.94, -0.24, 0.02]], 0xd9f764, 0.1, 0.009),
+        createArc([[-1.64, 1.02, -0.04], [-0.18, 1.44, 0.76], [1.08, 0.22, 0.44], [2.22, -0.62, -0.02]], 0x8edcff, 0.12, 0.01),
+      ];
+      arcs.forEach((arc) => rig.add(arc));
+
+      const nodes = [];
+      const nodeSeeds = [
+        [-2.2, 0.68, 0.24], [-1.42, -0.12, 0.18], [-0.2, 1.08, 0.26], [0.8, 0.22, 0.22],
+        [1.76, -0.46, 0.16], [2.12, 0.86, 0.28], [-0.32, -1.16, 0.24], [1.18, -1.02, 0.2]
+      ];
+
+      nodeSeeds.forEach((coords, index) => {
+        const dot = new THREE.Mesh(
+          new THREE.SphereGeometry(index % 3 === 0 ? 0.048 : 0.036, 16, 16),
+          new THREE.MeshBasicMaterial({
+            color: index % 3 === 0 ? 0xd9f764 : 0xffffff,
+            transparent: true,
+            opacity: index % 3 === 0 ? 0.92 : 0.72,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          })
+        );
+        dot.position.set(coords[0], coords[1], coords[2]);
+        dot.userData = { phase: index * 0.72, x: coords[0], y: coords[1], z: coords[2] };
+        rig.add(dot);
+        nodes.push(dot);
+      });
+
+      let mapPlane = null;
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.load(
+        'brasil-network-map.jpeg',
+        (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.minFilter = THREE.LinearMipmapLinearFilter;
+          texture.magFilter = THREE.LinearFilter;
+
+          const planeWidth = 6.05;
+          const planeHeight = planeWidth / (1408 / 768);
+          const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight, 52, 32);
+          const position = geometry.attributes.position;
+
+          for (let i = 0; i < position.count; i += 1) {
+            const x = position.getX(i) / planeWidth;
+            const y = position.getY(i) / planeHeight;
+            position.setZ(i, Math.sin((x + 0.5) * Math.PI) * 0.14 + Math.cos((y + 0.5) * Math.PI * 1.1) * 0.04);
+          }
+
+          position.needsUpdate = true;
+          geometry.computeVertexNormals();
+
+          mapPlane = new THREE.Mesh(
+            geometry,
+            new THREE.MeshPhysicalMaterial({
+              map: texture,
+              roughness: 0.88,
+              metalness: 0.04,
+              clearcoat: 0.2,
+              clearcoatRoughness: 0.42,
+              emissive: new THREE.Color(0x092448),
+              emissiveIntensity: 0.16,
+            })
+          );
+          mapPlane.position.z = 0.12;
+          rig.add(mapPlane);
+          shell.classList.add('is-ready');
+        },
+        undefined,
+        () => {
+          shell.classList.remove('is-ready');
+        }
+      );
+
+      const pointer = { tx: 0, ty: 0, x: 0, y: 0 };
+      stage.addEventListener('pointermove', (event) => {
+        const rect = stage.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const px = (event.clientX - rect.left) / rect.width - 0.5;
+        const py = (event.clientY - rect.top) / rect.height - 0.5;
+        pointer.ty = px * 0.42;
+        pointer.tx = -py * 0.18;
+      }, { passive: true });
+
+      stage.addEventListener('pointerleave', () => {
+        pointer.tx = 0;
+        pointer.ty = 0;
+      });
+
+      function resizeScene() {
+        const width = stage.clientWidth;
+        const height = stage.clientHeight;
+        if (!width || !height) return;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+        renderer.setSize(width, height, false);
+      }
+
+      if (typeof ResizeObserver !== 'undefined') {
+        const observer = new ResizeObserver(resizeScene);
+        observer.observe(stage);
+      }
+      window.addEventListener('resize', resizeScene, { passive: true });
+      resizeScene();
+
+      function frame(time) {
+        const t = time * 0.001;
+        pointer.x += (pointer.tx - pointer.x) * 0.06;
+        pointer.y += (pointer.ty - pointer.y) * 0.06;
+
+        rig.rotation.x = pointer.x + Math.sin(t * 0.42) * 0.02 - 0.04;
+        rig.rotation.y = pointer.y + Math.cos(t * 0.34) * 0.04 - 0.12;
+        rig.position.y = Math.sin(t * 0.82) * 0.08;
+
+        halo.material.opacity = 0.1 + (Math.sin(t * 1.04) + 1) * 0.018;
+        halo.scale.setScalar(1 + Math.sin(t * 0.76) * 0.014);
+
+        rings.forEach((ring, index) => {
+          ring.rotation.z = t * (0.06 + index * 0.018);
+          ring.material.opacity = 0.045 + (Math.sin(t * (0.94 + index * 0.12) + index) + 1) * 0.016;
+        });
+
+        arcs.forEach((arc, index) => {
+          arc.rotation.z = Math.sin(t * 0.46 + index * 0.8) * 0.045;
+          arc.material.opacity = 0.06 + (Math.sin(t * (1.22 + index * 0.1) + index) + 1) * 0.05;
+        });
+
+        nodes.forEach((node) => {
+          const data = node.userData;
+          node.position.x = data.x + Math.sin(t * 0.58 + data.phase) * 0.022;
+          node.position.y = data.y + Math.cos(t * 0.76 + data.phase) * 0.026;
+          node.scale.setScalar(1 + (Math.sin(t * 1.72 + data.phase) + 1) * 0.12);
+        });
+
+        if (mapPlane) {
+          mapPlane.rotation.z = Math.sin(t * 0.32) * 0.014;
+          mapPlane.position.z = 0.12 + Math.sin(t * 0.9) * 0.03;
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      renderer.setAnimationLoop(frame);
     }
 
     const ctaText = encodeURIComponent(`Olá, Conexte! Quero saber mais sobre ${data.title}.`);

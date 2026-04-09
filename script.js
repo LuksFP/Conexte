@@ -341,15 +341,40 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 
   const cards = Array.from(grid.querySelectorAll('.area-card'));
   const hoverCapable = window.matchMedia('(hover:hover) and (pointer:fine)');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let activeCard = null;
+  let pointerFrame = null;
+  let lastPointerEvent = null;
+
+  function commitPointerSpot() {
+    pointerFrame = null;
+    if (!lastPointerEvent || !hoverCapable.matches) return;
+
+    const card = lastPointerEvent.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = ((lastPointerEvent.clientX - rect.left) / rect.width) * 100;
+    const y = ((lastPointerEvent.clientY - rect.top) / rect.height) * 100;
+
+    card.style.setProperty('--spot-x', `${Math.max(0, Math.min(100, x)).toFixed(2)}%`);
+    card.style.setProperty('--spot-y', `${Math.max(0, Math.min(100, y)).toFixed(2)}%`);
+    lastPointerEvent = null;
+  }
 
   function setActive(card) {
+    if (!card || activeCard === card) return;
+    activeCard = card;
     cards.forEach((item) => item.classList.toggle('is-active', item === card));
     grid.classList.add('has-active-card');
   }
 
   function clearActive() {
+    activeCard = null;
     cards.forEach((item) => item.classList.remove('is-active'));
     grid.classList.remove('has-active-card');
+  }
+
+  function clearIfNoFocus() {
+    if (!grid.contains(document.activeElement)) clearActive();
   }
 
   cards.forEach((card) => {
@@ -362,31 +387,53 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     });
     card.addEventListener('pointermove', (event) => {
       if (!hoverCapable.matches) return;
-      const rect = card.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-      card.style.setProperty('--spot-x', `${Math.max(0, Math.min(100, x)).toFixed(2)}%`);
-      card.style.setProperty('--spot-y', `${Math.max(0, Math.min(100, y)).toFixed(2)}%`);
+      lastPointerEvent = event;
+      if (pointerFrame) return;
+      pointerFrame = window.requestAnimationFrame(commitPointerSpot);
     });
-    card.addEventListener('pointerleave', () => {
+    card.addEventListener('pointerleave', (event) => {
       card.style.removeProperty('--spot-x');
       card.style.removeProperty('--spot-y');
-      if (hoverCapable.matches && !grid.contains(document.activeElement)) clearActive();
+      if (hoverCapable.matches && activeCard === card && !grid.contains(event.relatedTarget)) {
+        clearIfNoFocus();
+      }
     });
-    card.addEventListener('focusin', () => setActive(card));
+    card.addEventListener('focusin', () => {
+      setActive(card);
+    });
     card.addEventListener('focusout', (event) => {
       if (!grid.contains(event.relatedTarget)) clearActive();
     });
     card.addEventListener('click', () => {
+      if (!hoverCapable.matches) {
+        if (activeCard === card) {
+          clearActive();
+          return;
+        }
+      }
       setActive(card);
     });
   });
 
+  if (!hoverCapable.matches) {
+    document.addEventListener('pointerdown', (event) => {
+      if (!grid.contains(event.target)) clearActive();
+    }, { passive: true });
+  }
+
   grid.addEventListener('mouseleave', () => {
-    if (hoverCapable.matches && !grid.contains(document.activeElement)) clearActive();
+    if (hoverCapable.matches) clearIfNoFocus();
   });
 
   window.addEventListener('blur', clearActive);
+
+  if (reducedMotion.matches) {
+    cards.forEach((card) => {
+      card.style.removeProperty('opacity');
+      card.style.removeProperty('transform');
+      card.style.removeProperty('filter');
+    });
+  }
 })();
 
 // ══════════════════════════════════
@@ -471,12 +518,328 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 })();
 
 // ══════════════════════════════════
+// SOBRE — mapa Brasil com three.js
+// ══════════════════════════════════
+(function initSobreMapScene() {
+  const stage = document.getElementById('sobreMapStage');
+  const shell = stage ? stage.closest('.sobre-visual-shell') : null;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (!stage || !shell || prefersReducedMotion.matches || typeof THREE === 'undefined') return;
+  if (!window.WebGLRenderingContext) return;
+
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: true,
+    powerPreference: 'high-performance',
+  });
+  renderer.setClearColor(0x000000, 0);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.08;
+  stage.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+  camera.position.set(0, 0.08, 8.2);
+
+  const scrollRig = new THREE.Group();
+  const hoverRig = new THREE.Group();
+  scene.add(scrollRig);
+  scrollRig.add(hoverRig);
+
+  const ambient = new THREE.AmbientLight(0xd9ebff, 2.2);
+  const key = new THREE.DirectionalLight(0xffffff, 1.8);
+  key.position.set(2.8, 2.6, 5.2);
+  const rim = new THREE.PointLight(0x44b4ff, 18, 28, 2);
+  rim.position.set(-3.8, 0.8, 5);
+  const accent = new THREE.PointLight(0xc8d400, 6.5, 18, 2);
+  accent.position.set(3.6, -2.2, 3.2);
+  scene.add(ambient, key, rim, accent);
+
+  const halo = new THREE.Mesh(
+    new THREE.PlaneGeometry(8.4, 5.1),
+    new THREE.MeshBasicMaterial({
+      color: 0x4ac3ff,
+      transparent: true,
+      opacity: 0.14,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    })
+  );
+  halo.position.set(0, 0, -2.2);
+  scrollRig.add(halo);
+
+  const radarRings = [
+    { outer: 3.2, inner: 3.16, opacity: 0.12, z: -1.8 },
+    { outer: 2.6, inner: 2.56, opacity: 0.09, z: -1.6 },
+    { outer: 2.0, inner: 1.97, opacity: 0.08, z: -1.4 },
+  ].map((ring) => {
+    const mesh = new THREE.Mesh(
+      new THREE.RingGeometry(ring.inner, ring.outer, 96),
+      new THREE.MeshBasicMaterial({
+        color: 0xe6f8ff,
+        transparent: true,
+        opacity: ring.opacity,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    );
+    mesh.rotation.x = Math.PI / 2.34;
+    mesh.position.z = ring.z;
+    scrollRig.add(mesh);
+    return mesh;
+  });
+
+  function createArc(points, color, opacity, radius) {
+    const curve = new THREE.CatmullRomCurve3(points.map((point) => new THREE.Vector3(point[0], point[1], point[2])));
+    const geometry = new THREE.TubeGeometry(curve, 64, radius, 10, false);
+    const material = new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    return new THREE.Mesh(geometry, material);
+  }
+
+  const arcs = [
+    createArc([[-2.85, -0.92, -0.4], [-1.5, 1.12, 0.95], [0.2, 0.25, 0.4], [2.55, 0.92, -0.25]], 0xf4fbff, 0.14, 0.015),
+    createArc([[-2.35, 0.78, -0.2], [-0.65, 1.6, 0.82], [1.05, 0.05, 0.46], [2.24, -0.68, -0.12]], 0xa4e8ff, 0.18, 0.012),
+    createArc([[-1.9, -1.28, -0.1], [-0.18, -0.14, 1.04], [1.12, 1.08, 0.58], [2.6, -0.16, 0.02]], 0xffffff, 0.12, 0.011),
+    createArc([[-2.5, 0.1, -0.28], [-0.95, 1.36, 0.84], [0.62, 1.18, 0.72], [2.2, 0.18, -0.06]], 0xc8d400, 0.08, 0.01),
+  ];
+  arcs.forEach((arc) => hoverRig.add(arc));
+
+  const nodeSeeds = [
+    { x: -2.7, y: 1.14, z: 0.48, size: 0.05, color: 0xffffff, phase: 0.1, opacity: 0.8 },
+    { x: -2.18, y: 0.42, z: 0.28, size: 0.04, color: 0xffffff, phase: 0.9, opacity: 0.68 },
+    { x: -1.45, y: 0.26, z: 0.24, size: 0.035, color: 0xffffff, phase: 1.7, opacity: 0.62 },
+    { x: -0.52, y: -0.48, z: 0.34, size: 0.055, color: 0xffffff, phase: 2.2, opacity: 0.84 },
+    { x: 0.24, y: 1.06, z: 0.44, size: 0.04, color: 0xffffff, phase: 2.9, opacity: 0.72 },
+    { x: 0.96, y: 0.14, z: 0.26, size: 0.038, color: 0xffffff, phase: 3.4, opacity: 0.62 },
+    { x: 1.76, y: -0.18, z: 0.22, size: 0.048, color: 0xffffff, phase: 4.2, opacity: 0.76 },
+    { x: 2.32, y: 0.84, z: 0.42, size: 0.036, color: 0xffffff, phase: 4.8, opacity: 0.62 },
+    { x: -0.08, y: -1.28, z: 0.3, size: 0.06, color: 0xc8d400, phase: 5.2, opacity: 0.92 },
+    { x: 1.28, y: -0.96, z: 0.28, size: 0.05, color: 0xc8d400, phase: 5.9, opacity: 0.84 },
+  ];
+
+  const nodes = nodeSeeds.map((seed) => {
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(seed.size, 18, 18),
+      new THREE.MeshBasicMaterial({
+        color: seed.color,
+        transparent: true,
+        opacity: seed.opacity,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    );
+    mesh.position.set(seed.x, seed.y, seed.z);
+    mesh.userData = seed;
+    hoverRig.add(mesh);
+    return mesh;
+  });
+
+  let mapMesh = null;
+
+  const loader = new THREE.TextureLoader();
+  loader.load(
+    'brasil-network-map.jpeg',
+    (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.minFilter = THREE.LinearMipmapLinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      if (renderer.capabilities && typeof renderer.capabilities.getMaxAnisotropy === 'function') {
+        texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+      }
+
+      const planeWidth = 6.65;
+      const planeHeight = planeWidth / (1408 / 768);
+      const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight, 56, 36);
+      const positions = geometry.attributes.position;
+
+      for (let index = 0; index < positions.count; index += 1) {
+        const x = positions.getX(index) / planeWidth;
+        const y = positions.getY(index) / planeHeight;
+        const bend = Math.sin((x + 0.5) * Math.PI) * 0.16 + Math.cos((y + 0.5) * Math.PI * 1.2) * 0.045;
+        positions.setZ(index, bend);
+      }
+
+      positions.needsUpdate = true;
+      geometry.computeVertexNormals();
+
+      const material = new THREE.MeshPhysicalMaterial({
+        map: texture,
+        roughness: 0.86,
+        metalness: 0.04,
+        clearcoat: 0.24,
+        clearcoatRoughness: 0.4,
+        emissive: new THREE.Color(0x08284f),
+        emissiveIntensity: 0.18,
+      });
+
+      mapMesh = new THREE.Mesh(geometry, material);
+      mapMesh.position.z = 0.14;
+      hoverRig.add(mapMesh);
+
+      const edgeGlow = new THREE.Mesh(
+        new THREE.PlaneGeometry(planeWidth * 1.035, planeHeight * 1.04),
+        new THREE.MeshBasicMaterial({
+          color: 0x8fdcff,
+          transparent: true,
+          opacity: 0.08,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        })
+      );
+      edgeGlow.position.z = -0.08;
+      hoverRig.add(edgeGlow);
+
+      shell.classList.add('is-ready');
+    },
+    undefined,
+    () => {
+      shell.classList.remove('is-ready');
+    }
+  );
+
+  const scrollState = {
+    rotationY: -0.18,
+    rotationX: -0.08,
+    lift: 0.3,
+  };
+
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.to(scrollState, {
+      rotationY: 0.12,
+      rotationX: 0.03,
+      lift: -0.16,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#sobre',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.2,
+      },
+    });
+  }
+
+  const pointer = {
+    targetX: 0,
+    targetY: 0,
+    currentX: 0,
+    currentY: 0,
+  };
+
+  function updatePointer(event) {
+    const rect = stage.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    pointer.targetY = x * 0.48;
+    pointer.targetX = -y * 0.22;
+  }
+
+  stage.addEventListener('pointermove', updatePointer, { passive: true });
+  stage.addEventListener('pointerleave', () => {
+    pointer.targetX = 0;
+    pointer.targetY = 0;
+  });
+
+  function resize() {
+    const width = stage.clientWidth;
+    const height = stage.clientHeight;
+    if (!width || !height) return;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+    renderer.setSize(width, height, false);
+  }
+
+  const resizeObserver = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(resize) : null;
+  if (resizeObserver) resizeObserver.observe(stage);
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+
+  let visible = true;
+  if (typeof IntersectionObserver !== 'undefined') {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        renderer.setAnimationLoop(visible ? renderFrame : null);
+        if (visible) renderFrame(performance.now());
+      },
+      { threshold: 0.14 }
+    );
+    observer.observe(stage);
+  }
+
+  function renderFrame(time) {
+    const t = time * 0.001;
+
+    pointer.currentX += (pointer.targetX - pointer.currentX) * 0.06;
+    pointer.currentY += (pointer.targetY - pointer.currentY) * 0.06;
+
+    scrollRig.rotation.y = scrollState.rotationY;
+    scrollRig.rotation.x = scrollState.rotationX;
+    scrollRig.position.y = scrollState.lift;
+
+    hoverRig.rotation.x = pointer.currentX;
+    hoverRig.rotation.y = pointer.currentY;
+    hoverRig.position.y = Math.sin(t * 0.72) * 0.09;
+    hoverRig.position.x = Math.cos(t * 0.44) * 0.05;
+
+    halo.material.opacity = 0.12 + (Math.sin(t * 1.1) + 1) * 0.022;
+    halo.scale.setScalar(1 + Math.sin(t * 0.88) * 0.015);
+
+    radarRings.forEach((ring, index) => {
+      ring.rotation.z = t * (0.05 + index * 0.01);
+      ring.material.opacity = 0.07 + (Math.sin(t * (0.8 + index * 0.12) + index) + 1) * 0.018;
+    });
+
+    arcs.forEach((arc, index) => {
+      arc.rotation.z = Math.sin(t * 0.42 + index * 0.8) * 0.035;
+      arc.material.opacity = 0.07 + (Math.sin(t * (1.2 + index * 0.1) + index) + 1) * 0.035;
+    });
+
+    nodes.forEach((node) => {
+      const seed = node.userData;
+      node.position.x = seed.x + Math.sin(t * 0.58 + seed.phase) * 0.03;
+      node.position.y = seed.y + Math.cos(t * 0.76 + seed.phase) * 0.04;
+      node.position.z = seed.z + Math.sin(t * 0.94 + seed.phase) * 0.02;
+      const scale = 1 + (Math.sin(t * 1.7 + seed.phase) + 1) * 0.12;
+      node.scale.setScalar(scale);
+      node.material.opacity = Math.min(seed.opacity + (Math.sin(t * 2.2 + seed.phase) + 1) * 0.08, 1);
+    });
+
+    if (mapMesh) {
+      mapMesh.rotation.z = Math.sin(t * 0.34) * 0.018;
+      mapMesh.position.z = 0.14 + Math.sin(t * 0.92) * 0.035;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  renderer.setAnimationLoop(renderFrame);
+})();
+
+// ══════════════════════════════════
 // ÁREAS — cards nascem no centro e se espalham para o grid
 // ══════════════════════════════════
 (function initAreasIntro() {
-  const areasGrid = document.querySelector('.areas-grid');
+  const areasGrid = document.querySelector('#solucoes .areas-grid');
   const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
   if (!areasGrid || !areaCardsForIntro.length) return;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (reducedMotion.matches) {
+    gsap.set('#solucoes', { opacity: 1, y: 0 });
+    gsap.set('#solucoes .label-tag, #solucoes .section-h2, #solucoes .cta-center', { opacity: 1, y: 0 });
+    gsap.set(areaCardsForIntro, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0, filter: 'none' });
+    return;
+  }
 
   const stackOffsets = [
     { x: -26, y: -14, r: -6, z: 16 },
