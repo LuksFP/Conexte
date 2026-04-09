@@ -826,77 +826,15 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 })();
 
 // ══════════════════════════════════
-// ÁREAS — cards nascem no centro e se espalham para o grid
+// ÁREAS — cards já entram fixos no grid
 // ══════════════════════════════════
 (function initAreasIntro() {
   const areasGrid = document.querySelector('#solucoes .areas-grid');
   const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
   if (!areasGrid || !areaCardsForIntro.length) return;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  if (reducedMotion.matches) {
-    gsap.set('#solucoes', { opacity: 1, y: 0 });
-    gsap.set('#solucoes .label-tag, #solucoes .section-h2, #solucoes .cta-center', { opacity: 1, y: 0 });
-    gsap.set(areaCardsForIntro, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0, filter: 'none' });
-    return;
-  }
-
-  const stackOffsets = [
-    { x: -26, y: -14, r: -6, z: 16 },
-    { x: -14, y: -8, r: -4, z: 15 },
-    { x: -4, y: -2, r: -2, z: 14 },
-    { x: 6, y: 2, r: 2, z: 13 },
-    { x: 16, y: 8, r: 4, z: 12 },
-    { x: 28, y: 14, r: 6, z: 11 },
-  ];
-
-  gsap.timeline({
-    scrollTrigger: {
-      trigger: '#solucoes',
-      start: 'top 82%',
-      toggleActions: 'play none none reverse',
-      invalidateOnRefresh: true,
-    }
-  })
-    .from('#solucoes', { opacity: 0, y: 64, duration: 0.85, ease: 'power3.out', immediateRender: false })
-    .from('#solucoes .label-tag', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.5')
-    .from('#solucoes .section-h2', { opacity: 0, y: 24, duration: 0.55, ease: 'power3.out', immediateRender: false }, '-=0.4')
-    .from(areaCardsForIntro, {
-      opacity: 0,
-      scale: 0.9,
-      filter: 'blur(4px)',
-      transformOrigin: '50% 50%',
-      zIndex(i) {
-        return stackOffsets[i % stackOffsets.length].z;
-      },
-      x(i, el) {
-        const rect = el.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const viewportCenterX = window.innerWidth / 2;
-        return (viewportCenterX - centerX) + stackOffsets[i % stackOffsets.length].x;
-      },
-      y(i, el) {
-        const rect = el.getBoundingClientRect();
-        const centerY = rect.top + rect.height / 2;
-        const viewportCenterY = window.innerHeight / 2;
-        return (viewportCenterY - centerY) + stackOffsets[i % stackOffsets.length].y;
-      },
-      rotation(i) {
-        return stackOffsets[i % stackOffsets.length].r;
-      },
-      duration: 1.05,
-      ease: 'power2.out',
-      immediateRender: false,
-      stagger: { each: 0.06, from: 'center' }
-    }, '-=0.24')
-    .to(areaCardsForIntro, {
-      rotation: 0,
-      filter: 'blur(0px)',
-      duration: 0.38,
-      ease: 'power1.out',
-      stagger: { each: 0.018, from: 'center' }
-    }, '<0.42')
-    .from('#solucoes .cta-center', { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out', immediateRender: false }, '-=0.24');
+  gsap.set('#solucoes', { opacity: 1, y: 0 });
+  gsap.set('#solucoes .label-tag, #solucoes .section-h2, #solucoes .cta-center', { opacity: 1, y: 0 });
+  gsap.set(areaCardsForIntro, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0, filter: 'none' });
 })();
 
 (function initAreasOrbit() {
@@ -1000,7 +938,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       nodes.forEach((node) => {
         node.style.left = '';
         node.style.top = '';
-        node.style.transform = 'translateY(20px) scale(.96)';
+        node.style.transform = 'translateY(0) scale(1)';
       });
       return;
     }
@@ -1015,7 +953,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       const y = Math.sin(angle) * radius;
       node.style.left = `calc(50% + ${x.toFixed(2)}px)`;
       node.style.top = `calc(50% + ${y.toFixed(2)}px)`;
-      node.style.transform = 'translate(-50%,-50%) scale(.96)';
+      node.style.transform = 'translate(-50%,-50%) scale(1)';
     });
   }
 
@@ -1029,41 +967,10 @@ document.querySelectorAll('.reveal-right').forEach(el => {
     });
   });
 
-  gsap.timeline({
-    scrollTrigger: {
-      trigger: '#areas',
-      start: 'top 80%',
-      toggleActions: 'play none none reverse',
-      invalidateOnRefresh: true,
-    }
-  })
-    .from('#areas', { opacity: 0, y: 50, duration: 0.8, ease: 'power3.out', immediateRender: false })
-    .from('#areas .label-tag', { opacity: 0, y: 20, duration: 0.45, ease: 'power3.out', immediateRender: false }, '-=0.45')
-    .from('#areas .section-h2', { opacity: 0, y: 20, duration: 0.5, ease: 'power3.out', immediateRender: false }, '-=0.3')
-    .from(rings, {
-      opacity: 0,
-      scale: 0.9,
-      duration: 0.85,
-      stagger: 0.08,
-      ease: 'power2.out',
-      immediateRender: false
-    }, '-=0.18')
-    .from(core, {
-      opacity: 0,
-      scale: 0.84,
-      duration: 0.7,
-      ease: 'power3.out',
-      immediateRender: false
-    }, '-=0.5')
-    .to(nodes, {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.55,
-      stagger: { each: 0.08, from: 'center' },
-      ease: 'power3.out',
-      immediateRender: false
-    }, '-=0.3');
+  gsap.set('#areas, #areas .label-tag, #areas .section-h2', { opacity: 1, y: 0 });
+  gsap.set(rings, { opacity: 1, scale: 1 });
+  gsap.set(core, { opacity: 1, scale: 1 });
+  gsap.set(nodes, { opacity: 1, y: 0, scale: 1 });
 
   gsap.to('#areas .areas-orbit-ring--outer', {
     rotate: 360,
