@@ -29,210 +29,40 @@ function splitChars(el) {
   const parts = el.innerHTML.split('<br>');
   el.innerHTML = '';
   parts.forEach((part, pi) => {
-    if (part.includes('__HERO_GLYPH__')) {
-      const [beforeGlyph, afterGlyph] = part.split('__HERO_GLYPH__');
-      if (beforeGlyph.trim()) {
-        beforeGlyph.trim().split(/\s+/).forEach((w) => {
-          const wEl = document.createElement('span'); wEl.className = 'word';
-          w.split('').forEach(c => { const s = document.createElement('span'); s.className = 'char'; s.textContent = c; wEl.appendChild(s); });
-          el.appendChild(wEl);
-          const g = document.createElement('span'); g.className = 'gap'; el.appendChild(g);
+    const segments = part.split(/(<span class="[^"]+">[^<]+<\/span>)/g).filter(Boolean);
+    let shouldAddGap = false;
+
+    segments.forEach((segment) => {
+      const spanMatch = segment.match(/^<span class="([^"]+)">([^<]+)<\/span>$/);
+      const className = spanMatch ? spanMatch[1] : '';
+      const content = (spanMatch ? spanMatch[2] : segment).trim();
+      if (!content) return;
+
+      content.split(/\s+/).forEach((word) => {
+        if (!word) return;
+        if (shouldAddGap) {
+          const gap = document.createElement('span');
+          gap.className = 'gap';
+          el.appendChild(gap);
+        }
+
+        const wordEl = document.createElement('span');
+        wordEl.className = 'word';
+        if (className) wordEl.classList.add(className);
+
+        word.split('').forEach((c) => {
+          const charEl = document.createElement('span');
+          charEl.className = 'char';
+          charEl.textContent = c;
+          wordEl.appendChild(charEl);
         });
-      }
-      el.appendChild(createHeroGlyph());
-      part = afterGlyph;
-    }
-    const hasAccent = part.includes('class="accent"');
-    if (hasAccent) {
-      const [before, rest] = part.split('<span class="accent"');
-      const inside = rest.slice(rest.indexOf('>') + 1).split('</span>')[0];
-      if (before.trim()) {
-        before.trim().split(/\s+/).forEach((w) => {
-          const wEl = document.createElement('span'); wEl.className = 'word';
-          w.split('').forEach(c => { const s = document.createElement('span'); s.className = 'char'; s.textContent = c; wEl.appendChild(s); });
-          el.appendChild(wEl);
-          const g = document.createElement('span'); g.className = 'gap'; el.appendChild(g);
-        });
-      }
-      const acc = document.createElement('span');
-      acc.className = 'accent'; acc.style.color = 'var(--blue)';
-      const wEl = document.createElement('span'); wEl.className = 'word';
-      inside.split('').forEach(c => { const s = document.createElement('span'); s.className = 'char'; s.textContent = c; wEl.appendChild(s); });
-      acc.appendChild(wEl); el.appendChild(acc);
-    } else {
-      part.trim().split(/\s+/).forEach((w, wi, arr) => {
-        if (!w) return;
-        const wEl = document.createElement('span'); wEl.className = 'word';
-        w.split('').forEach(c => { const s = document.createElement('span'); s.className = 'char'; s.textContent = c; wEl.appendChild(s); });
-        el.appendChild(wEl);
-        if (wi < arr.length-1) { const g = document.createElement('span'); g.className = 'gap'; el.appendChild(g); }
+
+        el.appendChild(wordEl);
+        shouldAddGap = true;
       });
-    }
-    if (pi < parts.length-1) el.appendChild(document.createElement('br'));
-  });
-}
-
-function createHeroGlyph() {
-  const wrap = document.createElement('span');
-  wrap.className = 'hero-glyph-slot';
-  wrap.setAttribute('aria-hidden', 'true');
-  return wrap;
-}
-
-function buildHeroGlyphSvg() {
-  return `
-    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" focusable="false">
-      <defs>
-        <linearGradient id="heroGlyphOuter" x1="22" y1="18" x2="96" y2="101" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#18568d"/>
-          <stop offset="1" stop-color="#103f6a"/>
-        </linearGradient>
-        <linearGradient id="heroGlyphInner" x1="35" y1="30" x2="83" y2="90" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#2aa3ff"/>
-          <stop offset="1" stop-color="#177fd7"/>
-        </linearGradient>
-      </defs>
-      <path class="hero-glyph-shell" d="M59 7L101 31L91 37L59 19L31 35V86L59 102L91 84L101 90L59 114L22 92V22Z" fill="url(#heroGlyphOuter)"/>
-      <path class="hero-glyph-shell" d="M59 7L109 35L99 41L59 18L26 37L22 31Z" fill="url(#heroGlyphOuter)"/>
-      <path class="hero-glyph-shell" d="M89 79L109 90L59 114L65 104Z" fill="url(#heroGlyphOuter)"/>
-      <path class="hero-glyph-core" d="M59 26L85 41L77 46L59 35L42 45V75L59 85L77 75L85 80L59 96L34 81V40Z" fill="url(#heroGlyphInner)"/>
-      <path class="hero-glyph-highlight" d="M59 11L96 32L90 35L59 17L31 33L27 31Z" fill="#ffffff" opacity=".14"/>
-      <path class="hero-glyph-highlight" d="M59 30L81 42L76 45L59 36L44 45L44 41Z" fill="#ffffff" opacity=".18"/>
-    </svg>`;
-}
-
-function initHeroGlyphMotion() {
-  const heroSlot = document.querySelector('.hero-glyph-slot:not(.hero-glyph-slot-about)');
-  const aboutSlot = document.querySelector('.hero-glyph-slot-about');
-  const hero = document.getElementById('hero');
-  const sobreTitle = document.getElementById('sobre-title');
-  if (!heroSlot || !aboutSlot || !hero || !sobreTitle) return;
-
-  let floating = document.getElementById('heroGlyphFloat');
-  if (!floating) {
-    floating = document.createElement('div');
-    floating.id = 'heroGlyphFloat';
-    floating.className = 'hero-glyph hero-glyph-float';
-    floating.setAttribute('aria-hidden', 'true');
-    floating.innerHTML = buildHeroGlyphSvg();
-    document.body.appendChild(floating);
-  }
-
-  const state = { progress: 0 };
-  let dockedInAbout = false;
-
-  function getRectCenter(rect, size) {
-    return {
-      x: rect.left + (rect.width - size) / 2,
-      y: rect.top + (rect.height - size) / 2,
-    };
-  }
-
-  function renderGlyph() {
-    if (dockedInAbout) return;
-    const heroRect = heroSlot.getBoundingClientRect();
-    const aboutRect = aboutSlot.getBoundingClientRect();
-    const size = Math.max(heroRect.height * 1.02, 44);
-    const start = getRectCenter(heroRect, size);
-    const end = getRectCenter(aboutRect, size);
-    const x = gsap.utils.interpolate(start.x, end.x, state.progress);
-    const y = gsap.utils.interpolate(start.y, end.y, state.progress);
-    const scale = gsap.utils.interpolate(1, 0.84, state.progress);
-    const rotate = gsap.utils.interpolate(0, -6, state.progress);
-
-    gsap.set(floating, {
-      x,
-      y,
-      width: size,
-      height: size,
-      scale,
-      rotate,
-      opacity: 1,
     });
-  }
 
-  function undockGlyph() {
-    if (!dockedInAbout) return;
-    aboutSlot.innerHTML = '';
-    floating.innerHTML = buildHeroGlyphSvg();
-    gsap.set(floating, { opacity: 1 });
-    dockedInAbout = false;
-  }
-
-  function dockGlyphIntoAbout() {
-    if (dockedInAbout) return;
-    aboutSlot.innerHTML = buildHeroGlyphSvg();
-    gsap.set(floating, { opacity: 0 });
-    dockedInAbout = true;
-    const dockedSvg = aboutSlot.querySelector('svg');
-    if (dockedSvg) {
-      gsap.fromTo(dockedSvg,
-        { scale: 0.92, rotate: -4, transformOrigin: '50% 50%' },
-        { scale: 1, rotate: 0, duration: 0.6, ease: 'power2.out' }
-      );
-    }
-  }
-
-  gsap.to(state, {
-    progress: 1,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '#hero',
-      start: 'top top',
-      endTrigger: '#sobre-title',
-      end: 'top 42%',
-      scrub: 1.2,
-      invalidateOnRefresh: true,
-      onUpdate: self => {
-        if (self.progress >= 0.999) {
-          dockGlyphIntoAbout();
-        } else {
-          undockGlyph();
-          renderGlyph();
-        }
-      },
-      onRefresh: self => {
-        if (self.progress >= 0.999) {
-          dockGlyphIntoAbout();
-        } else {
-          undockGlyph();
-          renderGlyph();
-        }
-      },
-      onLeave: () => {
-        state.progress = 1;
-        dockGlyphIntoAbout();
-      },
-      onEnterBack: () => {
-        undockGlyph();
-        renderGlyph();
-      },
-      onLeaveBack: () => {
-        state.progress = 0;
-        undockGlyph();
-        renderGlyph();
-      },
-    },
-  });
-
-  renderGlyph();
-
-  gsap.to(floating.querySelector('.hero-glyph-core'), {
-    scale: 1.035,
-    duration: 2.2,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut',
-    transformOrigin: '50% 50%',
-  });
-
-  gsap.to(floating.querySelectorAll('.hero-glyph-highlight'), {
-    opacity: 0.26,
-    duration: 1.8,
-    repeat: -1,
-    yoyo: true,
-    stagger: 0.16,
-    ease: 'sine.inOut',
+    if (pi < parts.length-1) el.appendChild(document.createElement('br'));
   });
 }
 
@@ -241,8 +71,9 @@ function initHeroGlyphMotion() {
 // ══════════════════════════════════
 // Apenas chars de largura similar às latinas para evitar quebra de layout
 const MATRIX_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&?!<>';
+const BINARY_CHARS = '01';
 
-function scrambleChar(el, duration = 0.48, glowColor = 'rgba(38,165,255,0.95)') {
+function scrambleChar(el, duration = 0.48, glowColor = 'rgba(38,165,255,0.95)', chars = MATRIX_CHARS) {
   if (el._scrambling) return;
   el._scrambling = true;
   const original = el.textContent;
@@ -266,7 +97,7 @@ function scrambleChar(el, duration = 0.48, glowColor = 'rgba(38,165,255,0.95)') 
       );
       return;
     }
-    el.textContent = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
+    el.textContent = chars[Math.floor(Math.random() * chars.length)];
     tick++;
   }, (duration * 1000) / ticks);
 }
@@ -275,20 +106,21 @@ function scrambleChar(el, duration = 0.48, glowColor = 'rgba(38,165,255,0.95)') 
 function matrixReveal(charEls, stagger = 0.038) {
   charEls.forEach((el, i) => {
     gsap.set(el, { opacity: 1 });
-    setTimeout(() => scrambleChar(el), i * stagger * 1000);
+    setTimeout(() => scrambleChar(el, 0.48, 'rgba(38,165,255,0.95)', BINARY_CHARS), i * stagger * 1000);
   });
 }
 
 // Hover individual em cada .char
 function bindCharHover() {
   document.querySelectorAll('.hero-title .char').forEach(el => {
-    el.addEventListener('mouseenter', () => scrambleChar(el, 0.3));
+    el.addEventListener('mouseenter', () => scrambleChar(el, 0.34, 'rgba(93,183,255,0.95)', BINARY_CHARS));
   });
 }
 
 window.addEventListener('load', () => {
-  splitChars(document.getElementById('heroTitle'));
-  initHeroGlyphMotion();
+  const heroTitle = document.getElementById('heroTitle');
+  heroTitle.innerHTML = heroTitle.innerHTML.replace('CONEXTE', '<span class="hero-brand">CONEXTE</span>');
+  splitChars(heroTitle);
 
   gsap.to('#navbar', { y: 0, duration: 0.8, ease: 'power2.out', delay: 0.1 });
 
@@ -309,28 +141,130 @@ window.addEventListener('load', () => {
 // ══════════════════════════════════
 document.querySelectorAll('.reveal').forEach(el => {
   gsap.fromTo(el,
-    { opacity: 0, y: 32 },
-    { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out',
+    { opacity: 0, y: 32, filter: 'blur(10px)' },
+    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.75, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' }
     }
   );
 });
 document.querySelectorAll('.reveal-left').forEach(el => {
   gsap.fromTo(el,
-    { opacity: 0, x: -36 },
-    { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out',
+    { opacity: 0, x: -36, filter: 'blur(10px)' },
+    { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' }
     }
   );
 });
 document.querySelectorAll('.reveal-right').forEach(el => {
   gsap.fromTo(el,
-    { opacity: 0, x: 36 },
-    { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out',
+    { opacity: 0, x: 36, filter: 'blur(10px)' },
+    { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' }
     }
   );
 });
+
+// ══════════════════════════════════
+// SECTION TRANSITIONS — reveal suave + divisores
+// ══════════════════════════════════
+(function initSectionTransitions() {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const collect = (selectors) => selectors.flatMap((selector) => Array.from(document.querySelectorAll(selector)));
+
+  document.querySelectorAll('.section-wave-bottom svg').forEach((svg) => {
+    gsap.fromTo(svg,
+      { opacity: 0, y: -24, scaleX: 0.97, scaleY: 0.9, filter: 'blur(8px)' },
+      {
+        opacity: 1,
+        y: 0,
+        scaleX: 1,
+        scaleY: 1,
+        filter: 'blur(0px)',
+        duration: 1.05,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: svg.closest('.section-wave-bottom'),
+          start: 'top bottom-=90',
+          toggleActions: 'play none none reverse',
+          invalidateOnRefresh: true,
+        }
+      }
+    );
+  });
+
+  document.querySelectorAll('.navy-stripes').forEach((stripes) => {
+    const section = stripes.closest('section');
+    if (!section || prefersReducedMotion.matches) return;
+    gsap.to(stripes, {
+      yPercent: 10,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.1,
+      }
+    });
+  });
+
+  if (prefersReducedMotion.matches) return;
+
+  const plans = [
+    {
+      trigger: '#solucoes',
+      steps: [
+        { selectors: ['#solucoes .label-tag', '#solucoes .section-h2'], y: 28, stagger: 0.08, duration: 0.74 },
+        { selectors: ['#solucoes .areas-grid .area-card'], y: 54, stagger: 0.09, duration: 0.88 },
+        { selectors: ['#solucoes .cta-center'], y: 26, stagger: 0, duration: 0.68 }
+      ]
+    },
+    {
+      trigger: '#areas',
+      steps: [
+        { selectors: ['#areas .label-tag', '#areas .section-h2'], y: 28, stagger: 0.08, duration: 0.74 },
+        { selectors: ['#areas .areas-showcase-card'], y: 56, stagger: 0.08, duration: 0.9 }
+      ]
+    },
+    {
+      trigger: '#contato',
+      steps: [
+        { selectors: ['#contato .label-tag', '#contato .section-h2', '#contato .contato-lead', '#contato .contato-meta'], y: 26, stagger: 0.08, duration: 0.74 },
+        { selectors: ['#contato .contato-card'], y: 34, stagger: 0.08, duration: 0.76 },
+        { selectors: ['#contato .contato-form-box'], y: 42, stagger: 0, duration: 0.82 }
+      ]
+    }
+  ];
+
+  plans.forEach((plan) => {
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: plan.trigger,
+        start: 'top 78%',
+        toggleActions: 'play none none reverse',
+        invalidateOnRefresh: true,
+      }
+    });
+
+    let offset = 0;
+    plan.steps.forEach((step) => {
+      const elements = collect(step.selectors);
+      if (!elements.length) return;
+      timeline.fromTo(elements,
+        { opacity: 0, y: step.y, filter: 'blur(10px)' },
+        {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: step.duration,
+          stagger: step.stagger,
+          ease: 'power3.out'
+        },
+        offset
+      );
+      offset += 0.16;
+    });
+  });
+})();
 
 // ══════════════════════════════════
 // AREAS — card spotlight interaction
@@ -825,18 +759,6 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   renderer.setAnimationLoop(renderFrame);
 })();
 
-// ══════════════════════════════════
-// ÁREAS — cards já entram fixos no grid
-// ══════════════════════════════════
-(function initAreasIntro() {
-  const areasGrid = document.querySelector('#solucoes .areas-grid');
-  const areaCardsForIntro = areasGrid ? Array.from(areasGrid.querySelectorAll('.area-card')) : [];
-  if (!areasGrid || !areaCardsForIntro.length) return;
-  gsap.set('#solucoes', { opacity: 1, y: 0 });
-  gsap.set('#solucoes .label-tag, #solucoes .section-h2, #solucoes .cta-center', { opacity: 1, y: 0 });
-  gsap.set(areaCardsForIntro, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0, filter: 'none' });
-})();
-
 (function initAreasOrbit() {
   const orbit = document.getElementById('areasOrbit');
   if (!orbit) return;
@@ -1003,20 +925,6 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 })();
 
 // ══════════════════════════════════
-// CONTATO: fade-slide ao entrar
-// ══════════════════════════════════
-gsap.timeline({
-  scrollTrigger: {
-    trigger: '#contato',
-    start: 'top 75%',
-    toggleActions: 'play none none reverse',
-    invalidateOnRefresh: true,
-  }
-})
-  .fromTo('#contato .contato-info',    { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
-  .fromTo('#contato .contato-form-box',{ opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.55');
-
-// ══════════════════════════════════
 // NAV: transparente sobre hero, sólida no resto
 // ══════════════════════════════════
 // ══════════════════════════════════
@@ -1108,11 +1016,12 @@ gsap.timeline({
 // ══════════════════════════════════════════════════
 (function () {
   const TOTAL = 200;
+  const STATIC_FRAME = 99;
   const canvas = document.getElementById('cable-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   let DPR = 1;
-  let currentFrame = 0;
+  let currentFrame = STATIC_FRAME;
   const FRAME_DIRS = ['rede', 'frames'];
   let frameDir = FRAME_DIRS[0];
 
@@ -1171,24 +1080,12 @@ gsap.timeline({
 
   function init() {
     fitCanvas();
-    drawFrame(0);
+    drawFrame(currentFrame);
   }
 
-  if (imgs[0].complete) { init(); }
-  else { imgs[0].addEventListener('load', init); }
+  if (imgs[currentFrame].complete) { init(); }
+  else { imgs[currentFrame].addEventListener('load', init, { once: true }); }
   window.addEventListener('resize', () => { fitCanvas(); drawFrame(currentFrame); });
-
-  // Scrub: cabo anima conforme rola pelo #sobre
-  ScrollTrigger.create({
-    trigger: '#sobre',
-    start: 'top 50%',
-    end:   'bottom top',
-    scrub: 0.35,
-    onUpdate(self) {
-      currentFrame = Math.round(Math.min(self.progress * 1.12, 1) * (TOTAL - 1));
-      drawFrame(currentFrame);
-    }
-  });
 })();
 
 // gradiente hero→sobre: aparece só ao rolar para baixo

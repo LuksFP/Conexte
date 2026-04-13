@@ -174,6 +174,17 @@
       background:var(--panel);
       border:1px solid var(--border);
     }
+    .module-card-link{
+      display:block;
+      color:inherit;
+      text-decoration:none;
+      transition:transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+    }
+    .module-card-link:hover{
+      transform:translateY(-4px);
+      border-color:rgba(77,143,232,.22);
+      box-shadow:0 18px 38px rgba(16,37,111,.1);
+    }
     .module-card h4{
       margin:0 0 10px;
       color:var(--navy);
@@ -840,12 +851,15 @@
       margin-top:28px;
     }
     .managed-solution-card{
+      display:block;
       position:relative;
       overflow:hidden;
       border-radius:26px;
       background:#eef4ff;
       border:1px solid rgba(77,143,232,.16);
       box-shadow:0 16px 34px rgba(16,37,111,.08);
+      color:inherit;
+      text-decoration:none;
       transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
     }
     .managed-solution-card:hover{
@@ -1388,7 +1402,7 @@
         <a class="brand" href="index.html">
           <img src="https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO.png" alt="Conexte">
         </a>
-        <a class="back-link" href="index.html#solucoes">Voltar para soluções</a>
+        <a class="back-link" id="backLink" href="index.html#solucoes">Voltar para soluções</a>
       </div>
       <div class="hero-grid">
         <div>
@@ -1397,7 +1411,7 @@
           <p class="hero-copy" id="solutionIntro"></p>
         </div>
         <aside class="hero-panel">
-          <h2>Entregáveis</h2>
+          <h2 id="solutionHighlightsTitle">Entregáveis</h2>
           <ul id="solutionHighlights"></ul>
         </aside>
       </div>
@@ -1432,7 +1446,7 @@
       </section>
 
       <section class="panel" id="solutionModulesSection" style="display:none">
-        <h3>Estrutura do Serviço</h3>
+        <h3 id="solutionModulesTitle">Estrutura do Serviço</h3>
         <div class="modules-grid" id="solutionModules"></div>
       </section>
 
@@ -1740,8 +1754,140 @@
 
     const fallbackKey = 'cloud-computing';
     const params = new URLSearchParams(window.location.search);
-    const key = params.get('item');
-    const data = solutions[key] || solutions[fallbackKey];
+    const rawKey = params.get('item');
+    const key = solutions[rawKey] ? rawKey : fallbackKey;
+    const subKey = params.get('subitem');
+
+    const slugify = (value) => value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/&/g, ' e ')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    const topicHref = (parentKey, topic) => `solucao.html?item=${encodeURIComponent(parentKey)}&subitem=${encodeURIComponent(topic.slug)}`;
+
+    const buildTopicCardCopy = (parentTitle, topicTitle) => `${topicTitle} é um tema dentro de ${parentTitle}, com abordagem técnica, implantação assistida e foco em continuidade operacional.`;
+
+    const genericTopics = {
+      'infraestrutura': [
+        { code: '1.2.1', title: 'Conectividade e redes' },
+        { code: '1.2.2', title: 'Segurança Eletrônica' },
+        { code: '1.2.3', title: 'Infovia' }
+      ],
+      'data-center': [
+        { code: '1.3.1', title: 'Projetos e Consultoria Para Data Centers' },
+        { code: '1.3.2', title: 'Observabilidade e Gerenciamento' },
+        { code: '1.3.3', title: 'Manutenção de Data Centers' },
+        { code: '1.3.4', title: 'Construção e Retrofit' }
+      ],
+      'inovacao-solucoes-inteligentes': [
+        { code: '1.4.1', title: 'Cidades Inteligentes' },
+        { code: '1.4.2', title: 'Fábrica de Software' },
+        { code: '1.4.3', title: 'Criação e Administração de Site' },
+        { code: '1.4.4', title: 'Ambiente Inteligente' }
+      ],
+      'cybersecurity': [
+        { code: '1.5.1', title: 'Conscientização & Proteção' },
+        { code: '1.5.2', title: 'Infrastructure Security' },
+        { code: '1.5.3', title: 'Pentest e Análise de Vulnerabilidades' }
+      ]
+    };
+
+    const solutionTopics = {
+      'servicos-gerenciados': solutions['servicos-gerenciados'].managedPage.sections.map((section) => ({
+        slug: slugify(section.title),
+        code: section.code,
+        title: section.title,
+        intro: section.intro,
+        metrics: section.metrics,
+        details: section.details
+      })),
+      ...Object.fromEntries(
+        Object.entries(genericTopics).map(([solutionKey, items]) => [
+          solutionKey,
+          items.map((item) => ({
+            ...item,
+            slug: slugify(item.title)
+          }))
+        ])
+      )
+    };
+
+    const baseData = solutions[key];
+    const topicList = solutionTopics[key] || [];
+    const selectedTopic = subKey ? topicList.find((topic) => topic.slug === subKey) : null;
+
+    function buildSubtopicPage(parentKey, parent, topic, siblings) {
+      const relatedModules = siblings
+        .filter((item) => item.slug !== topic.slug)
+        .map((item) => ({
+          title: `${item.code}. ${item.title}`,
+          copy: buildTopicCardCopy(parent.title, item.title),
+          href: topicHref(parentKey, item)
+        }));
+
+      const baseOverview = selectedTopic?.details
+        ? `A Conexte trata ${topic.title} como uma frente específica dentro de ${parent.title}. ${topic.details.map((item) => item.copy).join(' ')}`
+        : `A Conexte desenvolve projetos de ${topic.title.toLowerCase()} dentro da frente de ${parent.title}, combinando diagnóstico, desenho técnico, implantação assistida e entrega alinhada à operação do cliente.`;
+
+      const baseHighlights = selectedTopic?.metrics
+        ? topic.metrics.map((item) => `${item.label}: ${item.value}`)
+        : [
+            `Levantamento técnico para ${topic.title.toLowerCase()}`,
+            'Definição de escopo e prioridades de implantação',
+            'Execução assistida conforme a realidade do ambiente',
+            'Documentação para continuidade operacional'
+          ];
+
+      const baseDeliverables = selectedTopic?.details
+        ? topic.details.map((item) => item.copy)
+        : [
+            `Escopo técnico de ${topic.title}`,
+            'Plano de implantação ou evolução',
+            'Validação do ambiente e próximos passos',
+            'Documentação final para sustentação'
+          ];
+
+      return {
+        category: `${parent.title} • Tema`,
+        title: topic.title,
+        intro: topic.intro || `${topic.title} é um tema dentro de ${parent.title} com foco em planejamento, implantação e sustentação aderentes à realidade operacional do ambiente.`,
+        overview: baseOverview,
+        highlights: baseHighlights,
+        deliverables: baseDeliverables,
+        useCases: [
+          `Projetos novos ou evolução de ${topic.title.toLowerCase()}.`,
+          `Operações que precisam estruturar ${topic.title.toLowerCase()} com mais previsibilidade.`,
+          `Ambientes que exigem suporte especializado dentro da frente de ${parent.title}.`,
+          'Demandas com necessidade de padronização, controle e continuidade operacional.'
+        ],
+        differentials: [
+          `Entrega alinhada ao portfólio de ${parent.title}.`,
+          'Abordagem consultiva com implantação assistida.',
+          'Visão técnica combinada com leitura operacional do ambiente.',
+          'Base preparada para sustentação e evolução posterior.'
+        ],
+        kpis: [
+          { value: topic.code, label: 'tema estruturado dentro da solução' },
+          { value: '1 escopo', label: 'implantação guiada por prioridade' },
+          { value: 'base estável', label: 'entrega preparada para sustentação' }
+        ],
+        steps: [
+          `Levantamento do cenário atual para ${topic.title.toLowerCase()}.`,
+          'Definição do escopo, prioridades e abordagem técnica.',
+          'Implantação assistida com validação funcional e operacional.',
+          'Entrega documentada com próximos passos de evolução.'
+        ],
+        ctaTitle: `Falar sobre ${topic.title}`,
+        ctaCopy: `A Conexte pode estruturar uma proposta de ${topic.title.toLowerCase()} conforme o cenário atual do seu ambiente.`,
+        modulesTitle: `Outros temas em ${parent.title}`,
+        modules: relatedModules
+      };
+    }
+
+    const data = selectedTopic ? buildSubtopicPage(key, baseData, selectedTopic, topicList) : baseData;
 
     document.title = `Conexte | ${data.title}`;
     document.getElementById('solutionCategory').textContent = data.category;
@@ -1750,9 +1896,11 @@
     document.getElementById('solutionOverview').textContent = data.overview;
     document.getElementById('solutionCtaTitle').textContent = data.ctaTitle;
     document.getElementById('solutionCtaCopy').textContent = data.ctaCopy;
+    document.getElementById('solutionHighlightsTitle').textContent = selectedTopic ? 'Pontos centrais' : 'Entregáveis';
 
     const hero = document.getElementById('hero');
     const brandImage = document.querySelector('.brand img');
+    const backLink = document.getElementById('backLink');
     const defaultBrandLogo = 'https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO.png';
     const managedBrandLogo = 'https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO-Branco.png';
     const imageMap = {
@@ -1765,6 +1913,13 @@
     };
     hero.style.setProperty('--hero-bg', imageMap[key] || imageMap[fallbackKey]);
     brandImage.src = defaultBrandLogo;
+    if (selectedTopic) {
+      backLink.href = `solucao.html?item=${encodeURIComponent(key)}`;
+      backLink.textContent = `Voltar para ${baseData.title}`;
+    } else {
+      backLink.href = 'index.html#solucoes';
+      backLink.textContent = 'Voltar para soluções';
+    }
 
     const listMap = [
       ['solutionHighlights', data.highlights],
@@ -1787,18 +1942,40 @@
     `).join('');
 
     const modulesSection = document.getElementById('solutionModulesSection');
+    const modulesTitleNode = document.getElementById('solutionModulesTitle');
     const modulesNode = document.getElementById('solutionModules');
-    if (data.modules && data.modules.length) {
+    const pageModules = selectedTopic
+      ? data.modules
+      : topicList.length
+        ? topicList.map((item) => ({
+            title: `${item.code}. ${item.title}`,
+            copy: buildTopicCardCopy(baseData.title, item.title),
+            href: topicHref(key, item)
+          }))
+        : data.modules;
+
+    if (pageModules && pageModules.length) {
       modulesSection.style.display = '';
-      modulesNode.innerHTML = data.modules.map((item) => `
+      modulesTitleNode.textContent = data.modulesTitle || (topicList.length ? 'Temas da solução' : 'Estrutura do Serviço');
+      modulesNode.innerHTML = pageModules.map((item) => item.href ? `
+        <a class="module-card module-card-link" href="${item.href}">
+          <h4>${item.title}</h4>
+          <p>${item.copy}</p>
+        </a>
+      ` : `
         <article class="module-card">
           <h4>${item.title}</h4>
           <p>${item.copy}</p>
         </article>
       `).join('');
+    } else {
+      modulesSection.style.display = 'none';
     }
 
-    if (key === 'servicos-gerenciados' && data.managedPage) {
+    document.getElementById('solutionCtaLink').href = `https://api.whatsapp.com/send/?phone=5513996847503&text=${encodeURIComponent(`Olá, Conexte! Quero saber mais sobre ${data.title}.`)}`;
+    document.getElementById('solutionCtaLink').textContent = selectedTopic ? 'Falar sobre este tema' : 'Solicitar atendimento';
+
+    if (!selectedTopic && key === 'servicos-gerenciados' && data.managedPage) {
       document.querySelectorAll('.content > section:not(#managedServicesPage)').forEach((section) => {
         section.style.display = 'none';
       });
@@ -1831,7 +2008,7 @@
       `).join('');
 
       document.getElementById('managedSolutionsGrid').innerHTML = data.managedPage.sections.map((section) => `
-        <article class="managed-solution-card">
+        <a class="managed-solution-card" href="${topicHref(key, { slug: slugify(section.title) })}">
           <div class="managed-solution-media" style="--managed-solution-image:${section.image}">
             <div class="managed-solution-glow"></div>
           </div>
@@ -1843,7 +2020,7 @@
               ${section.metrics.slice(0, 2).map((item) => `<span>${item.value}</span>`).join('')}
             </div>
           </div>
-        </article>
+        </a>
       `).join('');
 
       document.getElementById('managedBenefitsGrid').innerHTML = data.managedPage.benefits.map((item, index) => `
