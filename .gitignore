@@ -9,3 +9,4 @@ node_modules/
 # logs locais
 server.err.log
 server.out.log
+.vercel
