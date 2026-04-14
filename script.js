@@ -1155,13 +1155,133 @@ document.querySelectorAll('.mm-link').forEach(a => {
 document.getElementById('contactForm').addEventListener('submit', e => {
   e.preventDefault();
   const btn = document.getElementById('submitBtn');
-  btn.textContent = 'Enviando...'; btn.disabled = true;
+  const originalMarkup = '<span class="btn-label">Solicitar diagnóstico</span>';
+  btn.innerHTML = '<span class="btn-label">Enviando...</span>'; btn.disabled = true;
   setTimeout(() => {
-    btn.textContent = '✓ Mensagem enviada!';
+    btn.innerHTML = '<span class="btn-label">✓ Mensagem enviada!</span>';
     btn.style.background = '#eafaf3'; btn.style.color = '#0A6640';
-    setTimeout(() => { btn.textContent = 'Enviar'; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 3000);
+    setTimeout(() => { btn.innerHTML = originalMarkup; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 3000);
   }, 1200);
 });
+
+// ══════════════════════════════════
+// COOKIE CONSENT
+// ══════════════════════════════════
+(() => {
+  const consentKey = 'conexte-cookie-consent-v2';
+  const legacyConsentKey = 'conexte-cookie-consent';
+  const banner = document.getElementById('cookieBanner');
+  const accept = document.getElementById('cookieAccept');
+  const reject = document.getElementById('cookieReject');
+  const prefsToggle = document.getElementById('cookiePrefsToggle');
+  const settings = document.getElementById('cookieSettings');
+  const analyticsToggle = document.getElementById('cookieAnalytics');
+  const savePrefs = document.getElementById('cookieSavePrefs');
+
+  if (!banner || !accept || !reject || !prefsToggle || !settings || !analyticsToggle || !savePrefs) return;
+
+  const showBanner = () => document.body.classList.add('cookie-banner-visible');
+  const hideBanner = () => document.body.classList.remove('cookie-banner-visible');
+  const openSettings = () => {
+    banner.classList.add('cookie-banner-expanded');
+    settings.hidden = false;
+    prefsToggle.setAttribute('aria-expanded', 'true');
+  };
+  const closeSettings = () => {
+    banner.classList.remove('cookie-banner-expanded');
+    settings.hidden = true;
+    prefsToggle.setAttribute('aria-expanded', 'false');
+  };
+  const applyConsent = (consent) => {
+    document.documentElement.dataset.cookieAnalytics = consent.analytics ? 'granted' : 'denied';
+  };
+  const persistConsent = (consent) => {
+    const payload = {
+      essential: true,
+      analytics: Boolean(consent.analytics),
+      decision: consent.decision,
+      updatedAt: new Date().toISOString(),
+    };
+    localStorage.setItem(consentKey, JSON.stringify(payload));
+    localStorage.removeItem(legacyConsentKey);
+    applyConsent(payload);
+  };
+  const readConsent = () => {
+    const raw = localStorage.getItem(consentKey);
+    if (!raw) return null;
+    if (raw === 'accepted') {
+      return { essential: true, analytics: true, decision: 'accepted' };
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    return {
+      essential: true,
+      analytics: Boolean(parsed.analytics),
+      decision: typeof parsed.decision === 'string' ? parsed.decision : 'custom',
+    };
+  };
+  const readLegacyConsent = () => {
+    const raw = localStorage.getItem(legacyConsentKey);
+    if (!raw) return null;
+    if (raw === 'accepted') {
+      return { essential: true, analytics: true, decision: 'accepted' };
+    }
+    return null;
+  };
+  const finalizeConsent = (consent) => {
+    try {
+      persistConsent(consent);
+    } catch (error) {
+      applyConsent({ analytics: Boolean(consent.analytics) });
+    }
+    closeSettings();
+    hideBanner();
+  };
+
+  try {
+    const storedConsent = readConsent();
+    if (storedConsent) {
+      analyticsToggle.checked = storedConsent.analytics;
+      applyConsent(storedConsent);
+      hideBanner();
+      return;
+    }
+    const legacyConsent = readLegacyConsent();
+    if (legacyConsent) {
+      analyticsToggle.checked = legacyConsent.analytics;
+      applyConsent(legacyConsent);
+      showBanner();
+      return;
+    }
+  } catch (error) {
+    // If storage is blocked, keep the banner visible for this session only.
+  }
+
+  analyticsToggle.checked = false;
+  showBanner();
+
+  accept.addEventListener('click', () => {
+    analyticsToggle.checked = true;
+    finalizeConsent({ analytics: true, decision: 'accepted' });
+  });
+
+  reject.addEventListener('click', () => {
+    analyticsToggle.checked = false;
+    finalizeConsent({ analytics: false, decision: 'rejected' });
+  });
+
+  prefsToggle.addEventListener('click', () => {
+    if (settings.hidden) {
+      openSettings();
+      return;
+    }
+    closeSettings();
+  });
+
+  savePrefs.addEventListener('click', () => {
+    finalizeConsent({ analytics: analyticsToggle.checked, decision: 'custom' });
+  });
+})();
 
 // recalcula todos os triggers após o layout estar estável
 gsap.delayedCall(0.3, () => ScrollTrigger.refresh());

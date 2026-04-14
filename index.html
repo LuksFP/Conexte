@@ -40,7 +40,7 @@
       <li><a href="#areas">Áreas</a></li>
     </ul>
     <a href="#contato" class="nav-cta">
-      Contato
+      <span class="btn-label">Falar com especialista</span>
       <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -104,7 +104,7 @@
           </span>
           <svg class="arr" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="#solucoes" class="btn-outline-white">Nossas Soluções</a>
+        <a href="#solucoes" class="btn-outline-white"><span class="btn-label">Nossas Soluções</span></a>
       </div>
     </div>
   </div>
@@ -341,7 +341,7 @@
       </div>
       <div class="cta-center reveal">
         <a href="https://api.whatsapp.com/send/?phone=5513996847503&text=Olá, Conexte! Quero uma solução personalizada." class="btn-navy" target="_blank" rel="noopener">
-          Quero uma solução personalizada
+          <span class="btn-label">Quero uma solução personalizada</span>
           <svg class="arr" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
@@ -349,7 +349,7 @@
   </div>
   <!-- wave divider: areas → contato -->
   <div class="section-wave-bottom" aria-hidden="true">
-    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#E5EEFB"/></svg>
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#12206F"/></svg>
   </div>
 </section>
 
@@ -501,6 +501,7 @@
           <span>Resposta consultiva</span>
           <span>Atendimento rápido</span>
           <span>Infraestrutura, redes e suporte</span>
+          <span>Desenvolvimento de softwares</span>
         </div>
 
         <div class="contato-cards">
@@ -548,7 +549,7 @@
             <div class="form-field"><label>Telefone</label><input type="tel" placeholder="(00) 00000-0000"></div>
           </div>
           <div class="form-field"><label>Mensagem</label><textarea rows="5" placeholder="Descreva o que você precisa..."></textarea></div>
-          <button type="submit" class="btn-submit" id="submitBtn">Solicitar diagnóstico</button>
+          <button type="submit" class="btn-submit" id="submitBtn"><span class="btn-label">Solicitar diagnóstico</span></button>
         </form>
         <div class="contato-form-foot">
           <span>Prefere falar agora?</span>
@@ -606,6 +607,46 @@
     <span>© 2026 Conexte Tecnologia. Todos os direitos reservados.</span>
   </div>
 </footer>
+
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Aviso de cookies">
+  <div class="cookie-banner-badge">Cookies</div>
+  <p class="cookie-banner-title">Preferências de cookies</p>
+  <p class="cookie-banner-text">Escolha como deseja prosseguir. Os cookies essenciais permanecem ativos para o funcionamento do site. Quando habilitados, os analíticos ajudam a entender acessos e melhorar a experiência.</p>
+  <a class="cookie-banner-policy" href="https://conexte.com.br/politica-de-privacidade/" target="_blank" rel="noopener">Ler Política de Privacidade</a>
+  <div class="cookie-banner-actions">
+    <div class="cookie-banner-secondary">
+      <button class="cookie-banner-ghost" id="cookieReject" type="button">Recusar opcionais</button>
+      <button class="cookie-banner-link-btn" id="cookiePrefsToggle" type="button" aria-expanded="false" aria-controls="cookieSettings">Preferências</button>
+    </div>
+    <button class="cookie-banner-accept" id="cookieAccept" type="button">Aceitar tudo</button>
+  </div>
+  <div class="cookie-banner-settings" id="cookieSettings" hidden>
+    <div class="cookie-setting">
+      <div class="cookie-setting-copy">
+        <strong>Essenciais</strong>
+        <span>Necessários para funcionamento, segurança e armazenamento do seu consentimento.</span>
+      </div>
+      <span class="cookie-switch cookie-switch--locked" aria-hidden="true">
+        <span class="cookie-switch-track">
+          <span class="cookie-switch-knob"></span>
+        </span>
+      </span>
+    </div>
+    <div class="cookie-setting">
+      <div class="cookie-setting-copy">
+        <strong>Analíticos</strong>
+        <span>Opcional. Permite registrar preferências e preparar o site para medição de acesso quando aplicável.</span>
+      </div>
+      <label class="cookie-switch" for="cookieAnalytics">
+        <input id="cookieAnalytics" type="checkbox">
+        <span class="cookie-switch-track">
+          <span class="cookie-switch-knob"></span>
+        </span>
+      </label>
+    </div>
+    <button class="cookie-banner-save" id="cookieSavePrefs" type="button">Salvar preferências</button>
+  </div>
+</div>
 
 <!--
  removed curtain-cursor

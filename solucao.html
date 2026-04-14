@@ -111,12 +111,11 @@
       color:rgba(255,255,255,.86);
     }
     .hero-panel{
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:24px;
-      background:rgba(255,255,255,.08);
-      backdrop-filter:blur(12px);
-      padding:22px;
-      box-shadow:0 22px 56px rgba(0,0,0,.18);
+      padding:0;
+      background:none;
+      border:none;
+      box-shadow:none;
+      backdrop-filter:none;
     }
     .hero-panel h2{
       margin:0 0 10px;
@@ -127,6 +126,127 @@
       padding-left:18px;
       line-height:1.8;
       color:rgba(255,255,255,.84);
+    }
+    .hero-panel li + li{
+      margin-top:2px;
+    }
+    .hero-panel-link{
+      color:rgba(244,248,255,.9);
+      text-decoration:none;
+      border-bottom:1px solid transparent;
+      transition:color .22s ease, border-color .22s ease, opacity .22s ease;
+    }
+    .hero-panel-link:hover,
+    .hero-panel-link:focus-visible{
+      color:#d9f764;
+      border-color:rgba(217,247,100,.48);
+      outline:none;
+    }
+    .hero-device{
+      position:relative;
+      width:min(560px,100%);
+      margin-left:auto;
+    }
+    .hero-device-lid{
+      position:relative;
+      padding:14px 14px 18px;
+      border-radius:30px 30px 20px 20px;
+      background:
+        linear-gradient(180deg, rgba(34,38,46,.98) 0%, rgba(16,18,24,.98) 100%);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:
+        0 28px 60px rgba(0,0,0,.34),
+        0 2px 0 rgba(255,255,255,.12) inset;
+    }
+    .hero-device-camera{
+      position:absolute;
+      top:8px;
+      left:50%;
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      transform:translateX(-50%);
+      background:radial-gradient(circle at 40% 35%, rgba(122,177,255,.7) 0%, rgba(24,32,52,.94) 55%, #05070d 100%);
+      box-shadow:0 0 0 2px rgba(255,255,255,.03);
+      z-index:2;
+    }
+    .hero-device-screen{
+      position:relative;
+      min-height:320px;
+      border-radius:18px 18px 12px 12px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 72% 10%, rgba(129,205,255,.18) 0%, transparent 22%),
+        radial-gradient(circle at 12% 0%, rgba(200,212,0,.12) 0%, transparent 24%),
+        linear-gradient(180deg, rgba(17,25,54,.94) 0%, rgba(11,18,42,.98) 100%);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        inset 0 -18px 48px rgba(0,0,0,.26);
+    }
+    .hero-device-screen::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(110deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.05) 18%, transparent 34%),
+        radial-gradient(circle at 82% 12%, rgba(255,255,255,.1) 0%, transparent 20%);
+      pointer-events:none;
+    }
+    .hero-device-screen::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), transparent 28%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 28px);
+      opacity:.42;
+      pointer-events:none;
+    }
+    .hero-device-content{
+      position:relative;
+      z-index:1;
+      height:100%;
+      padding:28px 26px 24px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+    }
+    .hero-device-base{
+      position:relative;
+      width:116%;
+      height:22px;
+      margin:-2px 0 0 -8%;
+      border-radius:0 0 42px 42px;
+      background:
+        linear-gradient(180deg, #c9ccd1 0%, #a8adb4 46%, #8e949d 100%);
+      box-shadow:
+        0 14px 24px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.56),
+        inset 0 -1px 0 rgba(118,124,134,.48);
+    }
+    .hero-device-base::before{
+      content:'';
+      position:absolute;
+      left:50%;
+      top:1px;
+      width:24%;
+      height:4px;
+      transform:translateX(-50%);
+      border-radius:0 0 999px 999px;
+      background:rgba(102,108,118,.52);
+    }
+    .hero-device-base::after{
+      content:'';
+      position:absolute;
+      left:50%;
+      top:7px;
+      width:18%;
+      height:7px;
+      transform:translateX(-50%);
+      border-radius:999px;
+      background:rgba(124,130,139,.28);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
     }
     main{padding:36px 24px 64px}
     .content{
@@ -147,6 +267,31 @@
       padding:26px;
       box-shadow:0 18px 44px rgba(16,37,111,.08);
     }
+    .panel-glass{
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.66) 0%, rgba(228,238,255,.46) 100%);
+      border:1px solid rgba(122,156,219,.3);
+      box-shadow:
+        0 24px 56px rgba(16,37,111,.12),
+        inset 0 1px 0 rgba(255,255,255,.62);
+      backdrop-filter:blur(22px) saturate(148%);
+      -webkit-backdrop-filter:blur(22px) saturate(148%);
+    }
+    .panel-glass::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255,255,255,.78) 0%, transparent 34%),
+        radial-gradient(circle at 100% 100%, rgba(77,143,232,.12) 0%, transparent 28%);
+      pointer-events:none;
+    }
+    .panel-glass > *{
+      position:relative;
+      z-index:1;
+    }
     .panel h3{
       margin:0 0 14px;
       font-size:20px;
@@ -162,6 +307,41 @@
       padding-left:18px;
       color:var(--muted);
       line-height:1.9;
+    }
+    .feature-list{
+      list-style:none;
+      padding:0;
+      display:grid;
+      gap:12px;
+    }
+    .feature-list li{
+      position:relative;
+      padding:15px 16px 15px 44px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.34);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(216,228,249,.22) 100%);
+      color:#365073;
+      line-height:1.7;
+      box-shadow:
+        0 12px 26px rgba(16,37,111,.08),
+        inset 0 1px 0 rgba(255,255,255,.55);
+      backdrop-filter:blur(16px) saturate(140%);
+      -webkit-backdrop-filter:blur(16px) saturate(140%);
+    }
+    .feature-list li::before{
+      content:'';
+      position:absolute;
+      left:16px;
+      top:18px;
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 32% 32%, #f7ffb4 0%, #c8d400 52%, #90a500 100%);
+      box-shadow:
+        0 0 0 5px rgba(200,212,0,.12),
+        0 6px 14px rgba(132,150,0,.22);
     }
     .modules-grid{
       display:grid;
@@ -728,12 +908,41 @@
       color:rgba(239,246,255,.88);
     }
     body.managed-mode .hero-panel{
+      padding:0;
+      background:none;
+      border:none;
+      box-shadow:none;
+      backdrop-filter:none;
+    }
+    body.managed-mode .hero-device{
+      width:100%;
+      margin-left:0;
+    }
+    body.managed-mode .hero-device-lid{
       padding:26px;
       border-radius:28px;
       background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
       border:1px solid rgba(255,255,255,.16);
       box-shadow:0 28px 64px rgba(0,0,0,.18);
       backdrop-filter:blur(18px);
+    }
+    body.managed-mode .hero-device-camera,
+    body.managed-mode .hero-device-base{
+      display:none;
+    }
+    body.managed-mode .hero-device-screen{
+      min-height:0;
+      border:none;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+    }
+    body.managed-mode .hero-device-screen::before,
+    body.managed-mode .hero-device-screen::after{
+      display:none;
+    }
+    body.managed-mode .hero-device-content{
+      padding:0;
     }
     body.managed-mode .hero-panel h2{
       margin:0 0 14px;
@@ -895,22 +1104,6 @@
       padding:20px 20px 22px;
       display:grid;
       gap:12px;
-    }
-    .managed-solution-code{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size:11px;
-      font-weight:700;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:#4d8fe8;
-    }
-    .managed-solution-code::before{
-      content:'';
-      width:18px;
-      height:1px;
-      background:currentColor;
     }
     .managed-solution-card h3{
       margin:0;
@@ -1375,6 +1568,42 @@
       .service-map-visual{padding:24px 18px 28px}
       .service-map-badge{position:relative;left:auto;top:auto;margin-top:12px;max-width:none}
       .topbar{margin-bottom:34px}
+      .hero-device{
+        margin:8px auto 0;
+      }
+      .hero-device-screen{
+        min-height:286px;
+      }
+      .hero-device-content{
+        padding:24px 22px 22px;
+      }
+      .hero-device-base{
+        width:110%;
+        margin-left:-5%;
+      }
+    }
+    @media (max-width: 640px){
+      .hero-device-lid{
+        padding:12px 12px 16px;
+        border-radius:24px 24px 16px 16px;
+      }
+      .hero-device-screen{
+        min-height:250px;
+        border-radius:14px 14px 10px 10px;
+      }
+      .hero-device-content{
+        padding:22px 18px 20px;
+      }
+      .hero-panel h2{
+        font-size:17px;
+      }
+      .hero-panel ul{
+        font-size:14px;
+        line-height:1.72;
+      }
+      .hero-device-base{
+        height:18px;
+      }
     }
     @media (prefers-reduced-motion: reduce){
       body.managed-mode .hero::before,
@@ -1411,8 +1640,18 @@
           <p class="hero-copy" id="solutionIntro"></p>
         </div>
         <aside class="hero-panel">
-          <h2 id="solutionHighlightsTitle">Entregáveis</h2>
-          <ul id="solutionHighlights"></ul>
+          <div class="hero-device">
+            <div class="hero-device-lid">
+              <div class="hero-device-camera" aria-hidden="true"></div>
+              <div class="hero-device-screen">
+                <div class="hero-device-content">
+                  <h2 id="solutionHighlightsTitle">Entregáveis</h2>
+                  <ul id="solutionHighlights"></ul>
+                </div>
+              </div>
+            </div>
+            <div class="hero-device-base" aria-hidden="true"></div>
+          </div>
         </aside>
       </div>
     </div>
@@ -1426,17 +1665,17 @@
       </section>
 
       <section class="grid">
-        <article class="panel">
+        <article class="panel panel-glass">
           <h3>O que entregamos</h3>
-          <ul id="solutionDeliverables"></ul>
+          <ul class="feature-list" id="solutionDeliverables"></ul>
         </article>
-        <article class="panel">
+        <article class="panel panel-glass">
           <h3>Casos de uso</h3>
-          <ul id="solutionUseCases"></ul>
+          <ul class="feature-list" id="solutionUseCases"></ul>
         </article>
-        <article class="panel">
+        <article class="panel panel-glass">
           <h3>Diferenciais</h3>
-          <ul id="solutionDifferentials"></ul>
+          <ul class="feature-list" id="solutionDifferentials"></ul>
         </article>
       </section>
 
@@ -1823,7 +2062,7 @@
       const relatedModules = siblings
         .filter((item) => item.slug !== topic.slug)
         .map((item) => ({
-          title: `${item.code}. ${item.title}`,
+          title: item.title,
           copy: buildTopicCardCopy(parent.title, item.title),
           href: topicHref(parentKey, item)
         }));
@@ -1870,8 +2109,8 @@
           'Base preparada para sustentação e evolução posterior.'
         ],
         kpis: [
-          { value: topic.code, label: 'tema estruturado dentro da solução' },
-          { value: '1 escopo', label: 'implantação guiada por prioridade' },
+          { value: 'tema dedicado', label: 'frente estruturada dentro da solução' },
+          { value: 'escopo claro', label: 'implantação guiada por prioridade' },
           { value: 'base estável', label: 'entrega preparada para sustentação' }
         ],
         steps: [
@@ -1896,7 +2135,19 @@
     document.getElementById('solutionOverview').textContent = data.overview;
     document.getElementById('solutionCtaTitle').textContent = data.ctaTitle;
     document.getElementById('solutionCtaCopy').textContent = data.ctaCopy;
-    document.getElementById('solutionHighlightsTitle').textContent = selectedTopic ? 'Pontos centrais' : 'Entregáveis';
+    const hasTopicOverview = !selectedTopic && topicList.length > 0;
+    const heroHighlights = hasTopicOverview
+      ? topicList.map((item) => ({
+          label: item.title,
+          href: topicHref(key, item)
+        }))
+      : data.highlights;
+
+    document.getElementById('solutionHighlightsTitle').textContent = selectedTopic
+      ? 'Pontos centrais'
+      : hasTopicOverview
+        ? 'Temas da solução'
+        : 'Entregáveis';
 
     const hero = document.getElementById('hero');
     const brandImage = document.querySelector('.brand img');
@@ -1922,7 +2173,7 @@
     }
 
     const listMap = [
-      ['solutionHighlights', data.highlights],
+      ['solutionHighlights', heroHighlights],
       ['solutionDeliverables', data.deliverables],
       ['solutionUseCases', data.useCases],
       ['solutionDifferentials', data.differentials],
@@ -1931,7 +2182,12 @@
 
     listMap.forEach(([id, items]) => {
       const node = document.getElementById(id);
-      node.innerHTML = items.map((item) => `<li>${item}</li>`).join('');
+      node.innerHTML = items.map((item) => {
+        if (item && typeof item === 'object' && 'href' in item) {
+          return `<li><a class="hero-panel-link" href="${item.href}">${item.label}</a></li>`;
+        }
+        return `<li>${item}</li>`;
+      }).join('');
     });
 
     document.getElementById('solutionKpis').innerHTML = data.kpis.map((item) => `
@@ -1946,9 +2202,11 @@
     const modulesNode = document.getElementById('solutionModules');
     const pageModules = selectedTopic
       ? data.modules
-      : topicList.length
+      : hasTopicOverview
+        ? []
+        : topicList.length
         ? topicList.map((item) => ({
-            title: `${item.code}. ${item.title}`,
+            title: item.title,
             copy: buildTopicCardCopy(baseData.title, item.title),
             href: topicHref(key, item)
           }))
@@ -2013,7 +2271,6 @@
             <div class="managed-solution-glow"></div>
           </div>
           <div class="managed-solution-body">
-            <span class="managed-solution-code">${section.code}</span>
             <h3>${section.title}</h3>
             <p>${section.intro}</p>
             <div class="managed-solution-tags">
