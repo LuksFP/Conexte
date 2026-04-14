@@ -2006,6 +2006,8 @@
       .replace(/^-+|-+$/g, '');
 
     const topicHref = (parentKey, topic) => `solucao.html?item=${encodeURIComponent(parentKey)}&subitem=${encodeURIComponent(topic.slug)}`;
+    const softwarePartnerTopics = new Set(['fabrica-de-software', 'criacao-e-administracao-de-site']);
+    const softwarePartnerOverview = 'A execução dessa frente acontece em parceria com a Nexios, empresa parceira responsável pela parte de software.';
 
     const buildTopicCardCopy = (parentTitle, topicTitle) => `${topicTitle} é um tema dentro de ${parentTitle}, com abordagem técnica, implantação assistida e foco em continuidade operacional.`;
 
@@ -2070,6 +2072,9 @@
       const baseOverview = selectedTopic?.details
         ? `A Conexte trata ${topic.title} como uma frente específica dentro de ${parent.title}. ${topic.details.map((item) => item.copy).join(' ')}`
         : `A Conexte desenvolve projetos de ${topic.title.toLowerCase()} dentro da frente de ${parent.title}, combinando diagnóstico, desenho técnico, implantação assistida e entrega alinhada à operação do cliente.`;
+      const overview = softwarePartnerTopics.has(topic.slug)
+        ? `${baseOverview} ${softwarePartnerOverview}`
+        : baseOverview;
 
       const baseHighlights = selectedTopic?.metrics
         ? topic.metrics.map((item) => `${item.label}: ${item.value}`)
@@ -2093,7 +2098,7 @@
         category: `${parent.title} • Tema`,
         title: topic.title,
         intro: topic.intro || `${topic.title} é um tema dentro de ${parent.title} com foco em planejamento, implantação e sustentação aderentes à realidade operacional do ambiente.`,
-        overview: baseOverview,
+        overview,
         highlights: baseHighlights,
         deliverables: baseDeliverables,
         useCases: [
