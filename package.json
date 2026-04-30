@@ -1,5 +1,4 @@
 {
-  "dependencies": {
-    "three": "^0.183.2"
-  }
+  "name": "conexte",
+  "private": true
 }
