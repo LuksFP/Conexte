@@ -25,6 +25,48 @@ if (heroVideo) {
 // ══════════════════════════════════
 // SPLIT TEXT + HERO ENTRANCE
 // ══════════════════════════════════
+// METRICAS
+const metricsSection = document.getElementById('metricas');
+if (metricsSection) {
+  const metricItems = gsap.utils.toArray('.metrics-item');
+  const metricNumbers = gsap.utils.toArray('[data-metric-target]');
+  let metricsPlayed = false;
+
+  gsap.set(metricItems, { opacity: 0, y: 26 });
+
+  ScrollTrigger.create({
+    trigger: metricsSection,
+    start: 'top 72%',
+    onEnter() {
+      if (metricsPlayed) return;
+      metricsPlayed = true;
+
+      gsap.to(metricItems, {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        stagger: 0.14,
+        ease: 'power3.out'
+      });
+
+      metricNumbers.forEach((el, index) => {
+        const target = Number(el.dataset.metricTarget || 0);
+        const value = { current: 0 };
+
+        gsap.to(value, {
+          current: target,
+          duration: 1.8,
+          delay: 0.12 + index * 0.12,
+          ease: 'power3.out',
+          onUpdate() {
+            el.textContent = Math.round(value.current).toLocaleString('pt-BR');
+          }
+        });
+      });
+    }
+  });
+}
+
 function splitChars(el) {
   const parts = el.innerHTML.split('<br>');
   el.innerHTML = '';
