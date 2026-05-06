@@ -86,6 +86,7 @@
       background-position:center;
       position:relative;
       overflow:hidden;
+      isolation:isolate;
     }
     .hero::before{
       content:'';
@@ -2511,8 +2512,8 @@
       title: 'Infraestrutura',
       intro: 'Projetamos e implementamos infraestruturas robustas, seguras e preparadas para alta performance. Desde redes corporativas até ambientes distribuídos, entregamos conectividade estável, segurança integrada e alta disponibilidade para sustentar operações críticas com eficiência.',
       overview: 'Projetamos e implementamos infraestruturas robustas, seguras e preparadas para alta performance. Desde redes corporativas até ambientes distribuídos, entregamos conectividade estável, segurança integrada e alta disponibilidade para sustentar operações críticas com eficiência.',
-      highlights: ['Conectividade e redes', 'Segurança e Monitoramento Eletrônico', 'Infraestrutura de Comunicação (Infovia)'],
-      deliverables: ['Conectividade e redes', 'Segurança e Monitoramento Eletrônico', 'Infraestrutura de Comunicação (Infovia)'],
+      highlights: ['Conectividade e Redes', 'Segurança e Monitoramento Eletrônico', 'Infraestrutura de Comunicação (Infovia)'],
+      deliverables: ['Conectividade e Redes', 'Segurança e Monitoramento Eletrônico', 'Infraestrutura de Comunicação (Infovia)'],
       useCases: ['Redes corporativas', 'Ambientes distribuídos', 'Conectividade estável', 'Operações críticas'],
       differentials: ['Infraestruturas robustas', 'Segurança integrada', 'Alta disponibilidade', 'Alta performance'],
       kpis: [{value:'1 base', label:'infraestrutura preparada para sustentar operações críticas'}, {value:'100%', label:'ambiente documentado para continuidade'}, {value:'alta disponibilidade', label:'projeto orientado a estabilidade e desempenho'}],
@@ -2541,8 +2542,8 @@
       title: 'Soluções Digitais e Inovação',
       intro: 'Transforme tecnologia em vantagem competitiva. Desenvolvemos soluções inteligentes que automatizam processos, melhoram a experiência do usuário e impulsionam a transformação digital da sua empresa, com foco em inovação, eficiência e escalabilidade.',
       overview: 'Transforme tecnologia em vantagem competitiva. Desenvolvemos soluções inteligentes que automatizam processos, melhoram a experiência do usuário e impulsionam a transformação digital da sua empresa, com foco em inovação, eficiência e escalabilidade.',
-      highlights: ['Cidades Inteligentes', 'Desenvolvimento de Software', 'Criação e Gestão de Sites', 'Ambientes Inteligentes (IoT)', 'Digitalização e Gestão de Documentos'],
-      deliverables: ['Cidades Inteligentes', 'Desenvolvimento de Software', 'Criação e Gestão de Sites', 'Ambientes Inteligentes (IoT)', 'Digitalização e Gestão de Documentos'],
+      highlights: ['Cidades Inteligentes', 'Criação e Gestão de Sites', 'Digitalização e Gestão de Documentos', 'Desenvolvimento de Software', 'Ambientes Inteligentes (IoT)'],
+      deliverables: ['Cidades Inteligentes', 'Criação e Gestão de Sites', 'Digitalização e Gestão de Documentos', 'Desenvolvimento de Software', 'Ambientes Inteligentes (IoT)'],
       useCases: ['Automatização de processos', 'Melhoria da experiência do usuário', 'Transformação digital', 'Vantagem competitiva'],
       differentials: ['Inovação', 'Eficiência', 'Escalabilidade', 'Soluções inteligentes'],
       kpis: [{value:'5 frentes', label:'inovação digital organizada por necessidade'}, {value:'menos retrabalho', label:'processos automatizados e documentados'}, {value:'mais controle', label:'dados, sites, sistemas e ambientes integrados'}],
@@ -2551,13 +2552,28 @@
       ctaCopy: 'A Conexte pode transformar uma demanda operacional em uma solução digital estruturada, escalável e pronta para evolução.'
     };
 
+    solutions['controle-acesso-atendimento-inteligente'] = {
+      category: 'Acesso e atendimento',
+      title: 'Controle de Acesso e Atendimento Inteligente',
+      intro: 'Soluções para controle de entrada, autoatendimento e gestão de filas, organizando o fluxo de pessoas com mais segurança, eficiência e rastreabilidade.',
+      overview: 'Soluções para controle de entrada, autoatendimento e gestão de filas, organizando o fluxo de pessoas com mais segurança, eficiência e rastreabilidade.',
+      highlights: ['Controle de Acesso', 'Totens de Autoatendimento', 'Gestão de Filas (Senha)'],
+      deliverables: ['Controle de Acesso', 'Totens de Autoatendimento', 'Gestão de Filas (Senha)'],
+      useCases: ['Controle de entrada e saída de pessoas', 'Check-in, triagem e autoatendimento', 'Organização de atendimento por senha', 'Relatórios de desempenho operacional'],
+      differentials: ['Segurança no acesso físico', 'Fluxo de atendimento otimizado', 'Organização por prioridade', 'Experiência mais ágil para o usuário'],
+      kpis: [{value:'3 frentes', label:'acesso, autoatendimento e filas'}, {value:'mais controle', label:'entrada, saída e atendimento organizados'}, {value:'menos espera', label:'fluxos com triagem e prioridade'}],
+      steps: ['Levantamento dos pontos de acesso e atendimento.', 'Definição dos equipamentos, fluxos e prioridades.', 'Implantação de catracas, totens, senhas e painéis digitais.', 'Validação, treinamento e acompanhamento dos indicadores.'],
+      ctaTitle: 'Organizar acesso e atendimento',
+      ctaCopy: 'A Conexte estrutura o controle de acesso, autoatendimento e gestão de filas conforme o fluxo da sua operação.'
+    };
+
     Object.assign(solutions['cybersecurity'], {
       category: 'Segurança da informação',
       title: 'Cybersecurity',
       intro: 'Proteja sua empresa contra ameaças digitais com uma abordagem completa de segurança. Atuamos na prevenção, detecção e resposta a incidentes, garantindo a integridade dos dados, a continuidade dos serviços e a conformidade com as melhores práticas de mercado.',
       overview: 'Proteja sua empresa contra ameaças digitais com uma abordagem completa de segurança. Atuamos na prevenção, detecção e resposta a incidentes, garantindo a integridade dos dados, a continuidade dos serviços e a conformidade com as melhores práticas de mercado.',
-      highlights: ['Conscientização e Treinamento', 'Proteção de Infraestrutura', 'Testes de Intrusão (Pentest)'],
-      deliverables: ['Conscientização e Treinamento', 'Proteção de Infraestrutura', 'Testes de Intrusão (Pentest)'],
+      highlights: ['Conscientização e Treinamento', 'Testes de Intrusão (Pentest)', 'Proteção de Infraestrutura'],
+      deliverables: ['Conscientização e Treinamento', 'Testes de Intrusão (Pentest)', 'Proteção de Infraestrutura'],
       useCases: ['Prevenção de ameaças digitais', 'Detecção e resposta a incidentes', 'Integridade dos dados', 'Continuidade dos serviços'],
       differentials: ['Abordagem completa de segurança', 'Conformidade com melhores práticas de mercado', 'Proteção contra ameaças digitais', 'Continuidade operacional'],
       kpis: [{value:'360°', label:'visibilidade sobre superfície crítica'}, {value:'3 frentes', label:'treinamento, proteção e pentest'}, {value:'risco menor', label:'ações priorizadas por impacto operacional'}],
@@ -2592,27 +2608,32 @@
 
     const genericTopics = {
       'infraestrutura': [
-        { code: '1.2.1', title: 'Conectividade e redes', intro: 'Projeto e implantação de redes corporativas para conectividade estável, segura e preparada para alta performance.' },
-        { code: '1.2.2', title: 'Segurança e Monitoramento Eletrônico', intro: 'Controles de segurança e monitoramento eletrônico integrados à infraestrutura para ampliar proteção, visibilidade e resposta.' },
-        { code: '1.2.3', title: 'Infraestrutura de Comunicação (Infovia)', intro: 'Estrutura de comunicação para interligar unidades, ativos e serviços com desempenho, organização e continuidade operacional.' }
+        { code: '1.2.1', title: 'Conectividade e Redes', intro: 'Redes corporativas de alta performance, com estabilidade, segurança e disponibilidade contínua. Projetos escaláveis com segmentação, VPN e balanceamento para máxima eficiência.' },
+        { code: '1.2.2', title: 'Segurança e Monitoramento Eletrônico', intro: 'Proteção completa com câmeras, controle de acesso e monitoramento em tempo real. Tecnologia confiável para garantir a segurança do seu patrimônio.' },
+        { code: '1.2.3', title: 'Infraestrutura de Comunicação (Infovia)', intro: 'Implantação de redes estruturadas e enlaces de alta capacidade para interligação de unidades, com desempenho, organização e confiabilidade.' }
       ],
       'data-center': [
-        { code: '1.3.1', title: 'Projetos e Consultoria', intro: 'Planejamento técnico para ambientes críticos, com avaliação de capacidade, riscos, redundância e caminhos de evolução.' },
-        { code: '1.3.2', title: 'Observabilidade e Gerenciamento', intro: 'Monitoramento e gestão do ambiente para acompanhar disponibilidade, desempenho, eventos e condições de operação.' },
-        { code: '1.3.3', title: 'Manutenção Especializada', intro: 'Rotinas de manutenção para preservar confiabilidade, corrigir riscos e manter o data center pronto para serviços críticos.' },
-        { code: '1.3.4', title: 'Construção e Modernização', intro: 'Construção, reorganização ou modernização de data centers e salas técnicas com padrão para continuidade e expansão.' }
+        { code: '1.3.1', title: 'Projetos e Consultoria', intro: 'Planejamento estratégico e soluções sob medida para redes e infraestrutura, com foco em desempenho, segurança e escalabilidade.' },
+        { code: '1.3.2', title: 'Observabilidade e Gerenciamento', intro: 'Monitoramento contínuo e gestão proativa da rede, garantindo visibilidade total, alta disponibilidade e rápida resposta a incidentes.' },
+        { code: '1.3.3', title: 'Manutenção Especializada', intro: 'Suporte técnico avançado para garantir o pleno funcionamento da sua infraestrutura, com agilidade, prevenção e redução de falhas.' },
+        { code: '1.3.4', title: 'Construção e Modernização', intro: 'Implantação e atualização de infraestrutura com tecnologia atual, elevando o desempenho, a organização e a confiabilidade do ambiente.' }
       ],
       'solucoes-digitais-inovacao': [
-        { code: '1.4.1', title: 'Cidades Inteligentes', intro: 'Projetos digitais para gestão urbana, serviços conectados e uso de tecnologia em favor de eficiência pública e operacional.' },
-        { code: '1.4.2', title: 'Desenvolvimento de Software', intro: 'Sistemas e integrações sob medida para automatizar processos, organizar dados e apoiar fluxos críticos da operação.' },
-        { code: '1.4.3', title: 'Criação e Gestão de Sites', intro: 'Sites, portais e presença digital com gestão contínua, performance, segurança e experiência de uso.' },
-        { code: '1.4.4', title: 'Ambientes Inteligentes (IoT)', intro: 'Ambientes conectados por sensores, automações e dispositivos para ampliar controle, eficiência e resposta operacional.' },
-        { code: '1.4.5', title: 'Digitalização e Gestão de Documentos', intro: 'Digitalização, organização e gestão documental para reduzir retrabalho, melhorar acesso à informação e dar rastreabilidade.' }
+        { code: '1.4.1', title: 'Cidades Inteligentes', intro: 'Soluções tecnológicas para modernizar a gestão pública, integrando conectividade, monitoramento e eficiência nos serviços urbanos.' },
+        { code: '1.4.2', title: 'Criação e Gestão de Sites', intro: 'Desenvolvimento de sites profissionais com gestão completa, performance e segurança para fortalecer sua presença digital.' },
+        { code: '1.4.3', title: 'Digitalização e Gestão de Documentos', intro: 'Transforme processos físicos em digitais, com organização, controle e acesso rápido às informações.' },
+        { code: '1.4.4', title: 'Desenvolvimento de Software', intro: 'Sistemas sob medida para otimizar processos, aumentar a produtividade e atender às necessidades específicas do seu negócio.' },
+        { code: '1.4.5', title: 'Ambientes Inteligentes (IoT)', intro: 'Automação e integração de dispositivos para criar ambientes conectados, eficientes e controlados em tempo real.' }
+      ],
+      'controle-acesso-atendimento-inteligente': [
+        { code: '1.5.1', title: 'Controle de Acesso', intro: 'Sistemas de controle com catracas, cartões, biometria e RFID, proporcionando segurança e gestão eficiente de entrada e saída de pessoas.' },
+        { code: '1.5.2', title: 'Totens de Autoatendimento', intro: 'Totens interativos para check-in, triagem e autoatendimento, reduzindo filas e otimizando o fluxo de atendimento.' },
+        { code: '1.5.3', title: 'Gestão de Filas (Senha)', intro: 'Soluções completas de emissão e chamada de senhas com painéis digitais, organização por prioridade e relatórios de desempenho.' }
       ],
       'cybersecurity': [
-        { code: '1.5.1', title: 'Conscientização e Treinamento', intro: 'Treinamento de usuários e equipes para reduzir riscos humanos, fortalecer cultura de segurança e melhorar resposta a incidentes.' },
-        { code: '1.5.2', title: 'Proteção de Infraestrutura', intro: 'Camadas de defesa para redes, acessos e ativos críticos, com controles voltados à prevenção e continuidade dos serviços.' },
-        { code: '1.5.3', title: 'Testes de Intrusão (Pentest)', intro: 'Validação prática da segurança por meio de testes de intrusão, análise de vulnerabilidades e recomendações priorizadas.' }
+        { code: '1.5.1', title: 'Conscientização e Treinamento', intro: 'Capacitação de equipes para prevenção de riscos e fortalecimento da segurança da informação no dia a dia.' },
+        { code: '1.5.2', title: 'Testes de Intrusão (Pentest)', intro: 'Simulação de ataques reais para identificar vulnerabilidades e corrigir falhas antes que sejam exploradas.' },
+        { code: '1.5.3', title: 'Proteção de Infraestrutura', intro: 'Defesa avançada de redes e sistemas, com foco em prevenção, detecção e resposta a ameaças.' }
       ]
     };
 
@@ -2645,7 +2666,7 @@
         .filter((item) => item.slug !== topic.slug)
         .map((item) => ({
           title: item.title,
-          copy: buildTopicCardCopy(parent.title, item.title),
+          copy: item.intro || buildTopicCardCopy(parent.title, item.title),
           href: topicHref(parentKey, item)
         }));
 
@@ -2744,7 +2765,8 @@
       'servicos-gerenciados': "url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1600&q=80')",
       'cybersecurity': "url('https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1600&q=80')",
       'infraestrutura': "url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80')",
-      'data-center': "url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80')"
+      'data-center': "url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80')",
+      'controle-acesso-atendimento-inteligente': "url('https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=1600&q=80')"
     };
     const accentMap = {
       'servicos-gerenciados': { accent:'#69b7ff', accent2:'#d9f764', rgb:'105,183,255', rgb2:'217,247,100' },
@@ -2753,6 +2775,7 @@
       'solucoes-digitais-inovacao': { accent:'#62e0ff', accent2:'#d9f764', rgb:'98,224,255', rgb2:'217,247,100' },
       'inovacao-solucoes-inteligentes': { accent:'#62e0ff', accent2:'#d9f764', rgb:'98,224,255', rgb2:'217,247,100' },
       'cloud-computing': { accent:'#72c7ff', accent2:'#9df4cf', rgb:'114,199,255', rgb2:'157,244,207' },
+      'controle-acesso-atendimento-inteligente': { accent:'#5fd2c2', accent2:'#d9f764', rgb:'95,210,194', rgb2:'217,247,100' },
       'cybersecurity': { accent:'#8bbdff', accent2:'#d9f764', rgb:'139,189,255', rgb2:'217,247,100' }
     };
     const solutionAccent = accentMap[key] || accentMap[fallbackKey];
@@ -2798,10 +2821,15 @@
     const modulesSection = document.getElementById('solutionModulesSection');
     const modulesTitleNode = document.getElementById('solutionModulesTitle');
     const modulesNode = document.getElementById('solutionModules');
-    const docFidelityKeys = new Set(['infraestrutura', 'data-center', 'solucoes-digitais-inovacao', 'cybersecurity']);
+    const docFidelityKeys = new Set(['infraestrutura', 'data-center', 'solucoes-digitais-inovacao', 'controle-acesso-atendimento-inteligente', 'cybersecurity']);
     const docFidelityMode = !selectedTopic && docFidelityKeys.has(key);
     const pageModules = selectedTopic
       ? data.modules
+      : docFidelityMode
+        ? topicList.map((item) => ({
+            title: item.title,
+            copy: item.intro
+          }))
       : hasTopicOverview
         ? topicList.map((item) => ({
             title: item.title,

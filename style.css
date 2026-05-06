@@ -1820,9 +1820,10 @@ section{position:relative;z-index:1}
   margin-top:44px;
 }
 #solucoes .solutions-carousel-viewport{
-  overflow:hidden;
+  overflow-x:clip;
+  overflow-y:visible;
   margin:0 -4px;
-  padding:14px 4px 34px;
+  padding:14px 4px 60px;
 }
 #solucoes .areas-grid{
   display:flex;
@@ -1841,16 +1842,16 @@ section{position:relative;z-index:1}
   flex:0 0 calc((100% - var(--solutions-carousel-gap)) / 2);
   min-width:0;
   display:flex;
-  align-items:center;
-  justify-content:center;
+  align-items:stretch;
+  justify-content:flex-start;
   color:inherit;
   text-decoration:none;
   cursor:pointer;
   background:linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
   border:1px solid color-mix(in srgb, var(--area-accent) 22%, rgba(217,223,229,0.18));
   border-radius:28px;
-  padding:0;
-  min-height:380px;
+  padding:96px 28px 34px;
+  min-height:430px;
   overflow:hidden;
   box-shadow:
     0 28px 64px rgba(2, 8, 45, 0.35),
@@ -1970,14 +1971,15 @@ section{position:relative;z-index:1}
   box-shadow:0 0 16px color-mix(in srgb, var(--area-accent) 18%, transparent);
 }
 #solucoes .area-body{
-  position:absolute;
-  inset:84px 0 0;
+  position:relative;
+  inset:auto;
+  width:100%;
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  justify-content:space-between;
-  gap:18px;
-  padding:0 28px 30px;
+  justify-content:flex-start;
+  gap:14px;
+  padding:0;
   text-align:left;
   transition:
     transform .4s cubic-bezier(.18,.88,.24,1);
@@ -1987,29 +1989,29 @@ section{position:relative;z-index:1}
 }
 #solucoes .area-title{
   font-family:var(--serif);
-  font-size:clamp(28px, 2.25vw, 38px);
+  font-size:clamp(26px, 2vw, 34px);
   font-weight:700;
   color:#ffffff;
   margin:0;
-  letter-spacing:-.018em;
-  line-height:1;
-  max-width:15ch;
+  letter-spacing:0;
+  line-height:1.04;
+  max-width:20ch;
   text-shadow:0 12px 28px rgba(0,0,0,0.52), 0 2px 6px rgba(0,0,0,0.28);
   transition:transform .32s ease, color .28s ease;
 }
 #solucoes .area-desc{
-  margin:14px 0 0;
-  max-width:38ch;
+  margin:0;
+  max-width:44ch;
   color:rgba(247,251,255,0.88);
   font-size:14px;
-  line-height:1.62;
+  line-height:1.55;
   text-shadow:0 8px 22px rgba(0,0,0,0.44);
 }
 #solucoes .area-tags{
   display:flex;
   flex-wrap:wrap;
-  gap:9px;
-  margin-top:auto;
+  gap:8px;
+  margin-top:4px;
 }
 #solucoes .area-tags span{
   padding:7px 13px;
@@ -3845,8 +3847,9 @@ body.cookie-banner-visible .cookie-banner{
   #solucoes .area-card{
     grid-column:auto;
     flex-basis:100%;
-    min-height:320px;
+    min-height:0;
     border-radius:24px;
+    padding:82px 18px 24px;
   }
   #solucoes .areas-grid{
     grid-template-columns:1fr 1fr;
@@ -3860,12 +3863,13 @@ body.cookie-banner-visible .cookie-banner{
     border-radius:23px;
   }
   #solucoes .area-body{
-    inset:72px 0 0;
-    padding:0 18px 22px;
+    inset:auto;
+    padding:0;
+    gap:12px;
   }
   #solucoes .area-title{
     font-size:24px;
-    max-width:13ch;
+    max-width:18ch;
   }
   #solucoes .area-icon-badge,
   #solucoes .area-index{
@@ -3952,15 +3956,17 @@ body.cookie-banner-visible .cookie-banner{
   .sobre-visual-ping--right{right:-10px}
   #solucoes .area-card{
     flex-basis:100%;
-    min-height:320px;
+    min-height:0;
+    padding:78px 18px 24px;
   }
   #solucoes .areas-grid{
     grid-template-columns:1fr;
     gap:14px;
   }
   #solucoes .area-body{
-    inset:66px 0 0;
-    padding:0 18px 20px;
+    inset:auto;
+    padding:0;
+    gap:12px;
   }
   #solucoes .area-title{
     font-size:25px;
