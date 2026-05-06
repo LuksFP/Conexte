@@ -86,6 +86,7 @@
       background-position:center;
       position:relative;
       overflow:hidden;
+      isolation:isolate;
     }
     .hero::before{
       content:'';
@@ -129,7 +130,7 @@
       letter-spacing:.06em;
       text-transform:uppercase;
     }
-    .brand img{height:42px;width:auto;display:block}
+    .brand img{height:90px;width:auto;display:block}
     .back-link,.cta-link{
       text-decoration:none;
       border-radius:999px;
@@ -420,6 +421,7 @@
         linear-gradient(135deg, #020a50 0%, var(--navy-2) 100%);
       color:var(--white);border-color:rgba(255,255,255,.1);
     }
+    .cta-box h3{color:var(--white);}
     .cta-box p{color:rgba(255,255,255,.84)}
     .cta-primary{
       display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
@@ -438,18 +440,10 @@
     body:not(.managed-mode) .eyebrow,
     body:not(.managed-mode) #solutionTitle,
     body:not(.managed-mode) .hero-copy,
-    body:not(.managed-mode) .hero-device,
-    body:not(.managed-mode) main .panel,
-    body:not(.managed-mode) main .grid{animation:solutionFadeUp .58s var(--motion-ease) both;}
+    body:not(.managed-mode) .hero-device{animation:solutionFadeUp .58s var(--motion-ease) both;}
     body:not(.managed-mode) #solutionTitle{animation-delay:.06s}
     body:not(.managed-mode) .hero-copy{animation-delay:.12s}
     body:not(.managed-mode) .hero-device{animation-delay:.16s}
-    body:not(.managed-mode) main .panel:nth-child(1){animation-delay:.18s}
-    body:not(.managed-mode) main .grid{animation-delay:.24s}
-    body:not(.managed-mode) main .panel:nth-child(3){animation-delay:.3s}
-    body:not(.managed-mode) main .panel:nth-child(4){animation-delay:.34s}
-    body:not(.managed-mode) main .panel:nth-child(5){animation-delay:.38s}
-    body:not(.managed-mode) main .panel:nth-child(6){animation-delay:.42s}
     html{scroll-behavior:smooth}
     .page-footer{
       padding:28px 24px;text-align:center;
@@ -488,8 +482,7 @@
     }
     @media (prefers-reduced-motion: reduce){
       body:not(.managed-mode) .eyebrow,body:not(.managed-mode) #solutionTitle,
-      body:not(.managed-mode) .hero-copy,body:not(.managed-mode) .hero-device,
-      body:not(.managed-mode) main .panel,body:not(.managed-mode) main .grid{
+      body:not(.managed-mode) .hero-copy,body:not(.managed-mode) .hero-device{
         animation:none !important;opacity:1 !important;transform:none !important;
       }
       .back-link,.cta-link,.cta-primary,.panel,.module-card-link{transition:none !important;}
@@ -501,9 +494,12 @@
     <div class="shell">
       <div class="topbar">
         <a class="brand" href="index.html">
-          <img src="https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO.png" alt="Conexte">
+          <img src="logo-white.png" alt="Conexte">
         </a>
-        <a class="back-link" href="index.html#solucoes">Voltar para soluções</a>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <a class="back-link" href="index.html#solucoes">Voltar para soluções</a>
+          <a class="cta-primary" href="https://api.whatsapp.com/send/?phone=5513996847503" target="_blank" rel="noopener">Solicitar atendimento</a>
+        </div>
       </div>
       <div class="hero-grid">
         <div>

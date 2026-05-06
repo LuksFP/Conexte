@@ -86,6 +86,7 @@
       background-position:center;
       position:relative;
       overflow:hidden;
+      isolation:isolate;
     }
     .hero::before{
       content:'';
@@ -129,7 +130,7 @@
       letter-spacing:.06em;
       text-transform:uppercase;
     }
-    .brand img{height:42px;width:auto;display:block}
+    .brand img{height:90px;width:auto;display:block}
     .back-link,.cta-link{
       text-decoration:none;
       border-radius:999px;
@@ -422,6 +423,7 @@
         linear-gradient(135deg, #020a50 0%, var(--navy-2) 100%);
       color:var(--white);border-color:rgba(255,255,255,.1);
     }
+    .cta-box h3{color:var(--white);}
     .cta-box p{color:rgba(255,255,255,.84)}
     .cta-primary{
       display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
@@ -503,9 +505,12 @@
     <div class="shell">
       <div class="topbar">
         <a class="brand" href="index.html">
-          <img src="https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO.png" alt="Conexte">
+          <img src="logo-white.png" alt="Conexte">
         </a>
-        <a class="back-link" href="index.html#solucoes">Voltar para soluções</a>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <a class="back-link" href="index.html#solucoes">Voltar para soluções</a>
+          <a class="cta-primary" href="https://api.whatsapp.com/send/?phone=5513996847503" target="_blank" rel="noopener">Solicitar atendimento</a>
+        </div>
       </div>
       <div class="hero-grid">
         <div>
