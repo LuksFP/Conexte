@@ -264,6 +264,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       trigger: '#areas',
       steps: [
         { selectors: ['#areas .label-tag', '#areas .section-h2'], y: 28, stagger: 0.08, duration: 0.74 },
+        { selectors: ['#areas .areas-segment-tab'], y: 24, stagger: 0.06, duration: 0.72 },
         { selectors: ['#areas .areas-showcase-card'], y: 56, stagger: 0.08, duration: 0.9 }
       ]
     },
@@ -316,6 +317,14 @@ document.querySelectorAll('.reveal-right').forEach(el => {
   if (!grid) return;
 
   const cards = Array.from(grid.querySelectorAll('.area-card'));
+  if (grid.classList.contains('solutions-carousel-track')) {
+    cards.forEach((card) => {
+      const title = card.querySelector('.area-title');
+      if (title) card.setAttribute('aria-label', title.textContent.trim());
+    });
+    return;
+  }
+
   const hoverCapable = window.matchMedia('(hover:hover) and (pointer:fine)');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let activeCard = null;
@@ -973,6 +982,31 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 // PRELOADER
 // ══════════════════════════════════
 (function() {
+  const revealPage = () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) preloader.style.display = 'none';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    const hashTarget = window.location.hash
+      ? document.getElementById(decodeURIComponent(window.location.hash.slice(1)))
+      : null;
+    if (hashTarget) {
+      hashTarget.scrollIntoView({ block: 'start' });
+    } else {
+      window.scrollTo(0, 0);
+    }
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+  };
+
+  if (new URLSearchParams(window.location.search).has('skipPreloader') || !window.gsap) {
+    revealPage();
+    return;
+  }
+
   // Garante que começa do topo e trava scroll
   window.scrollTo(0, 0);
   document.documentElement.style.overflow = 'hidden';
@@ -1027,15 +1061,7 @@ document.querySelectorAll('.reveal-right').forEach(el => {
 
   // Fase 6 — hero content anima ao aparecer
   .call(() => {
-    document.getElementById('preloader').style.display = 'none';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-    window.scrollTo(0, 0);
-    ScrollTrigger.refresh();
+    revealPage();
     // Anima hero content
     gsap.fromTo('#hero-content',
       { opacity: 0, y: 30 },
@@ -1322,6 +1348,249 @@ document.getElementById('contactForm').addEventListener('submit', e => {
 
   savePrefs.addEventListener('click', () => {
     finalizeConsent({ analytics: analyticsToggle.checked, decision: 'custom' });
+  });
+})();
+
+(function initSolutionsCarousel() {
+  const section = document.querySelector('#solucoes');
+  if (!section) return;
+
+  const viewport = section.querySelector('.solutions-carousel-viewport');
+  const track = section.querySelector('.solutions-carousel-track');
+  const cards = Array.from(section.querySelectorAll('.solutions-carousel-track .area-card'));
+  const current = section.querySelector('[data-solutions-current]');
+  const prev = section.querySelector('[data-solutions-carousel="prev"]');
+  const next = section.querySelector('[data-solutions-carousel="next"]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (!viewport || !track || !cards.length) return;
+
+  let activeIndex = 0;
+  let autoplayTimer = null;
+  let resizeFrame = null;
+
+  function getGap() {
+    const styles = window.getComputedStyle(track);
+    return parseFloat(styles.columnGap || styles.gap || '0') || 0;
+  }
+
+  function getVisibleCount() {
+    const cardWidth = cards[0].getBoundingClientRect().width;
+    const viewportWidth = viewport.getBoundingClientRect().width;
+    if (!cardWidth || !viewportWidth) return 1;
+    return Math.max(1, Math.round((viewportWidth + getGap()) / (cardWidth + getGap())));
+  }
+
+  function getMaxOffset() {
+    return Math.max(0, cards.length - getVisibleCount());
+  }
+
+  function setActive(nextIndex) {
+    activeIndex = (nextIndex + cards.length) % cards.length;
+
+    const gap = getGap();
+    const visibleCount = getVisibleCount();
+    const cardWidth = cards[0].getBoundingClientRect().width;
+    const offsetIndex = Math.min(activeIndex, getMaxOffset());
+    const visibleStart = offsetIndex;
+    const visibleEnd = visibleStart + visibleCount - 1;
+
+    track.style.transform = `translate3d(-${Math.round(offsetIndex * (cardWidth + gap))}px, 0, 0)`;
+
+    cards.forEach((card, index) => {
+      const isActive = index === activeIndex;
+      const isVisible = index >= visibleStart && index <= visibleEnd;
+      card.classList.toggle('is-active', isActive);
+      card.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+      card.tabIndex = isVisible ? 0 : -1;
+    });
+
+    if (current) current.textContent = String(activeIndex + 1).padStart(2, '0');
+  }
+
+  function stopAutoplay() {
+    if (!autoplayTimer) return;
+    window.clearInterval(autoplayTimer);
+    autoplayTimer = null;
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    if (reducedMotion.matches) return;
+    autoplayTimer = window.setInterval(() => setActive(activeIndex + 1), 5200);
+  }
+
+  function restartAutoplay() {
+    stopAutoplay();
+    startAutoplay();
+  }
+
+  if (prev) {
+    prev.addEventListener('click', () => {
+      setActive(activeIndex - 1);
+      restartAutoplay();
+    });
+  }
+
+  if (next) {
+    next.addEventListener('click', () => {
+      setActive(activeIndex + 1);
+      restartAutoplay();
+    });
+  }
+
+  section.addEventListener('pointerenter', stopAutoplay);
+  section.addEventListener('pointerleave', startAutoplay);
+  section.addEventListener('focusin', stopAutoplay);
+  section.addEventListener('focusout', (event) => {
+    if (!section.contains(event.relatedTarget)) startAutoplay();
+  });
+
+  window.addEventListener('resize', () => {
+    if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
+    resizeFrame = window.requestAnimationFrame(() => setActive(activeIndex));
+  });
+
+  if (reducedMotion.addEventListener) {
+    reducedMotion.addEventListener('change', () => {
+      setActive(activeIndex);
+      startAutoplay();
+    });
+  }
+
+  window.requestAnimationFrame(() => {
+    setActive(0);
+    startAutoplay();
+  });
+})();
+
+(function initAreasCarousel() {
+  const section = document.querySelector('#areas.section-areas-showcase');
+  if (!section) return;
+
+  const viewport = section.querySelector('.areas-carousel-viewport');
+  const track = section.querySelector('.areas-showcase-grid');
+  const cards = Array.from(section.querySelectorAll('.areas-showcase-card'));
+  const tabs = Array.from(section.querySelectorAll('[data-segment-slide]'));
+  const current = section.querySelector('[data-areas-current]');
+  const prev = section.querySelector('[data-areas-carousel="prev"]');
+  const next = section.querySelector('[data-areas-carousel="next"]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (!viewport || !track || !cards.length) return;
+
+  let activeIndex = 0;
+  let autoplayTimer = null;
+  let resizeFrame = null;
+
+  function getGap() {
+    const styles = window.getComputedStyle(track);
+    return parseFloat(styles.columnGap || styles.gap || '0') || 0;
+  }
+
+  function getVisibleCount() {
+    const cardWidth = cards[0].getBoundingClientRect().width;
+    const viewportWidth = viewport.getBoundingClientRect().width;
+    if (!cardWidth || !viewportWidth) return 1;
+    return Math.max(1, Math.round((viewportWidth + getGap()) / (cardWidth + getGap())));
+  }
+
+  function getMaxOffset() {
+    return Math.max(0, cards.length - getVisibleCount());
+  }
+
+  function setActive(nextIndex, options = {}) {
+    activeIndex = (nextIndex + cards.length) % cards.length;
+
+    const gap = getGap();
+    const cardWidth = cards[0].getBoundingClientRect().width;
+    const offsetIndex = Math.min(activeIndex, getMaxOffset());
+    track.style.transform = `translate3d(-${Math.round(offsetIndex * (cardWidth + gap))}px, 0, 0)`;
+
+    cards.forEach((card, index) => {
+      const isActive = index === activeIndex;
+      card.classList.toggle('is-active', isActive);
+      card.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+    });
+
+    tabs.forEach((tab, index) => {
+      const isActive = index === activeIndex;
+      tab.classList.toggle('is-active', isActive);
+      tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+
+    if (current) current.textContent = String(activeIndex + 1).padStart(2, '0');
+
+    if (tabs[activeIndex] && options.fromUser) {
+      tabs[activeIndex].scrollIntoView({
+        block: 'nearest',
+        inline: 'center',
+        behavior: reducedMotion.matches ? 'auto' : 'smooth'
+      });
+    }
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer) {
+      window.clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    if (reducedMotion.matches) return;
+    autoplayTimer = window.setInterval(() => setActive(activeIndex + 1), 5200);
+  }
+
+  function restartAutoplay() {
+    stopAutoplay();
+    startAutoplay();
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      setActive(Number(tab.dataset.segmentSlide || 0), { fromUser: true });
+      restartAutoplay();
+    });
+  });
+
+  if (prev) {
+    prev.addEventListener('click', () => {
+      setActive(activeIndex - 1, { fromUser: true });
+      restartAutoplay();
+    });
+  }
+
+  if (next) {
+    next.addEventListener('click', () => {
+      setActive(activeIndex + 1, { fromUser: true });
+      restartAutoplay();
+    });
+  }
+
+  section.addEventListener('pointerenter', stopAutoplay);
+  section.addEventListener('pointerleave', startAutoplay);
+  section.addEventListener('focusin', stopAutoplay);
+  section.addEventListener('focusout', (event) => {
+    if (!section.contains(event.relatedTarget)) startAutoplay();
+  });
+
+  window.addEventListener('resize', () => {
+    if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
+    resizeFrame = window.requestAnimationFrame(() => setActive(activeIndex));
+  });
+
+  if (reducedMotion.addEventListener) {
+    reducedMotion.addEventListener('change', () => {
+      setActive(activeIndex);
+      startAutoplay();
+    });
+  }
+
+  window.requestAnimationFrame(() => {
+    setActive(0);
+    startAutoplay();
   });
 })();
 

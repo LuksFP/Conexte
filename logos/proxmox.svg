@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 52" width="180" height="52">
+  <polygon points="26,4 42,14 42,38 26,48 10,38 10,14" fill="#E57000"/>
+  <text x="26" y="34" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="22" font-weight="900" fill="#fff">P</text>
+  <text x="52" y="33" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#E57000">Proxmox</text>
+</svg>

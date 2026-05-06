@@ -38,6 +38,14 @@
       --border:#d9e2f2;
       --panel:#f6f9ff;
       --green:#c8d400;
+      --surface:#eef4fb;
+      --surface-strong:#f7faff;
+      --text-strong:#071456;
+      --solution-accent:#76d7ff;
+      --solution-accent-2:#d9f764;
+      --solution-accent-rgb:118,215,255;
+      --solution-accent-2-rgb:217,247,100;
+      --motion-ease:cubic-bezier(.16,1,.3,1);
       --industrial-gray-bg:
         radial-gradient(circle at 18% 18%, rgba(255,255,255,0.28), transparent 34%),
         radial-gradient(circle at 82% 72%, rgba(118,132,146,0.2), transparent 38%),
@@ -50,7 +58,7 @@
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
-      font-family:Arial,sans-serif;
+      font-family:'Aptos Display','Montserrat',Arial,sans-serif;
       color:var(--text);
       background:var(--industrial-gray-bg);
       background-attachment:fixed;
@@ -67,14 +75,39 @@
     }
     a{color:inherit}
     .hero{
-      min-height:48vh;
-      padding:32px 24px 56px;
+      min-height:min(560px, 58vh);
+      padding:26px 24px 64px;
       color:var(--white);
       background:
-        linear-gradient(180deg, rgba(0,8,90,.2), rgba(0,8,90,.82)),
+        linear-gradient(90deg, rgba(0,8,90,.9) 0%, rgba(0,8,90,.55) 45%, rgba(0,8,90,.88) 100%),
+        linear-gradient(180deg, rgba(0,8,90,.12), rgba(0,8,90,.82)),
         var(--hero-bg, linear-gradient(135deg, #10256f, #091540));
       background-size:cover;
       background-position:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        linear-gradient(115deg, transparent 0 53%, rgba(var(--solution-accent-rgb),.18) 53% 53.18%, transparent 53.4%),
+        linear-gradient(115deg, transparent 0 67%, rgba(var(--solution-accent-2-rgb),.12) 67% 67.14%, transparent 67.32%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.028) 0 1px, transparent 1px 86px);
+      opacity:.78;
+      mix-blend-mode:screen;
+    }
+    .hero::after{
+      content:'';
+      position:absolute;
+      inset:auto 0 0;
+      z-index:0;
+      height:118px;
+      background:linear-gradient(180deg, transparent, rgba(203,211,220,.98));
+      pointer-events:none;
     }
     .shell{width:min(1160px, 100%);margin:0 auto}
     .topbar{
@@ -82,7 +115,9 @@
       align-items:center;
       justify-content:space-between;
       gap:16px;
-      margin-bottom:56px;
+      margin-bottom:46px;
+      position:relative;
+      z-index:1;
     }
     .brand{
       display:inline-flex;
@@ -102,30 +137,82 @@
       border:1px solid rgba(255,255,255,.22);
       background:rgba(255,255,255,.1);
       backdrop-filter:blur(10px);
+      transition:transform .18s var(--motion-ease), background .18s var(--motion-ease), border-color .18s var(--motion-ease);
+    }
+    .back-link:hover,
+    .back-link:focus-visible,
+    .cta-link:hover,
+    .cta-link:focus-visible{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.16);
+      border-color:rgba(255,255,255,.36);
+      outline:none;
     }
     .hero-grid{
       display:grid;
       grid-template-columns:1.2fr .8fr;
-      gap:28px;
-      align-items:end;
+      gap:clamp(28px, 5vw, 72px);
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+    .hero-grid > *{
+      min-width:0;
     }
     .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      width:max-content;
+      max-width:100%;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(var(--solution-accent-rgb),.26);
+      background:rgba(255,255,255,.07);
+      backdrop-filter:blur(12px);
       font-size:12px;
       letter-spacing:.16em;
       text-transform:uppercase;
-      color:rgba(255,255,255,.74);
-      margin:0 0 14px;
+      color:rgba(245,250,255,.82);
+      margin:0 0 18px;
+    }
+    .eyebrow::before{
+      content:'';
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--solution-accent-2);
+      box-shadow:0 0 0 5px rgba(var(--solution-accent-2-rgb),.12);
+      flex:0 0 auto;
     }
     h1{
       margin:0 0 16px;
-      font-size:clamp(34px, 4.5vw, 62px);
-      line-height:1.02;
+      font-family:'Aptos Light','Montserrat',Arial,sans-serif;
+      font-weight:300;
+      font-size:clamp(42px, 5.2vw, 76px);
+      line-height:.98;
+    }
+    #solutionTitle{
+      position:relative;
+      width:max-content;
+      max-width:100%;
+    }
+    #solutionTitle::after{
+      content:'';
+      display:block;
+      width:min(180px, 46%);
+      height:3px;
+      margin-top:18px;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--solution-accent), var(--solution-accent-2));
+      box-shadow:0 0 24px rgba(var(--solution-accent-rgb),.28);
     }
     .hero-copy{
-      max-width:720px;
-      font-size:18px;
-      line-height:1.7;
-      color:rgba(255,255,255,.86);
+      max-width:680px;
+      font-family:'Montserrat',Arial,sans-serif;
+      font-size:17px;
+      line-height:1.72;
+      color:rgba(244,248,255,.9);
     }
     .hero-panel{
       padding:0;
@@ -135,17 +222,45 @@
       backdrop-filter:none;
     }
     .hero-panel h2{
-      margin:0 0 10px;
-      font-size:18px;
+      margin:0 0 14px;
+      font-size:17px;
     }
     .hero-panel ul{
       margin:0;
-      padding-left:18px;
-      line-height:1.8;
-      color:rgba(255,255,255,.84);
+      padding-left:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+      font-family:'Montserrat',Arial,sans-serif;
+      font-size:14px;
+      line-height:1.45;
+      color:rgba(255,255,255,.86);
     }
-    .hero-panel li + li{
-      margin-top:2px;
+    .hero-panel li{
+      position:relative;
+      padding:11px 12px 11px 34px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      transition:transform .18s var(--motion-ease), border-color .18s var(--motion-ease), background .18s var(--motion-ease);
+    }
+    .hero-panel li::before{
+      content:'';
+      position:absolute;
+      left:14px;
+      top:50%;
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      transform:translateY(-50%);
+      background:var(--solution-accent);
+      box-shadow:0 0 0 4px rgba(var(--solution-accent-rgb),.12);
+    }
+    .hero-panel li:hover{
+      transform:translateX(3px);
+      border-color:rgba(var(--solution-accent-rgb),.28);
+      background:linear-gradient(90deg, rgba(var(--solution-accent-rgb),.14), rgba(255,255,255,.035));
     }
     .hero-panel-link{
       color:rgba(244,248,255,.9);
@@ -161,7 +276,7 @@
     }
     .hero-device{
       position:relative;
-      width:min(560px,100%);
+      width:min(500px,100%);
       margin-left:auto;
     }
     .hero-device-lid{
@@ -170,9 +285,11 @@
       border-radius:30px 30px 20px 20px;
       background:
         linear-gradient(180deg, rgba(34,38,46,.98) 0%, rgba(16,18,24,.98) 100%);
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(var(--solution-accent-rgb),.22);
       box-shadow:
         0 28px 60px rgba(0,0,0,.34),
+        0 0 0 1px rgba(255,255,255,.06),
+        0 0 36px rgba(var(--solution-accent-rgb),.1),
         0 2px 0 rgba(255,255,255,.12) inset;
     }
     .hero-device-camera{
@@ -189,12 +306,12 @@
     }
     .hero-device-screen{
       position:relative;
-      min-height:320px;
+      min-height:286px;
       border-radius:18px 18px 12px 12px;
       overflow:hidden;
       background:
-        radial-gradient(circle at 72% 10%, rgba(129,205,255,.18) 0%, transparent 22%),
-        radial-gradient(circle at 12% 0%, rgba(200,212,0,.12) 0%, transparent 24%),
+        radial-gradient(circle at 72% 10%, rgba(var(--solution-accent-rgb),.2) 0%, transparent 22%),
+        radial-gradient(circle at 12% 0%, rgba(var(--solution-accent-2-rgb),.14) 0%, transparent 24%),
         linear-gradient(180deg, rgba(17,25,54,.94) 0%, rgba(11,18,42,.98) 100%);
       border:1px solid rgba(255,255,255,.08);
       box-shadow:
@@ -224,10 +341,20 @@
       position:relative;
       z-index:1;
       height:100%;
-      padding:28px 26px 24px;
+      padding:26px 24px 24px;
       display:flex;
       flex-direction:column;
       justify-content:flex-start;
+    }
+    .hero-device-content::before{
+      content:'';
+      position:absolute;
+      left:24px;
+      right:24px;
+      top:18px;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(var(--solution-accent-rgb),.28), transparent);
+      opacity:.8;
     }
     .hero-device-base{
       position:relative;
@@ -265,44 +392,93 @@
       background:rgba(124,130,139,.28);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
     }
-    main{padding:36px 24px 64px}
+    main{
+      padding:0 24px 72px;
+      margin-top:-42px;
+      position:relative;
+      z-index:2;
+    }
     .content{
       width:min(1160px, 100%);
       margin:0 auto;
       display:grid;
-      gap:24px;
+      gap:20px;
     }
     .grid{
       display:grid;
       grid-template-columns:repeat(3, 1fr);
-      gap:24px;
+      gap:18px;
+      align-items:stretch;
     }
     .panel{
-      background:rgba(238,242,246,.86);
-      border:1px solid var(--border);
-      border-radius:24px;
-      padding:26px;
-      box-shadow:0 18px 44px rgba(16,37,111,.08);
+      position:relative;
+      overflow:hidden;
+      background:rgba(245,249,253,.92);
+      border:1px solid rgba(96,124,168,.22);
+      border-radius:8px;
+      padding:24px;
+      box-shadow:
+        0 16px 36px rgba(16,37,111,.09),
+        inset 0 1px 0 rgba(255,255,255,.62);
+      transition:transform .18s var(--motion-ease), border-color .18s var(--motion-ease), box-shadow .18s var(--motion-ease);
+    }
+    .panel::after{
+      content:'';
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:3px;
+      background:linear-gradient(90deg, var(--solution-accent), var(--solution-accent-2));
+      opacity:.82;
+      pointer-events:none;
+    }
+    .panel > *{
+      position:relative;
+      z-index:1;
+    }
+    .panel:hover{
+      border-color:rgba(var(--solution-accent-rgb),.38);
+      box-shadow:
+        0 20px 42px rgba(16,37,111,.13),
+        inset 0 1px 0 rgba(255,255,255,.68);
+    }
+    .content > .panel:first-child{
+      display:grid;
+      grid-template-columns:170px minmax(0, 1fr);
+      gap:22px;
+      align-items:start;
+      background:
+        linear-gradient(90deg, rgba(var(--solution-accent-rgb),.14) 0%, rgba(247,250,255,.98) 22%, rgba(232,240,250,.94) 100%);
+      border-color:rgba(77,143,232,.2);
+    }
+    .content > .panel:first-child h3{
+      margin:0;
+      padding-top:2px;
+    }
+    .content > .panel:first-child p{
+      max-width:860px;
     }
     .panel-glass{
       position:relative;
       overflow:hidden;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.66) 0%, rgba(228,238,255,.46) 100%);
-      border:1px solid rgba(122,156,219,.3);
+        linear-gradient(180deg, rgba(252,254,255,.98) 0%, rgba(230,238,248,.92) 100%);
+      border:1px solid rgba(96,124,168,.24);
       box-shadow:
-        0 24px 56px rgba(16,37,111,.12),
-        inset 0 1px 0 rgba(255,255,255,.62);
-      backdrop-filter:blur(22px) saturate(148%);
-      -webkit-backdrop-filter:blur(22px) saturate(148%);
+        0 16px 34px rgba(16,37,111,.09),
+        inset 0 1px 0 rgba(255,255,255,.68);
+      backdrop-filter:blur(12px) saturate(128%);
+      -webkit-backdrop-filter:blur(12px) saturate(128%);
     }
     .panel-glass::before{
       content:'';
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 12% 0%, rgba(255,255,255,.78) 0%, transparent 34%),
-        radial-gradient(circle at 100% 100%, rgba(77,143,232,.12) 0%, transparent 28%);
+        linear-gradient(135deg, rgba(var(--solution-accent-rgb),.14) 0%, transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.78) 0%, transparent 42%),
+        linear-gradient(90deg, transparent 0%, rgba(var(--solution-accent-2-rgb),.08) 100%);
       pointer-events:none;
     }
     .panel-glass > *{
@@ -310,14 +486,40 @@
       z-index:1;
     }
     .panel h3{
-      margin:0 0 14px;
-      font-size:20px;
-      color:var(--navy);
+      margin:0 0 16px;
+      font-family:'Aptos Bold','Montserrat',Arial,sans-serif;
+      font-size:18px;
+      line-height:1.22;
+      color:var(--text-strong);
     }
+    .grid .panel-glass h3{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .grid .panel-glass h3::before{
+      content:'01';
+      width:34px;
+      height:26px;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      color:#06105f;
+      background:linear-gradient(135deg, rgba(var(--solution-accent-rgb),.18), rgba(var(--solution-accent-2-rgb),.34));
+      border:1px solid rgba(var(--solution-accent-rgb),.22);
+      font-family:'Montserrat',Arial,sans-serif;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.04em;
+      flex:0 0 auto;
+    }
+    .grid .panel-glass:nth-child(2) h3::before{content:'02'}
+    .grid .panel-glass:nth-child(3) h3::before{content:'03'}
     .panel p{
       margin:0;
-      color:var(--muted);
-      line-height:1.75;
+      font-family:'Montserrat',Arial,sans-serif;
+      color:#485b78;
+      line-height:1.78;
     }
     .panel ul{
       margin:0;
@@ -329,36 +531,36 @@
       list-style:none;
       padding:0;
       display:grid;
-      gap:12px;
+      gap:0;
     }
     .feature-list li{
       position:relative;
-      padding:15px 16px 15px 44px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.34);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.34) 0%, rgba(216,228,249,.22) 100%);
-      color:#365073;
-      line-height:1.7;
-      box-shadow:
-        0 12px 26px rgba(16,37,111,.08),
-        inset 0 1px 0 rgba(255,255,255,.55);
-      backdrop-filter:blur(16px) saturate(140%);
-      -webkit-backdrop-filter:blur(16px) saturate(140%);
+      padding:13px 0 13px 34px;
+      border-bottom:1px solid rgba(96,124,168,.18);
+      color:#263d5f;
+      font-family:'Montserrat',Arial,sans-serif;
+      font-size:14px;
+      line-height:1.65;
+      transition:color .18s var(--motion-ease), transform .18s var(--motion-ease);
+    }
+    .feature-list li:last-child{border-bottom:none}
+    .feature-list li:hover{
+      color:#071456;
+      transform:translateX(2px);
     }
     .feature-list li::before{
       content:'';
       position:absolute;
-      left:16px;
+      left:4px;
       top:18px;
-      width:14px;
-      height:14px;
+      width:12px;
+      height:12px;
       border-radius:50%;
       background:
-        radial-gradient(circle at 32% 32%, #f7ffb4 0%, #c8d400 52%, #90a500 100%);
+        radial-gradient(circle at 32% 32%, #ffffff 0%, var(--solution-accent-2) 48%, #8ea000 100%);
       box-shadow:
-        0 0 0 5px rgba(200,212,0,.12),
-        0 6px 14px rgba(132,150,0,.22);
+        0 0 0 4px rgba(var(--solution-accent-2-rgb),.14),
+        0 6px 12px rgba(132,150,0,.2);
     }
     .modules-grid{
       display:grid;
@@ -366,21 +568,35 @@
       gap:18px;
     }
     .module-card{
-      padding:22px;
-      border-radius:20px;
-      background:var(--panel);
-      border:1px solid var(--border);
+      position:relative;
+      overflow:hidden;
+      padding:20px;
+      border-radius:8px;
+      background:
+        linear-gradient(135deg, rgba(var(--solution-accent-rgb),.1) 0%, transparent 32%),
+        var(--surface-strong);
+      border:1px solid rgba(96,124,168,.22);
+    }
+    .module-card::before{
+      content:'';
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:3px;
+      background:linear-gradient(180deg, var(--solution-accent), var(--solution-accent-2));
+      opacity:.82;
     }
     .module-card-link{
       display:block;
       color:inherit;
       text-decoration:none;
-      transition:transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+      transition:transform .18s var(--motion-ease), box-shadow .18s var(--motion-ease), border-color .18s var(--motion-ease);
     }
     .module-card-link:hover{
-      transform:translateY(-4px);
-      border-color:rgba(77,143,232,.22);
-      box-shadow:0 18px 38px rgba(16,37,111,.1);
+      transform:translateY(-2px);
+      border-color:rgba(77,143,232,.38);
+      box-shadow:0 16px 30px rgba(16,37,111,.12);
     }
     .module-card h4{
       margin:0 0 10px;
@@ -673,38 +889,106 @@
       list-style:none;
       padding:0;
       margin:0;
+      counter-reset:solution-steps;
     }
     .list-plain li{
-      padding:12px 0;
-      border-bottom:1px solid var(--border);
+      position:relative;
+      min-height:52px;
+      padding:14px 0 14px 58px;
+      border-bottom:1px solid rgba(96,124,168,.2);
+      color:#334b6f;
+      font-family:'Montserrat',Arial,sans-serif;
+      line-height:1.62;
+    }
+    .list-plain li::before{
+      counter-increment:solution-steps;
+      content:counter(solution-steps, decimal-leading-zero);
+      position:absolute;
+      left:0;
+      top:12px;
+      width:38px;
+      height:30px;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      color:#06105f;
+      background:linear-gradient(135deg, rgba(var(--solution-accent-rgb),.22), rgba(var(--solution-accent-2-rgb),.38));
+      border:1px solid rgba(var(--solution-accent-rgb),.22);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.02em;
     }
     .list-plain li:last-child{border-bottom:none}
     .kpis{
       display:grid;
       grid-template-columns:repeat(3, 1fr);
-      gap:18px;
+      gap:16px;
     }
     .kpi{
-      padding:18px;
-      border-radius:20px;
-      background:var(--panel);
-      border:1px solid var(--border);
+      position:relative;
+      overflow:hidden;
+      padding:20px;
+      border-radius:8px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.82), rgba(232,239,249,.88));
+      border:1px solid rgba(96,124,168,.22);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+      transition:transform .18s var(--motion-ease), border-color .18s var(--motion-ease), box-shadow .18s var(--motion-ease);
+    }
+    .kpi::before{
+      content:'';
+      position:absolute;
+      inset:0 auto 0 0;
+      width:4px;
+      background:linear-gradient(180deg, var(--solution-accent), var(--solution-accent-2));
+    }
+    .kpi:first-child{
+      background:
+        linear-gradient(135deg, rgba(var(--solution-accent-rgb),.18) 0%, rgba(255,255,255,.08) 34%),
+        linear-gradient(135deg, #06105f 0%, #122a77 100%);
+      border-color:rgba(255,255,255,.16);
+      box-shadow:0 18px 34px rgba(0,8,90,.18);
+    }
+    .kpi:hover{
+      transform:translateY(-2px);
+      border-color:rgba(var(--solution-accent-rgb),.34);
+      box-shadow:0 16px 30px rgba(16,37,111,.12), inset 0 1px 0 rgba(255,255,255,.72);
     }
     .kpi strong{
+      position:relative;
       display:block;
       margin-bottom:6px;
       color:var(--navy);
-      font-size:28px;
+      font-family:'Aptos Light','Montserrat',Arial,sans-serif;
+      font-size:30px;
+      font-weight:300;
     }
-    .kpi span{color:var(--muted);line-height:1.5}
+    .kpi span{
+      position:relative;
+      color:#485b78;
+      line-height:1.55;
+      font-family:'Montserrat',Arial,sans-serif;
+      font-size:14px;
+    }
+    .kpi:first-child strong,
+    .kpi:first-child span{
+      color:#fff;
+    }
+    .kpi:first-child span{
+      color:rgba(238,245,255,.84);
+    }
     .cta-box{
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:20px;
       flex-wrap:wrap;
-      background:linear-gradient(135deg, var(--navy), var(--navy-2));
+      background:
+        linear-gradient(115deg, rgba(var(--solution-accent-rgb),.16) 0 34%, transparent 34.2%),
+        radial-gradient(circle at 92% 18%, rgba(200,212,0,.18), transparent 22%),
+        linear-gradient(135deg, #020a50 0%, var(--navy-2) 100%);
       color:var(--white);
+      border-color:rgba(255,255,255,.1);
     }
     .cta-box p{color:rgba(255,255,255,.84)}
     .cta-primary{
@@ -718,7 +1002,36 @@
       border-radius:999px;
       font-weight:700;
       white-space:nowrap;
+      transition:transform .18s var(--motion-ease), box-shadow .18s var(--motion-ease), filter .18s var(--motion-ease);
     }
+    .cta-primary:hover,
+    .cta-primary:focus-visible{
+      transform:translateY(-1px);
+      filter:saturate(1.08);
+      box-shadow:0 16px 28px rgba(47,127,241,.22);
+      outline:none;
+    }
+    @keyframes solutionFadeUp{
+      0%{opacity:0;transform:translate3d(0,18px,0)}
+      100%{opacity:1;transform:translate3d(0,0,0)}
+    }
+    body:not(.managed-mode) .eyebrow,
+    body:not(.managed-mode) #solutionTitle,
+    body:not(.managed-mode) .hero-copy,
+    body:not(.managed-mode) .hero-device,
+    body:not(.managed-mode) main .panel,
+    body:not(.managed-mode) main .grid{
+      animation:solutionFadeUp .58s var(--motion-ease) both;
+    }
+    body:not(.managed-mode) #solutionTitle{animation-delay:.06s}
+    body:not(.managed-mode) .hero-copy{animation-delay:.12s}
+    body:not(.managed-mode) .hero-device{animation-delay:.16s}
+    body:not(.managed-mode) main .panel:nth-child(1){animation-delay:.18s}
+    body:not(.managed-mode) main .grid{animation-delay:.24s}
+    body:not(.managed-mode) main .panel:nth-child(3){animation-delay:.3s}
+    body:not(.managed-mode) main .panel:nth-child(4){animation-delay:.34s}
+    body:not(.managed-mode) main .panel:nth-child(5){animation-delay:.38s}
+    body:not(.managed-mode) main .panel:nth-child(6){animation-delay:.42s}
     html{scroll-behavior:smooth}
     body.managed-mode{
       font-family:'Montserrat',sans-serif;
@@ -1584,6 +1897,24 @@
       .service-map-visual{padding:24px 18px 28px}
       .service-map-badge{position:relative;left:auto;top:auto;margin-top:12px;max-width:none}
       .topbar{margin-bottom:34px}
+      .hero{
+        min-height:auto;
+        padding-bottom:54px;
+      }
+      .hero .shell,
+      .hero-grid,
+      .hero-grid > div{
+        width:100%;
+        max-width:100%;
+      }
+      main{
+        margin-top:-52px;
+        padding-inline:18px;
+      }
+      .content > .panel:first-child{
+        grid-template-columns:1fr;
+        gap:10px;
+      }
       .hero-device{
         margin:8px auto 0;
       }
@@ -1599,29 +1930,86 @@
       }
     }
     @media (max-width: 640px){
+      .topbar{
+        align-items:flex-start;
+        flex-wrap:wrap;
+        justify-content:flex-start;
+        gap:14px;
+      }
+      .brand img{
+        height:32px;
+      }
+      .back-link,
+      .cta-link{
+        max-width:100%;
+        padding:9px 12px;
+        font-size:11px;
+      }
+      h1{
+        font-size:clamp(34px, 11vw, 48px);
+      }
+      .hero-copy{
+        display:block;
+        width:100%;
+        font-size:14px;
+        line-height:1.56;
+        max-width:33ch;
+        overflow-wrap:break-word;
+      }
+      .panel{
+        padding:20px;
+      }
       .hero-device-lid{
         padding:12px 12px 16px;
         border-radius:24px 24px 16px 16px;
       }
+      .hero-device{
+        width:min(270px, calc(100vw - 72px));
+        margin-left:auto;
+        margin-right:auto;
+      }
       .hero-device-screen{
-        min-height:250px;
+        min-height:214px;
         border-radius:14px 14px 10px 10px;
       }
       .hero-device-content{
-        padding:22px 18px 20px;
+        padding:20px 16px 18px;
       }
       .hero-panel h2{
-        font-size:17px;
+        font-size:15px;
       }
       .hero-panel ul{
-        font-size:14px;
-        line-height:1.72;
+        font-size:13px;
+        line-height:1.48;
+        gap:8px;
+      }
+      .hero-panel li{
+        padding:9px 10px 9px 32px;
       }
       .hero-device-base{
         height:18px;
+        width:100%;
+        margin-left:0;
       }
     }
     @media (prefers-reduced-motion: reduce){
+      body:not(.managed-mode) .eyebrow,
+      body:not(.managed-mode) #solutionTitle,
+      body:not(.managed-mode) .hero-copy,
+      body:not(.managed-mode) .hero-device,
+      body:not(.managed-mode) main .panel,
+      body:not(.managed-mode) main .grid{
+        animation:none !important;
+        opacity:1 !important;
+        transform:none !important;
+      }
+      .back-link,
+      .cta-link,
+      .cta-primary,
+      .panel,
+      .module-card-link{
+        transition:none !important;
+      }
       body.managed-mode .hero::before,
       body.managed-mode .brand,
       body.managed-mode .back-link,
@@ -1741,8 +2129,8 @@
         <section class="managed-section managed-solutions" id="solucoes">
           <div class="managed-section-inner">
             <p class="managed-section-kicker">Soluções do grupo</p>
-            <h2>As frentes que sustentam a operação.</h2>
-            <p class="managed-section-copy">A página foi reorganizada no formato da referência, mas aplicada à Conexte: quatro frentes principais, leitura clara do portfólio e linguagem visual mais corporativa para vender a estrutura de Serviços Gerenciados.</p>
+            <h2>Serviços Gerenciados</h2>
+            <p class="managed-section-copy">Assuma o controle da sua operação de TI sem se preocupar com a complexidade. Nossos serviços gerenciados garantem monitoramento contínuo, suporte especializado e resposta rápida a incidentes, permitindo que sua equipe foque no que realmente importa.</p>
             <div class="managed-solutions-grid" id="managedSolutionsGrid"></div>
           </div>
         </section>
@@ -1769,9 +2157,9 @@
 
         <section class="managed-section managed-benefits" id="beneficios">
           <div class="managed-section-inner">
-            <p class="managed-section-kicker">Benefícios</p>
-            <h2>Operação mais previsível, rápida e controlada.</h2>
-            <p class="managed-section-copy">A mesma lógica comercial da referência, mas com o discurso da Conexte: suporte mais consistente, menor improviso operacional e leitura real do ambiente para decisões melhores.</p>
+            <p class="managed-section-kicker">Estrutura</p>
+            <h2>Temas definidos no documento.</h2>
+            <p class="managed-section-copy">A estrutura desta página segue os quatro temas listados no documento de referência para Serviços Gerenciados.</p>
             <div class="managed-benefits-grid" id="managedBenefitsGrid"></div>
           </div>
         </section>
@@ -1796,8 +2184,6 @@
   </main>
 
   <script type="module">
-    import * as THREE from './node_modules/three/build/three.module.min.js';
-
     const solutions = {
       'inovacao-solucoes-inteligentes': {
         category: 'Transformação digital',
@@ -2007,10 +2393,187 @@
       }
     };
 
-    const fallbackKey = 'cloud-computing';
+    Object.assign(solutions['servicos-gerenciados'], {
+      category: 'Operação de TI',
+      title: 'Serviços Gerenciados',
+      intro: 'Assuma o controle da sua operação de TI sem se preocupar com a complexidade. Nossos serviços gerenciados garantem monitoramento contínuo, suporte especializado e resposta rápida a incidentes, permitindo que sua equipe foque no que realmente importa.',
+      overview: 'Assuma o controle da sua operação de TI sem se preocupar com a complexidade. Nossos serviços gerenciados garantem monitoramento contínuo, suporte especializado e resposta rápida a incidentes, permitindo que sua equipe foque no que realmente importa.',
+      highlights: ['Suporte e Atendimento Técnico', 'Field Service', 'Network Operations Center', 'Gestão de Ativos de TI'],
+      deliverables: ['Suporte e Atendimento Técnico', 'Field Service', 'Network Operations Center', 'Gestão de Ativos de TI'],
+      useCases: ['Monitoramento contínuo', 'Suporte especializado', 'Resposta rápida a incidentes', 'Equipe focada no que realmente importa'],
+      differentials: ['Operação de TI com menos complexidade', 'Controle operacional', 'Serviços gerenciados estruturados', 'Continuidade para a equipe interna'],
+      kpis: [{value:'4 frentes', label:'suporte, campo, NOC e ativos em uma operação'}, {value:'24/7', label:'monitoramento aplicável a ambientes críticos'}, {value:'1 visão', label:'controle integrado da operação de TI'}],
+      modules: [
+        {title:'1.1.1. Suporte e Atendimento Técnico', copy:'Central de atendimento para registrar, classificar, priorizar e resolver demandas de usuários com fluxo claro de suporte.'},
+        {title:'1.1.2. Field Service', copy:'Atendimento presencial para instalações, substituições, correções físicas e suporte local quando a demanda exige ação em campo.'},
+        {title:'1.1.3. Network Operations Center', copy:'Monitoramento de rede, disponibilidade, eventos e desempenho para antecipar incidentes e coordenar respostas.'},
+        {title:'1.1.4. Gestão de Ativos de TI', copy:'Controle do parque tecnológico com inventário, rastreabilidade, histórico e governança do ciclo de vida dos ativos.'}
+      ],
+      steps: ['Mapeamento da operação, demandas, SLAs e ativos existentes.', 'Definição dos fluxos de suporte, campo, NOC e gestão de ativos.', 'Implantação assistida com processos, ferramentas e indicadores.', 'Operação contínua com revisão de performance e evolução do serviço.'],
+      ctaTitle: 'Estruturar Serviços Gerenciados',
+      ctaCopy: 'A Conexte pode organizar sua operação de TI com suporte, campo, monitoramento e ativos em uma frente integrada.'
+    });
+
+    Object.assign(solutions['servicos-gerenciados'].managedPage, {
+      heroLead: 'Assuma o controle da sua operação de TI sem se preocupar com a complexidade. Nossos serviços gerenciados garantem monitoramento contínuo, suporte especializado e resposta rápida a incidentes, permitindo que sua equipe foque no que realmente importa.',
+      heroPanelTitle: 'Temas da solução',
+      heroHighlights: [
+        'Suporte e Atendimento Técnico',
+        'Field Service',
+        'Network Operations Center',
+        'Gestão de Ativos de TI'
+      ],
+      scenarioTitle: 'Serviços Gerenciados',
+      scenarioCopy: 'Assuma o controle da sua operação de TI sem se preocupar com a complexidade. Nossos serviços gerenciados garantem monitoramento contínuo, suporte especializado e resposta rápida a incidentes, permitindo que sua equipe foque no que realmente importa.',
+      scenarioStats: [
+        {value:'4', label:'frentes centrais de serviços gerenciados'},
+        {value:'24/7', label:'monitoramento aplicável ao NOC e a ambientes críticos'},
+        {value:'1', label:'visão integrada de suporte, campo, rede e ativos'}
+      ],
+      benefits: [
+        {title:'Suporte e Atendimento Técnico', copy:'Tema definido no documento de referência para Serviços Gerenciados.'},
+        {title:'Field Service', copy:'Tema definido no documento de referência para Serviços Gerenciados.'},
+        {title:'Network Operations Center', copy:'Tema definido no documento de referência para Serviços Gerenciados.'},
+        {title:'Gestão de Ativos de TI', copy:'Tema definido no documento de referência para Serviços Gerenciados.'}
+      ],
+      contactTitle: 'Estruture Serviços Gerenciados com a Conexte.',
+      contactCopy: 'Precisa de uma solução sob medida? Nossa equipe está pronta para entender suas necessidades e propor a melhor estratégia para o seu negócio.',
+      sections: [
+        {
+          code: '1.1.1',
+          title: 'Suporte e Atendimento Técnico',
+          intro: 'Camada central de suporte para registro, triagem, categorização, priorização e resolução de demandas técnicas dos usuários.',
+          image: "url('https://framerusercontent.com/images/TFeA1Fjeg2BO6XEvoIdKeJ7KI9E.png?width=848&height=471')",
+          metrics: [
+            {label:'Atuação', value:'Registro, triagem e resolução de chamados'},
+            {label:'Foco', value:'Experiência do usuário, SLA e previsibilidade'},
+            {label:'Resultado', value:'Fila controlada e suporte rastreável'}
+          ],
+          details: [
+            {title:'Objetivo', copy:'Criar um ponto único de entrada para demandas, incidentes e requisições de suporte.'},
+            {title:'Atuação', copy:'Acompanhamento, escalonamento, comunicação e encerramento controlado de chamados conforme prioridade.'},
+            {title:'Resultado', copy:'Melhor experiência para o usuário e leitura clara de filas, gargalos, SLAs e reincidências.'}
+          ]
+        },
+        {
+          code: '1.1.2',
+          title: 'Field Service',
+          intro: 'Atendimento presencial para cenários que exigem ação local, instalação, substituição de equipamento, correção física ou suporte técnico in loco.',
+          image: "url('https://framerusercontent.com/images/XYQYT1P7Im1fhatpgiPDrxPY3Ag.png?width=848&height=471')",
+          metrics: [
+            {label:'Atuação', value:'Visitas técnicas, instalação e manutenção'},
+            {label:'Foco', value:'Execução presencial com padrão operacional'},
+            {label:'Resultado', value:'Menos indisponibilidade em unidades remotas'}
+          ],
+          details: [
+            {title:'Objetivo', copy:'Resolver demandas que não se encerram remotamente e garantir execução local com alinhamento técnico.'},
+            {title:'Atuação', copy:'Instalações, substituições, correções físicas, validações em campo e suporte presencial.'},
+            {title:'Resultado', copy:'Mais agilidade na resposta, menor impacto operacional e padronização da entrega local.'}
+          ]
+        },
+        {
+          code: '1.1.3',
+          title: 'Network Operations Center',
+          intro: 'Camada de monitoramento contínuo para leitura de eventos, disponibilidade, desempenho e atuação coordenada diante de incidentes.',
+          image: "url('https://framerusercontent.com/images/nVmgcJbgt5z9wOJYgdsLovd7G8.png?width=848&height=471')",
+          metrics: [
+            {label:'Atuação', value:'Monitoramento, alarmes e leitura operacional'},
+            {label:'Foco', value:'Disponibilidade, desempenho e resposta rápida'},
+            {label:'Resultado', value:'Visibilidade contínua sobre o ambiente'}
+          ],
+          details: [
+            {title:'Objetivo', copy:'Detectar desvios operacionais antes que se convertam em indisponibilidade crítica.'},
+            {title:'Atuação', copy:'Monitoramento de rede, ativos, eventos, alarmes, performance e status de componentes essenciais.'},
+            {title:'Resultado', copy:'Mais visibilidade, resposta mais rápida e sustentação contínua com leitura preventiva.'}
+          ]
+        },
+        {
+          code: '1.1.4',
+          title: 'Gestão de Ativos de TI',
+          intro: 'Controle do parque tecnológico com rastreabilidade, inventário, organização do ciclo de vida e apoio à governança dos ativos.',
+          image: "url('https://framerusercontent.com/images/1f79jLcyd1enK0a4qq5ojpRX8.png?width=848&height=471')",
+          metrics: [
+            {label:'Atuação', value:'Inventário, histórico e rastreabilidade'},
+            {label:'Foco', value:'Governança do parque tecnológico'},
+            {label:'Resultado', value:'Base confiável para suporte e auditoria'}
+          ],
+          details: [
+            {title:'Objetivo', copy:'Ter domínio sobre o que existe, onde está, em que condição está e como cada ativo participa da operação.'},
+            {title:'Atuação', copy:'Cadastro, padronização, atualização, histórico e gestão do ciclo de vida dos ativos de TI.'},
+            {title:'Resultado', copy:'Base confiável para suporte, auditoria, planejamento de expansão, renovação e governança.'}
+          ]
+        }
+      ]
+    });
+
+    Object.assign(solutions['infraestrutura'], {
+      category: 'Base operacional',
+      title: 'Infraestrutura',
+      intro: 'Projetamos e implementamos infraestruturas robustas, seguras e preparadas para alta performance. Desde redes corporativas até ambientes distribuídos, entregamos conectividade estável, segurança integrada e alta disponibilidade para sustentar operações críticas com eficiência.',
+      overview: 'Projetamos e implementamos infraestruturas robustas, seguras e preparadas para alta performance. Desde redes corporativas até ambientes distribuídos, entregamos conectividade estável, segurança integrada e alta disponibilidade para sustentar operações críticas com eficiência.',
+      highlights: ['Conectividade e redes', 'Segurança e Monitoramento Eletrônico', 'Infraestrutura de Comunicação (Infovia)'],
+      deliverables: ['Conectividade e redes', 'Segurança e Monitoramento Eletrônico', 'Infraestrutura de Comunicação (Infovia)'],
+      useCases: ['Redes corporativas', 'Ambientes distribuídos', 'Conectividade estável', 'Operações críticas'],
+      differentials: ['Infraestruturas robustas', 'Segurança integrada', 'Alta disponibilidade', 'Alta performance'],
+      kpis: [{value:'1 base', label:'infraestrutura preparada para sustentar operações críticas'}, {value:'100%', label:'ambiente documentado para continuidade'}, {value:'alta disponibilidade', label:'projeto orientado a estabilidade e desempenho'}],
+      steps: ['Levantamento da topologia atual, riscos e necessidades futuras.', 'Desenho técnico da infraestrutura alvo.', 'Implantação de conectividade, redes, monitoramento e comunicação.', 'Validação, documentação e transição para operação contínua.'],
+      ctaTitle: 'Planejar a infraestrutura',
+      ctaCopy: 'A Conexte levanta seu ambiente atual e desenha uma base técnica robusta para estabilidade, segurança e crescimento.'
+    });
+
+    Object.assign(solutions['data-center'], {
+      category: 'Ambiente crítico',
+      title: 'Data Center',
+      intro: 'Soluções completas para ambientes que não podem parar. Atuamos no planejamento, implantação e manutenção de data centers com foco em confiabilidade, redundância e desempenho, garantindo continuidade operacional mesmo nos cenários mais exigentes.',
+      overview: 'Soluções completas para ambientes que não podem parar. Atuamos no planejamento, implantação e manutenção de data centers com foco em confiabilidade, redundância e desempenho, garantindo continuidade operacional mesmo nos cenários mais exigentes.',
+      highlights: ['Projetos e Consultoria', 'Observabilidade e Gerenciamento', 'Manutenção Especializada', 'Construção e Modernização'],
+      deliverables: ['Projetos e Consultoria', 'Observabilidade e Gerenciamento', 'Manutenção Especializada', 'Construção e Modernização'],
+      useCases: ['Ambientes que não podem parar', 'Planejamento de data centers', 'Implantação e manutenção', 'Cenários exigentes'],
+      differentials: ['Confiabilidade', 'Redundância', 'Desempenho', 'Continuidade operacional'],
+      kpis: [{value:'N+1', label:'referência para cenários com redundância'}, {value:'24/7', label:'observabilidade recomendada para ambientes críticos'}, {value:'1 padrão', label:'organização técnica consistente'}],
+      steps: ['Avaliação do ambiente atual e criticidade dos ativos.', 'Definição do projeto, consultoria e plano de modernização.', 'Execução física e lógica com validação de disponibilidade.', 'Entrega documentada com rotina de manutenção e gerenciamento.'],
+      ctaTitle: 'Modernizar o Data Center',
+      ctaCopy: 'Projetamos a evolução do ambiente crítico com foco em confiabilidade, redundância, desempenho e continuidade.'
+    });
+
+    solutions['solucoes-digitais-inovacao'] = {
+      category: 'Transformação digital',
+      title: 'Soluções Digitais e Inovação',
+      intro: 'Transforme tecnologia em vantagem competitiva. Desenvolvemos soluções inteligentes que automatizam processos, melhoram a experiência do usuário e impulsionam a transformação digital da sua empresa, com foco em inovação, eficiência e escalabilidade.',
+      overview: 'Transforme tecnologia em vantagem competitiva. Desenvolvemos soluções inteligentes que automatizam processos, melhoram a experiência do usuário e impulsionam a transformação digital da sua empresa, com foco em inovação, eficiência e escalabilidade.',
+      highlights: ['Cidades Inteligentes', 'Desenvolvimento de Software', 'Criação e Gestão de Sites', 'Ambientes Inteligentes (IoT)', 'Digitalização e Gestão de Documentos'],
+      deliverables: ['Cidades Inteligentes', 'Desenvolvimento de Software', 'Criação e Gestão de Sites', 'Ambientes Inteligentes (IoT)', 'Digitalização e Gestão de Documentos'],
+      useCases: ['Automatização de processos', 'Melhoria da experiência do usuário', 'Transformação digital', 'Vantagem competitiva'],
+      differentials: ['Inovação', 'Eficiência', 'Escalabilidade', 'Soluções inteligentes'],
+      kpis: [{value:'5 frentes', label:'inovação digital organizada por necessidade'}, {value:'menos retrabalho', label:'processos automatizados e documentados'}, {value:'mais controle', label:'dados, sites, sistemas e ambientes integrados'}],
+      steps: ['Diagnóstico do processo, canal digital ou ambiente físico.', 'Definição da solução, escopo e prioridades de implantação.', 'Desenvolvimento, integração, digitalização ou automação assistida.', 'Validação, publicação e evolução contínua da solução.'],
+      ctaTitle: 'Desenvolver uma solução digital',
+      ctaCopy: 'A Conexte pode transformar uma demanda operacional em uma solução digital estruturada, escalável e pronta para evolução.'
+    };
+
+    Object.assign(solutions['cybersecurity'], {
+      category: 'Segurança da informação',
+      title: 'Cybersecurity',
+      intro: 'Proteja sua empresa contra ameaças digitais com uma abordagem completa de segurança. Atuamos na prevenção, detecção e resposta a incidentes, garantindo a integridade dos dados, a continuidade dos serviços e a conformidade com as melhores práticas de mercado.',
+      overview: 'Proteja sua empresa contra ameaças digitais com uma abordagem completa de segurança. Atuamos na prevenção, detecção e resposta a incidentes, garantindo a integridade dos dados, a continuidade dos serviços e a conformidade com as melhores práticas de mercado.',
+      highlights: ['Conscientização e Treinamento', 'Proteção de Infraestrutura', 'Testes de Intrusão (Pentest)'],
+      deliverables: ['Conscientização e Treinamento', 'Proteção de Infraestrutura', 'Testes de Intrusão (Pentest)'],
+      useCases: ['Prevenção de ameaças digitais', 'Detecção e resposta a incidentes', 'Integridade dos dados', 'Continuidade dos serviços'],
+      differentials: ['Abordagem completa de segurança', 'Conformidade com melhores práticas de mercado', 'Proteção contra ameaças digitais', 'Continuidade operacional'],
+      kpis: [{value:'360°', label:'visibilidade sobre superfície crítica'}, {value:'3 frentes', label:'treinamento, proteção e pentest'}, {value:'risco menor', label:'ações priorizadas por impacto operacional'}],
+      steps: ['Levantamento dos riscos, ativos críticos e exposição atual.', 'Definição das camadas de proteção e treinamento necessários.', 'Execução de proteção, testes e validações de segurança.', 'Entrega de recomendações, documentação e plano de resposta.'],
+      ctaTitle: 'Reforçar a Cybersecurity',
+      ctaCopy: 'Começamos por uma leitura objetiva do risco atual e desenhamos ações de proteção, treinamento e validação.'
+    });
+
+    const fallbackKey = 'servicos-gerenciados';
+    const solutionAliases = {
+      'inovacao-solucoes-inteligentes': 'solucoes-digitais-inovacao'
+    };
     const params = new URLSearchParams(window.location.search);
     const rawKey = params.get('item');
-    const key = solutions[rawKey] ? rawKey : fallbackKey;
+    const requestedKey = solutionAliases[rawKey] || rawKey;
+    const key = solutions[requestedKey] ? requestedKey : fallbackKey;
     const subKey = params.get('subitem');
 
     const slugify = (value) => value
@@ -2022,33 +2585,34 @@
       .replace(/^-+|-+$/g, '');
 
     const topicHref = (parentKey, topic) => `solucao.html?item=${encodeURIComponent(parentKey)}&subitem=${encodeURIComponent(topic.slug)}`;
-    const softwarePartnerTopics = new Set(['fabrica-de-software', 'criacao-e-administracao-de-site']);
-    const softwarePartnerOverview = 'A execução dessa frente acontece em parceria com a Nexios, empresa parceira responsável pela parte de software.';
+    const softwarePartnerTopics = new Set();
+    const softwarePartnerOverview = '';
 
-    const buildTopicCardCopy = (parentTitle, topicTitle) => `${topicTitle} é um tema dentro de ${parentTitle}, com abordagem técnica, implantação assistida e foco em continuidade operacional.`;
+    const buildTopicCardCopy = (parentTitle, topicTitle) => `${topicTitle} faz parte da estrutura de ${parentTitle} definida no documento de referência.`;
 
     const genericTopics = {
       'infraestrutura': [
-        { code: '1.2.1', title: 'Conectividade e redes' },
-        { code: '1.2.2', title: 'Segurança Eletrônica' },
-        { code: '1.2.3', title: 'Infovia' }
+        { code: '1.2.1', title: 'Conectividade e redes', intro: 'Projeto e implantação de redes corporativas para conectividade estável, segura e preparada para alta performance.' },
+        { code: '1.2.2', title: 'Segurança e Monitoramento Eletrônico', intro: 'Controles de segurança e monitoramento eletrônico integrados à infraestrutura para ampliar proteção, visibilidade e resposta.' },
+        { code: '1.2.3', title: 'Infraestrutura de Comunicação (Infovia)', intro: 'Estrutura de comunicação para interligar unidades, ativos e serviços com desempenho, organização e continuidade operacional.' }
       ],
       'data-center': [
-        { code: '1.3.1', title: 'Projetos e Consultoria Para Data Centers' },
-        { code: '1.3.2', title: 'Observabilidade e Gerenciamento' },
-        { code: '1.3.3', title: 'Manutenção de Data Centers' },
-        { code: '1.3.4', title: 'Construção e Retrofit' }
+        { code: '1.3.1', title: 'Projetos e Consultoria', intro: 'Planejamento técnico para ambientes críticos, com avaliação de capacidade, riscos, redundância e caminhos de evolução.' },
+        { code: '1.3.2', title: 'Observabilidade e Gerenciamento', intro: 'Monitoramento e gestão do ambiente para acompanhar disponibilidade, desempenho, eventos e condições de operação.' },
+        { code: '1.3.3', title: 'Manutenção Especializada', intro: 'Rotinas de manutenção para preservar confiabilidade, corrigir riscos e manter o data center pronto para serviços críticos.' },
+        { code: '1.3.4', title: 'Construção e Modernização', intro: 'Construção, reorganização ou modernização de data centers e salas técnicas com padrão para continuidade e expansão.' }
       ],
-      'inovacao-solucoes-inteligentes': [
-        { code: '1.4.1', title: 'Cidades Inteligentes' },
-        { code: '1.4.2', title: 'Fábrica de Software' },
-        { code: '1.4.3', title: 'Criação e Administração de Site' },
-        { code: '1.4.4', title: 'Ambiente Inteligente' }
+      'solucoes-digitais-inovacao': [
+        { code: '1.4.1', title: 'Cidades Inteligentes', intro: 'Projetos digitais para gestão urbana, serviços conectados e uso de tecnologia em favor de eficiência pública e operacional.' },
+        { code: '1.4.2', title: 'Desenvolvimento de Software', intro: 'Sistemas e integrações sob medida para automatizar processos, organizar dados e apoiar fluxos críticos da operação.' },
+        { code: '1.4.3', title: 'Criação e Gestão de Sites', intro: 'Sites, portais e presença digital com gestão contínua, performance, segurança e experiência de uso.' },
+        { code: '1.4.4', title: 'Ambientes Inteligentes (IoT)', intro: 'Ambientes conectados por sensores, automações e dispositivos para ampliar controle, eficiência e resposta operacional.' },
+        { code: '1.4.5', title: 'Digitalização e Gestão de Documentos', intro: 'Digitalização, organização e gestão documental para reduzir retrabalho, melhorar acesso à informação e dar rastreabilidade.' }
       ],
       'cybersecurity': [
-        { code: '1.5.1', title: 'Conscientização & Proteção' },
-        { code: '1.5.2', title: 'Infrastructure Security' },
-        { code: '1.5.3', title: 'Pentest e Análise de Vulnerabilidades' }
+        { code: '1.5.1', title: 'Conscientização e Treinamento', intro: 'Treinamento de usuários e equipes para reduzir riscos humanos, fortalecer cultura de segurança e melhorar resposta a incidentes.' },
+        { code: '1.5.2', title: 'Proteção de Infraestrutura', intro: 'Camadas de defesa para redes, acessos e ativos críticos, com controles voltados à prevenção e continuidade dos serviços.' },
+        { code: '1.5.3', title: 'Testes de Intrusão (Pentest)', intro: 'Validação prática da segurança por meio de testes de intrusão, análise de vulnerabilidades e recomendações priorizadas.' }
       ]
     };
 
@@ -2085,9 +2649,10 @@
           href: topicHref(parentKey, item)
         }));
 
+      const topicContext = topic.intro ? `${topic.intro} ` : '';
       const baseOverview = selectedTopic?.details
         ? `A Conexte trata ${topic.title} como uma frente específica dentro de ${parent.title}. ${topic.details.map((item) => item.copy).join(' ')}`
-        : `A Conexte desenvolve projetos de ${topic.title.toLowerCase()} dentro da frente de ${parent.title}, combinando diagnóstico, desenho técnico, implantação assistida e entrega alinhada à operação do cliente.`;
+        : `${topicContext}A Conexte desenvolve projetos de ${topic.title.toLowerCase()} dentro da frente de ${parent.title}, combinando diagnóstico, desenho técnico, implantação assistida e entrega alinhada à operação do cliente.`;
       const overview = softwarePartnerTopics.has(topic.slug)
         ? `${baseOverview} ${softwarePartnerOverview}`
         : baseOverview;
@@ -2158,10 +2723,7 @@
     document.getElementById('solutionCtaCopy').textContent = data.ctaCopy;
     const hasTopicOverview = !selectedTopic && topicList.length > 0;
     const heroHighlights = hasTopicOverview
-      ? topicList.map((item) => ({
-          label: item.title,
-          href: topicHref(key, item)
-        }))
+      ? topicList.map((item) => item.title)
       : data.highlights;
 
     document.getElementById('solutionHighlightsTitle').textContent = selectedTopic
@@ -2177,12 +2739,27 @@
     const managedBrandLogo = 'https://conexte.com.br/wp-content/uploads/2024/08/400x75-LOGO-HORIZONTAL-SEM-FUNDO-Branco.png';
     const imageMap = {
       'inovacao-solucoes-inteligentes': "url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1600&q=80')",
+      'solucoes-digitais-inovacao': "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80')",
       'cloud-computing': "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80')",
       'servicos-gerenciados': "url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1600&q=80')",
       'cybersecurity': "url('https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1600&q=80')",
       'infraestrutura': "url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1600&q=80')",
       'data-center': "url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80')"
     };
+    const accentMap = {
+      'servicos-gerenciados': { accent:'#69b7ff', accent2:'#d9f764', rgb:'105,183,255', rgb2:'217,247,100' },
+      'infraestrutura': { accent:'#58d5ba', accent2:'#b8f078', rgb:'88,213,186', rgb2:'184,240,120' },
+      'data-center': { accent:'#6c9fff', accent2:'#7ee7ff', rgb:'108,159,255', rgb2:'126,231,255' },
+      'solucoes-digitais-inovacao': { accent:'#62e0ff', accent2:'#d9f764', rgb:'98,224,255', rgb2:'217,247,100' },
+      'inovacao-solucoes-inteligentes': { accent:'#62e0ff', accent2:'#d9f764', rgb:'98,224,255', rgb2:'217,247,100' },
+      'cloud-computing': { accent:'#72c7ff', accent2:'#9df4cf', rgb:'114,199,255', rgb2:'157,244,207' },
+      'cybersecurity': { accent:'#8bbdff', accent2:'#d9f764', rgb:'139,189,255', rgb2:'217,247,100' }
+    };
+    const solutionAccent = accentMap[key] || accentMap[fallbackKey];
+    document.body.style.setProperty('--solution-accent', solutionAccent.accent);
+    document.body.style.setProperty('--solution-accent-2', solutionAccent.accent2);
+    document.body.style.setProperty('--solution-accent-rgb', solutionAccent.rgb);
+    document.body.style.setProperty('--solution-accent-2-rgb', solutionAccent.rgb2);
     hero.style.setProperty('--hero-bg', imageMap[key] || imageMap[fallbackKey]);
     brandImage.src = defaultBrandLogo;
     if (selectedTopic) {
@@ -2221,10 +2798,15 @@
     const modulesSection = document.getElementById('solutionModulesSection');
     const modulesTitleNode = document.getElementById('solutionModulesTitle');
     const modulesNode = document.getElementById('solutionModules');
+    const docFidelityKeys = new Set(['infraestrutura', 'data-center', 'solucoes-digitais-inovacao', 'cybersecurity']);
+    const docFidelityMode = !selectedTopic && docFidelityKeys.has(key);
     const pageModules = selectedTopic
       ? data.modules
       : hasTopicOverview
-        ? []
+        ? topicList.map((item) => ({
+            title: item.title,
+            copy: buildTopicCardCopy(baseData.title, item.title)
+          }))
         : topicList.length
         ? topicList.map((item) => ({
             title: item.title,
@@ -2249,6 +2831,17 @@
       `).join('');
     } else {
       modulesSection.style.display = 'none';
+    }
+
+    if (docFidelityMode) {
+      const featureGrid = document.querySelector('.content > .grid');
+      const kpiPanel = document.getElementById('solutionKpis')?.closest('.panel');
+      const stepsPanel = document.getElementById('solutionSteps')?.closest('.panel');
+      if (featureGrid) featureGrid.style.display = 'none';
+      if (kpiPanel) kpiPanel.style.display = 'none';
+      if (stepsPanel) stepsPanel.style.display = 'none';
+      modulesSection.style.display = '';
+      modulesTitleNode.textContent = 'Temas da solução';
     }
 
     document.getElementById('solutionCtaLink').href = `https://api.whatsapp.com/send/?phone=5513996847503&text=${encodeURIComponent(`Olá, Conexte! Quero saber mais sobre ${data.title}.`)}`;

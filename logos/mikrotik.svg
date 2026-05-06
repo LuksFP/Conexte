@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 48" width="160" height="48">
+  <rect width="160" height="48" fill="none"/>
+  <!-- MikroTik M icon -->
+  <rect x="4" y="8" width="32" height="32" rx="6" fill="#C8102E"/>
+  <text x="20" y="31" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="900" fill="#fff">M</text>
+  <!-- wordmark -->
+  <text x="44" y="31" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#1A1A1A">MikroTik</text>
+</svg>
