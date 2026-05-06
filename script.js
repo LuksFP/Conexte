@@ -160,10 +160,6 @@ function bindCharHover() {
 }
 
 window.addEventListener('load', () => {
-  const heroTitle = document.getElementById('heroTitle');
-  heroTitle.innerHTML = heroTitle.innerHTML.replace('CONEXTE', '<span class="hero-brand">CONEXTE</span>');
-  splitChars(heroTitle);
-
   gsap.to('#navbar', { y: 0, duration: 0.8, ease: 'power2.out', delay: 0.1 });
 
   gsap.fromTo('#hero-video',
@@ -173,9 +169,10 @@ window.addEventListener('load', () => {
 
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.25 });
   tl.to('#eyebrow',   { opacity: 1, duration: 0.7 }, 0);
-  tl.to('#heroSub',   { opacity: 1, y: 0, duration: 0.6 }, 1.1);
-  tl.to('#heroActions',{ opacity: 1, y: 0, duration: 0.6 }, 1.3);
-  tl.to('#scroll-hint',{ opacity: 1, duration: 0.6 }, 1.7);
+  tl.to('#heroTitle', { opacity: 1, y: 0, duration: 0.7 }, 0.18);
+  tl.to('#heroSub',   { opacity: 1, y: 0, duration: 0.6 }, 0.55);
+  tl.to('#heroActions',{ opacity: 1, y: 0, duration: 0.6 }, 0.82);
+  tl.to('#scroll-hint',{ opacity: 1, duration: 0.6 }, 1.2);
 });
 
 // ══════════════════════════════════
@@ -1068,14 +1065,6 @@ document.querySelectorAll('.reveal-right').forEach(el => {
       { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 }
     );
         // Matrix: dispara após preloader abrir — espera chars estarem prontos
-    (function waitForChars() {
-      const chars = Array.from(document.querySelectorAll('.hero-title .char'));
-      if (chars.length > 0) {
-        setTimeout(() => { matrixReveal(chars); bindCharHover(); }, 120);
-      } else {
-        setTimeout(waitForChars, 50);
-      }
-    })();
   }, [], 2.65);
 })();
 
