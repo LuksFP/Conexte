@@ -1406,7 +1406,7 @@ document.getElementById('contactForm').addEventListener('submit', e => {
   function startAutoplay() {
     stopAutoplay();
     if (reducedMotion.matches) return;
-    autoplayTimer = window.setInterval(() => setActive(activeIndex + 1), 5200);
+    autoplayTimer = window.setInterval(() => setActive(activeIndex + 1), 3200);
   }
 
   function restartAutoplay() {
@@ -1529,7 +1529,7 @@ document.getElementById('contactForm').addEventListener('submit', e => {
   function startAutoplay() {
     stopAutoplay();
     if (reducedMotion.matches) return;
-    autoplayTimer = window.setInterval(() => setActive(activeIndex + 1), 5200);
+    autoplayTimer = window.setInterval(() => setActive(activeIndex + 1), 3200);
   }
 
   function restartAutoplay() {

@@ -2540,13 +2540,13 @@
     solutions['solucoes-digitais-inovacao'] = {
       category: 'Transformação digital',
       title: 'Soluções Digitais e Inovação',
-      intro: 'Transforme tecnologia em vantagem competitiva. Desenvolvemos soluções inteligentes que automatizam processos, melhoram a experiência do usuário e impulsionam a transformação digital da sua empresa, com foco em inovação, eficiência e escalabilidade.',
-      overview: 'Transforme tecnologia em vantagem competitiva. Desenvolvemos soluções inteligentes que automatizam processos, melhoram a experiência do usuário e impulsionam a transformação digital da sua empresa, com foco em inovação, eficiência e escalabilidade.',
+      intro: 'Transforme tecnologia em vantagem competitiva. Desenvolvemos soluções inteligentes que automatizam processos, melhoram a experiência do usuário e impulsionam a transformação digital da sua empresa. Para desenvolvimento de softwares e sites, a Conexte atua em parceria com a NEXIO.',
+      overview: 'Transforme tecnologia em vantagem competitiva. Desenvolvemos soluções inteligentes que automatizam processos, melhoram a experiência do usuário e impulsionam a transformação digital da sua empresa. Para desenvolvimento de softwares e sites, a Conexte atua em parceria com a NEXIO.',
       highlights: ['Cidades Inteligentes', 'Criação e Gestão de Sites', 'Digitalização e Gestão de Documentos', 'Desenvolvimento de Software', 'Ambientes Inteligentes (IoT)'],
       deliverables: ['Cidades Inteligentes', 'Criação e Gestão de Sites', 'Digitalização e Gestão de Documentos', 'Desenvolvimento de Software', 'Ambientes Inteligentes (IoT)'],
       useCases: ['Automatização de processos', 'Melhoria da experiência do usuário', 'Transformação digital', 'Vantagem competitiva'],
-      differentials: ['Inovação', 'Eficiência', 'Escalabilidade', 'Soluções inteligentes'],
-      kpis: [{value:'5 frentes', label:'inovação digital organizada por necessidade'}, {value:'menos retrabalho', label:'processos automatizados e documentados'}, {value:'mais controle', label:'dados, sites, sistemas e ambientes integrados'}],
+      differentials: ['Parceria com NEXIO para software e sites', 'Inovação', 'Eficiência', 'Escalabilidade'],
+      kpis: [{value:'NEXIO', label:'parceria para desenvolvimento de softwares e sites'}, {value:'5 frentes', label:'inovação digital organizada por necessidade'}, {value:'mais controle', label:'dados, sites, sistemas e ambientes integrados'}],
       steps: ['Diagnóstico do processo, canal digital ou ambiente físico.', 'Definição da solução, escopo e prioridades de implantação.', 'Desenvolvimento, integração, digitalização ou automação assistida.', 'Validação, publicação e evolução contínua da solução.'],
       ctaTitle: 'Desenvolver uma solução digital',
       ctaCopy: 'A Conexte pode transformar uma demanda operacional em uma solução digital estruturada, escalável e pronta para evolução.'
@@ -2601,8 +2601,8 @@
       .replace(/^-+|-+$/g, '');
 
     const topicHref = (parentKey, topic) => `solucao.html?item=${encodeURIComponent(parentKey)}&subitem=${encodeURIComponent(topic.slug)}`;
-    const softwarePartnerTopics = new Set();
-    const softwarePartnerOverview = '';
+    const softwarePartnerTopics = new Set(['criacao-e-gestao-de-sites', 'desenvolvimento-de-software']);
+    const softwarePartnerOverview = 'Para desenvolvimento de softwares e sites, a Conexte atua em parceria com a NEXIO.';
 
     const buildTopicCardCopy = (parentTitle, topicTitle) => `${topicTitle} faz parte da estrutura de ${parentTitle} definida no documento de referência.`;
 
@@ -2695,14 +2695,32 @@
             'Validação do ambiente e próximos passos',
             'Documentação final para sustentação'
           ];
+      const isSoftwarePartnerTopic = softwarePartnerTopics.has(topic.slug);
+      const finalHighlights = isSoftwarePartnerTopic
+        ? ['Parceria com NEXIO para desenvolvimento de softwares e sites', ...baseHighlights.slice(0, 3)]
+        : baseHighlights;
+      const finalDeliverables = isSoftwarePartnerTopic
+        ? ['Entrega em parceria com a NEXIO', ...baseDeliverables.slice(0, 3)]
+        : baseDeliverables;
+      const finalKpis = isSoftwarePartnerTopic
+        ? [
+            { value: 'NEXIO', label: 'parceria técnica para software e sites' },
+            { value: 'escopo claro', label: 'desenvolvimento guiado por prioridade' },
+            { value: 'base evolutiva', label: 'entrega preparada para continuidade' }
+          ]
+        : [
+            { value: 'tema dedicado', label: 'frente estruturada dentro da solução' },
+            { value: 'escopo claro', label: 'implantação guiada por prioridade' },
+            { value: 'base estável', label: 'entrega preparada para sustentação' }
+          ];
 
       return {
         category: `${parent.title} • Tema`,
         title: topic.title,
         intro: topic.intro || `${topic.title} é um tema dentro de ${parent.title} com foco em planejamento, implantação e sustentação aderentes à realidade operacional do ambiente.`,
         overview,
-        highlights: baseHighlights,
-        deliverables: baseDeliverables,
+        highlights: finalHighlights,
+        deliverables: finalDeliverables,
         useCases: [
           `Projetos novos ou evolução de ${topic.title.toLowerCase()}.`,
           `Operações que precisam estruturar ${topic.title.toLowerCase()} com mais previsibilidade.`,
@@ -2715,11 +2733,7 @@
           'Visão técnica combinada com leitura operacional do ambiente.',
           'Base preparada para sustentação e evolução posterior.'
         ],
-        kpis: [
-          { value: 'tema dedicado', label: 'frente estruturada dentro da solução' },
-          { value: 'escopo claro', label: 'implantação guiada por prioridade' },
-          { value: 'base estável', label: 'entrega preparada para sustentação' }
-        ],
+        kpis: finalKpis,
         steps: [
           `Levantamento do cenário atual para ${topic.title.toLowerCase()}.`,
           'Definição do escopo, prioridades e abordagem técnica.',

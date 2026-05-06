@@ -130,9 +130,10 @@ nav{
   transition:opacity .2s ease, transform .2s ease;
 }
 .top-contact-link{
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.01em;
+  font-family:'Nunito Sans', 'Inter', system-ui, sans-serif;
+  font-size:12.5px;
+  font-weight:900;
+  letter-spacing:.015em;
   line-height:1;
 }
 .top-socials{
@@ -577,7 +578,7 @@ nav.scrolled .hamburger{color:var(--text)}
 .brands-wrap::after{right:0;background:linear-gradient(-90deg,#fff,transparent)}
 .brands-track{
   display:flex;gap:92px;align-items:center;
-  width:max-content;animation:marquee 34s linear infinite;
+  width:max-content;animation:marquee 20s linear infinite;
 }
 .brands-track:hover{animation-play-state:paused}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -602,25 +603,15 @@ nav.scrolled .hamburger{color:var(--text)}
   align-items:flex-end;
   line-height:1;
 }
-.brand-name{
-  font-family:'Oxanium', 'Inter', sans-serif;
-  font-size:clamp(25px,2.15vw,35px);
-  font-weight:400;
-  letter-spacing:.08em;
-  text-transform:lowercase;
-  color:var(--blue-accent);
-  white-space:nowrap;
-}
 .brand-area{
-  margin-top:2px;
   font-family:'Oxanium', 'Inter', sans-serif;
-  font-size:13px;
-  font-weight:400;
-  letter-spacing:.025em;
+  font-size:clamp(15px,1.25vw,19px);
+  font-weight:500;
+  letter-spacing:.015em;
   text-transform:none;
-  color:rgba(69,76,88,.82);
+  color:rgba(69,76,88,.88);
   max-width:250px;
-  line-height:1.08;
+  line-height:1.12;
   text-align:right;
   white-space:normal;
 }
@@ -1915,7 +1906,7 @@ section{position:relative;z-index:1}
   perspective:1400px;
   align-items:stretch;
   transform:translate3d(0,0,0);
-  transition:transform .58s cubic-bezier(.2,.82,.2,1);
+  transition:transform .42s cubic-bezier(.2,.82,.2,1);
   will-change:transform;
 }
 #solucoes .area-card{
@@ -2088,6 +2079,25 @@ section{position:relative;z-index:1}
   font-size:14px;
   line-height:1.55;
   text-shadow:0 8px 22px rgba(0,0,0,0.44);
+}
+#solucoes .area-partner{
+  width:max-content;
+  max-width:100%;
+  margin:0;
+  padding:7px 12px;
+  border-radius:999px;
+  color:rgba(248,252,255,0.94);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--area-accent) 24%, rgba(12,18,36,0.62)), rgba(12,18,36,0.56));
+  border:1px solid color-mix(in srgb, var(--area-accent) 42%, rgba(255,255,255,.16));
+  font-size:11px;
+  font-weight:700;
+  line-height:1.35;
+  text-shadow:0 6px 18px rgba(0,0,0,.42);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+#solucoes .area-partner strong{
+  color:#d9f764;
 }
 #solucoes .area-tags{
   display:flex;
@@ -2752,7 +2762,7 @@ section{position:relative;z-index:1}
   gap:var(--areas-gap);
   margin-top:0;
   transform:translate3d(0,0,0);
-  transition:transform .58s cubic-bezier(.2,.82,.2,1);
+  transition:transform .42s cubic-bezier(.2,.82,.2,1);
   will-change:transform;
 }
 #areas .areas-showcase-card{
@@ -4232,7 +4242,7 @@ body.cookie-banner-visible .cookie-banner{
 .seg-car-outer::after{right:0;background:linear-gradient(to left,var(--off) 0%,transparent 100%)}
 .seg-car-track{
   display:flex;
-  transition:transform .55s cubic-bezier(.4,0,.2,1);
+  transition:transform .38s cubic-bezier(.4,0,.2,1);
   will-change:transform;
 }
 .seg-car-item{
@@ -4245,7 +4255,7 @@ body.cookie-banner-visible .cookie-banner{
   cursor:pointer;
   opacity:.28;
   transform:scale(.88);
-  transition:opacity .45s ease,transform .45s ease,color .45s ease;
+  transition:opacity .32s ease,transform .32s ease,color .32s ease;
 }
 .seg-car-item.is-active{
   opacity:1;
@@ -4365,7 +4375,7 @@ body.cookie-banner-visible .cookie-banner{
   align-items:center;
   gap:64px;
   width:max-content;
-  animation:fab-scroll 28s linear infinite;
+  animation:fab-scroll 18s linear infinite;
 }
 .fab-carousel-track:hover{animation-play-state:paused}
 @keyframes fab-scroll{
