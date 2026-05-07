@@ -121,8 +121,8 @@ nav{
   transform:translateY(-1px);
 }
 .nav-pill{
-  display:flex;align-items:center;justify-content:space-between;
-  background:rgba(229, 229, 233, 0.82);
+  display:flex;align-items:center;justify-content:space-between;position:relative;
+  background:rgba(195, 205, 220, 0.90);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border:1px solid rgba(255,255,255,0.38);
   border-radius:999px;
@@ -142,7 +142,7 @@ nav.scrolled{
   padding:34px 20px 8px;
 }
 nav.scrolled .nav-pill{
-  background:rgba(229, 229, 233, 0.88);
+  background:rgba(195, 205, 220, 0.95);
   border-color:rgba(255,255,255,0.42);
   box-shadow:0 14px 32px rgba(93, 102, 122, 0.18);
   max-width:920px;
@@ -155,6 +155,7 @@ nav.scrolled .nav-cta{ color:var(--liquid-blue-fg)!important; }
 .nav-logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
 .nav-logo img{
   height:36px;
+  width:auto;
   display:block;
   filter:none;
 }
@@ -162,7 +163,7 @@ nav.scrolled .nav-logo img{ filter:none; }
 
 .nav-links{
   display:flex;align-items:center;gap:1.6rem;list-style:none;
-  flex:1;justify-content:center;
+  position:absolute;left:50%;transform:translateX(-50%);
 }
 .nav-links a{
   color:#2f3440;text-decoration:none;
@@ -3220,7 +3221,7 @@ footer::after{
   gap:60px;margin-bottom:48px;
   position:relative;z-index:3;
 }
-.footer-brand-img{height:32px;filter:brightness(0) invert(1);display:block;margin-bottom:16px}
+.footer-brand-img{height:52px;width:auto;filter:brightness(0) invert(1);display:block;margin-bottom:16px}
 .footer-brand p{font-size:14px;color:rgba(236,242,255,.68);line-height:1.7;max-width:240px;margin-bottom:20px}
 .footer-socials{display:flex;gap:10px;margin-top:4px}
 .footer-col h4{
@@ -3819,7 +3820,7 @@ body.cookie-banner-visible .cookie-banner{
 #pre-logo-wrap{
   overflow:hidden;
   height:52px;
-  width:52px;
+  width:280px;
   will-change:width;
 }
 #pre-logo-wrap img{ height:52px; width:auto; display:block; }
