@@ -70,24 +70,6 @@ footer{position:relative}
 }
 
 /* ── "C" flutuante acompanha scroll ── */
-#scroll-c{
-  position:fixed;
-  right:28px;
-  top:0;
-  z-index:200;
-  pointer-events:none;
-  opacity:0;
-  transition:opacity .5s ease;
-  will-change:transform;
-}
-#scroll-c img{
-  height:44px;
-  width:44px;
-  object-fit:contain;
-  opacity:0.22;
-}
-body.scrolled-past-hero #scroll-c{opacity:1}
-
 /* ── NAV pill — integrada ao hero navy ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:300;

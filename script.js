@@ -1169,22 +1169,15 @@ gsap.to('#hero-symbol', {
   }
 });
 
-const scrollC = document.getElementById('scroll-c');
 window.addEventListener('scroll', () => {
   const nav = document.getElementById('navbar');
   const pastHero = window.scrollY > window.innerHeight * 0.85;
   if (pastHero) {
     nav.classList.add('scrolled');
-    document.body.classList.add('scrolled-past-hero');
   } else {
     nav.classList.remove('scrolled');
-    document.body.classList.remove('scrolled-past-hero');
   }
   // símbolo desce acompanhando o scroll
-  const maxScroll = document.body.scrollHeight - window.innerHeight;
-  const pct = Math.min(window.scrollY / maxScroll, 1);
-  const maxY = window.innerHeight - 80;
-  scrollC.style.transform = `translateY(${pct * maxY}px)`;
 }, { passive: true });
 
 // ══════════════════════════════════
