@@ -775,17 +775,6 @@ gsap.to('#hero-fade', {
   }
 });
 
-// parallax símbolo hero
-gsap.to('#hero-symbol', {
-  yPercent: 60,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#hero',
-    start: 'top top',
-    end: 'bottom top',
-    scrub: true
-  }
-});
 
 window.addEventListener('scroll', () => {
   const nav = document.getElementById('navbar');
