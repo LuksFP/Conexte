@@ -10,3 +10,7 @@ node_modules/
 server.err.log
 server.out.log
 .vercel
+
+# credenciais e dependências locais
+.env
+vendor/

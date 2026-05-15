@@ -555,14 +555,14 @@
         <p class="contato-form-sub">Conte o cenário atual e o que deseja melhorar. Retornamos com um caminho direto, sem ruído.</p>
         <form id="contactForm">
           <div class="form-row">
-            <div class="form-field"><label>Nome</label><input type="text" placeholder="Seu nome" required></div>
-            <div class="form-field"><label>Empresa</label><input type="text" placeholder="Nome da empresa"></div>
+            <div class="form-field"><label for="nome">Nome</label><input id="nome" name="nome" type="text" placeholder="Seu nome" required></div>
+            <div class="form-field"><label for="empresa">Empresa</label><input id="empresa" name="empresa" type="text" placeholder="Nome da empresa"></div>
           </div>
           <div class="form-row">
-            <div class="form-field"><label>E-mail</label><input type="email" placeholder="seu@email.com" required></div>
-            <div class="form-field"><label>Telefone</label><input type="tel" placeholder="(00) 00000-0000"></div>
+            <div class="form-field"><label for="email">E-mail</label><input id="email" name="email" type="email" placeholder="seu@email.com" required></div>
+            <div class="form-field"><label for="telefone">Telefone</label><input id="telefone" name="telefone" type="tel" placeholder="(00) 00000-0000"></div>
           </div>
-          <div class="form-field"><label>Mensagem</label><textarea rows="5" placeholder="Descreva o que você precisa..."></textarea></div>
+          <div class="form-field"><label for="mensagem">Mensagem</label><textarea id="mensagem" name="mensagem" rows="5" placeholder="Descreva o que você precisa..."></textarea></div>
           <button type="submit" class="btn-submit" id="submitBtn"><span class="btn-label">Solicitar diagnóstico</span></button>
         </form>
         <div class="contato-form-foot">

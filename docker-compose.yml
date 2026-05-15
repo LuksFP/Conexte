@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      SMTP_HOST: ${SMTP_HOST:-mail.conexte.com.br}
+      SMTP_USER: ${SMTP_USER:-faleconosco@conexte.com.br}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_SECURE: ${SMTP_SECURE:-ssl}
+      MAIL_TO: ${MAIL_TO:-faleconosco@conexte.com.br}
+    restart: unless-stopped

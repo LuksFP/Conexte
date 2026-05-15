@@ -809,16 +809,46 @@ document.querySelectorAll('.mm-link').forEach(a => {
 // ══════════════════════════════════
 // FORM
 // ══════════════════════════════════
-document.getElementById('contactForm').addEventListener('submit', e => {
+document.getElementById('contactForm').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = document.getElementById('submitBtn');
   const originalMarkup = '<span class="btn-label">Solicitar diagnóstico</span>';
-  btn.innerHTML = '<span class="btn-label">Enviando...</span>'; btn.disabled = true;
-  setTimeout(() => {
-    btn.innerHTML = '<span class="btn-label">✓ Mensagem enviada!</span>';
-    btn.style.background = '#eafaf3'; btn.style.color = '#0A6640';
-    setTimeout(() => { btn.innerHTML = originalMarkup; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 3000);
-  }, 1200);
+
+  btn.innerHTML = '<span class="btn-label">Enviando...</span>';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('contact.php', {
+      method: 'POST',
+      body: new FormData(e.target),
+    });
+    const json = await res.json();
+
+    if (res.ok && json.ok) {
+      btn.innerHTML = '<span class="btn-label">✓ Mensagem enviada!</span>';
+      btn.style.background = '#eafaf3';
+      btn.style.color = '#0A6640';
+      e.target.reset();
+      setTimeout(() => {
+        btn.innerHTML = originalMarkup;
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+      }, 3000);
+    } else {
+      throw new Error(json.error || 'Erro ao enviar');
+    }
+  } catch {
+    btn.innerHTML = '<span class="btn-label">Erro — tente novamente</span>';
+    btn.style.background = '#fef2f2';
+    btn.style.color = '#b91c1c';
+    setTimeout(() => {
+      btn.innerHTML = originalMarkup;
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.disabled = false;
+    }, 3000);
+  }
 });
 
 // ══════════════════════════════════
